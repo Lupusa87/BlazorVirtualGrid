@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class ExampleJsInterop
+    public class BvgJsInterop
     {
         public static Task<string> Prompt(string message)
         {
