@@ -8,7 +8,11 @@ namespace BlazorVirtualGridComponent.classes
     public class BvgGrid
     {
         public int ID { get; set; }
-        public string Name { get; set; }
+
+        public bool IsReady { get; set; } = false;
+
+
+        public string Name { get; set; } = "null";
 
         //public Action OnChange { get; set; }
 
@@ -27,7 +31,7 @@ namespace BlazorVirtualGridComponent.classes
             ActiveRow = parCell.bvgRow;
             ActiveColumn = parCell.bvgColumn;
 
-            
+
             SelectActiveRow();
             SelectActiveCell(false);
         }
@@ -41,13 +45,13 @@ namespace BlazorVirtualGridComponent.classes
             SelectActiveRow();
         }
 
-        public void SelectColumn(BvgColumn parColumn)
+        public void SelectColumn(int parColumnID)
         {
             ActiveCell = null;
             ActiveRow = null;
-            ActiveColumn = parColumn;
+            ActiveColumn = Columns.Single(x=>x.ID==parColumnID);
 
-          
+
             SelectActiveColumn();
         }
 
@@ -58,7 +62,7 @@ namespace BlazorVirtualGridComponent.classes
         {
             Cmd_Clear_Selection();
 
-            Console.WriteLine("ActiveRow " +ActiveRow.ID);
+
             ActiveRow.IsSelected = true;
 
             ActiveRow.bvgStyle = new BvgStyle()
@@ -103,8 +107,9 @@ namespace BlazorVirtualGridComponent.classes
 
             foreach (var item in Rows)
             {
-                
-                BvgCell c =  item.Cells.Single(x => x.bvgColumn == ActiveColumn);
+
+                BvgCell c = item.Cells.Single(x => x.bvgColumn.ID == ActiveColumn.ID);
+
                 c.IsSelected = true;
                 c.bvgStyle = b;
                 c.CompReference.Refresh();
@@ -115,7 +120,7 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
-        private void SelectActiveCell(bool DoClear=true)
+        private void SelectActiveCell(bool DoClear = true)
         {
             if (DoClear)
             {
@@ -145,13 +150,48 @@ namespace BlazorVirtualGridComponent.classes
             }
 
 
-            foreach (var item in Columns.Where(x=>x.IsSelected))
+            foreach (var item in Columns.Where(x => x.IsSelected))
             {
                 item.IsSelected = false;
                 item.bvgStyle = new BvgStyle();
                 item.CompReference.Refresh();
             }
-            
+
+        }
+
+
+
+        public void FreezeColumn(string name)
+        {
+            if (Columns.Any())
+            {
+                if (Columns.Any(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                {
+
+                    Cmd_Clear_Selection();
+
+                    foreach (var item in Columns.Where(x => x.IsFrozen))
+                    {
+                        item.IsFrozen = false;
+                        item.SequenceNumber = item.ID;
+                    }
+
+                    BvgColumn c = Columns.Single(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                    c.IsFrozen = true;
+                    c.SequenceNumber = 0;
+
+
+                    if (CompReference != null)
+                    {
+                       
+
+                        CompReference.Refresh();
+
+
+
+                    }
+                }
+            }
         }
 
     }

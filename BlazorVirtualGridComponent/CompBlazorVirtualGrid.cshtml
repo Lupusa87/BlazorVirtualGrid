@@ -1,6 +1,18 @@
 ﻿@inherits CompBlazorVirtualGrid_Logic
 
-<h3>@bvgGrid.Name</h3>
 
 
-<CompGrid ref="CompGrid1" parent="@this"></CompGrid>
+@if (bvgGrid.IsReady)
+{
+
+    <h3>@bvgGrid.Name</h3>
+
+
+    <CompGrid ref="CompGrid1" parent="@this"></CompGrid>
+}
+else
+{
+    <br />
+    <h3>Loading...</h3>
+    <h3>@bvgGrid.Name</h3>
+}

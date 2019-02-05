@@ -27,7 +27,7 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-
+            Console.WriteLine("BuildRenderTree for column");
             int k = -1;
 
             builder.OpenElement(k++, "th");
@@ -55,10 +55,9 @@ namespace BlazorVirtualGridComponent
 
         public void Clicked(UIMouseEventArgs e)
         {
-            Console.WriteLine("invoked click");
             CompGrid a = parent as CompGrid;
-            a._parent.bvgGrid.SelectColumn(bvgColumn);
-            
+            a._parent.bvgGrid.SelectColumn(bvgColumn.ID);
+           
         }
 
 

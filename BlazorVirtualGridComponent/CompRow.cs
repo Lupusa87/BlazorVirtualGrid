@@ -28,6 +28,7 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            Console.WriteLine("BuildRenderTree for row");
             int k = -1;
             builder.OpenElement(k++, "tr");
 
@@ -40,7 +41,7 @@ namespace BlazorVirtualGridComponent
 
 
 
-            foreach (var cell in bvgRow.Cells)
+            foreach (var cell in bvgRow.Cells.OrderBy(x=>x.bvgColumn.SequenceNumber))
             {
                 builder.OpenComponent<CompCell>(k++);
                 builder.AddAttribute(k++, "bvgCell", cell);

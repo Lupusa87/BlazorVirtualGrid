@@ -10,11 +10,18 @@ namespace BlazorVirtualGridComponent.classes
     {
         public int ID { get; set; }
         public int Index { get; set; }
-       
+
         public string Name { get; set; }
 
         public Type type { get; set; }
         public bool IsSelected { get; set; }
+
+
+        public bool IsFrozen { get; set; }
+
+
+        public int SequenceNumber { get; set; }
+
 
         public BvgStyle bvgStyle { get; set; } = new BvgStyle();
 
@@ -70,6 +77,8 @@ namespace BlazorVirtualGridComponent.classes
             return sb1.ToString();
 
         }
+
+
 
     }
 }

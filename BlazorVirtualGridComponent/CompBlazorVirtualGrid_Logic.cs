@@ -9,13 +9,10 @@ namespace BlazorVirtualGridComponent
 {
     public class CompBlazorVirtualGrid_Logic:BlazorComponent 
     {
-        [Parameter]
-        public BvgGrid bvgGrid { get; set; }
-
-
         //[Parameter]
-        //public List<T> ItemsSource { get; set; }
+        public BvgGrid bvgGrid { get; set; } = new BvgGrid();
 
+        public BvgSettings GridSettings { get; set; } = new BvgSettings();
 
         public CompGrid CompGrid1 = new CompGrid();
 
@@ -31,6 +28,7 @@ namespace BlazorVirtualGridComponent
         protected override void OnAfterRender()
         {
             bvgGrid.CompReference = CompGrid1;
+
             base.OnAfterRender();
         }
 
@@ -42,8 +40,11 @@ namespace BlazorVirtualGridComponent
 
         public void Refresh()
         {
-            
-            CompGrid1.Refresh();
+            if (bvgGrid.CompReference != null)
+            {
+                bvgGrid.CompReference.Refresh();
+            }
+
             StateHasChanged();
         }
 

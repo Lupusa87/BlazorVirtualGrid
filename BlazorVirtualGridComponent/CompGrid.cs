@@ -32,6 +32,10 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
 
+
+           
+
+
             Cmd_RenderTable(builder);
 
 
@@ -49,9 +53,17 @@ namespace BlazorVirtualGridComponent
                 return;
             }
 
+
+
+            //foreach (var item in bvgGrid.Columns)
+            //{
+            //    item.CompReference = null;
+            //}
+
+
             int k = -1;
             builder.OpenElement(k++, "table");
-
+          
             builder.OpenElement(k++, "thead");
             builder.OpenElement(k++, "tr");
 
@@ -62,15 +74,19 @@ namespace BlazorVirtualGridComponent
 
             //builder.CloseElement(); //th
 
-            foreach (var c in bvgGrid.Columns)
-            {
 
+
+            Console.WriteLine("starting rendering columns");
+            foreach (BvgColumn c in bvgGrid.Columns.OrderBy(x=>x.SequenceNumber))
+            {
+                Console.WriteLine("starting rendering columns - " + c.Name);
                 builder.OpenComponent<CompColumn>(k++);
                 builder.AddAttribute(k++, "bvgColumn", c);
                 builder.AddAttribute(k++, "parent", this);
-
+                Console.WriteLine("before " + c.Name);
                 builder.AddComponentReferenceCapture(k++, (compReference) =>
                 {
+                    Console.WriteLine("AddComponentReferenceCapture - " + c.Name);
                     c.CompReference = compReference as CompColumn;
                 });
 
@@ -122,8 +138,7 @@ namespace BlazorVirtualGridComponent
 
         public void Refresh()
         {
-            StateHasChanged();
-           
+            StateHasChanged();  
         }
 
         public void Dispose()

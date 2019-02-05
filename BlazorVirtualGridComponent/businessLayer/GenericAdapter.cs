@@ -11,34 +11,27 @@ namespace BlazorVirtualGridComponent.businessLayer
     public class GenericAdapter<T> where T : class
     {
 
-
-        //public GenericAdapter(List<T> GenericList)
-        //{
-
-        //}
-
         public BvgGrid Convert(List<T> GenericList, string Name)
         {
 
-
-            Console.WriteLine("aaaaaaaaaaaa");
-
             BvgGrid result = new BvgGrid
             {
-                Name = Name
+                IsReady = true,
+                Name = Name,
             };
 
             PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (PropertyInfo prop in Props)
             {
-                Console.WriteLine(prop.Name);
+               
                 var t = (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>) ? Nullable.GetUnderlyingType(prop.PropertyType) : prop.PropertyType);
-                Console.WriteLine(prop.Name);
+              
                 BvgColumn col = new BvgColumn
                 {
                     ID = result.Columns.Count + 1,
                     Name = prop.Name,
                     type = t,
+                    SequenceNumber = result.Columns.Count + 1,
                 };
 
                 result.Columns.Add(col);

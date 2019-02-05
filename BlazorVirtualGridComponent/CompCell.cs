@@ -27,7 +27,7 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-
+            Console.WriteLine("BuildRenderTree for cell");
             int k = -1;
             builder.OpenElement(k++, "td");
 
@@ -35,6 +35,7 @@ namespace BlazorVirtualGridComponent
 
             builder.AddAttribute(k++, "onclick", Clicked);
             builder.AddContent(k++, bvgCell.Value.ToString());
+            Console.WriteLine(bvgCell.Value.ToString());
             builder.CloseElement();
 
 
