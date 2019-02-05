@@ -1,3 +1,6 @@
-﻿<div class="my-component">
-    This Blazor component is defined in the <strong>BlazorVirtualGridComponent</strong> package.
-</div>
+﻿@inherits CompBlazorVirtualGrid_Logic
+
+<h3>@bvgGrid.Name</h3>
+
+
+<CompGrid ref="CompGrid1" parent="@this"></CompGrid>
