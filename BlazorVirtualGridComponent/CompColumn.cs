@@ -21,12 +21,22 @@ namespace BlazorVirtualGridComponent
 
         protected override void OnInit()
         {
+            Console.WriteLine("OnInit " + bvgColumn.Name);
+            
             _parent = parent as CompGrid;
+        }
+
+        private void BvgColumn_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            Console.WriteLine("BuildRenderTree for column");
+
+            bvgColumn.PropertyChanged += BvgColumn_PropertyChanged;
+
+            Console.WriteLine("BuildRenderTree " + bvgColumn.Name);
             int k = -1;
 
             builder.OpenElement(k++, "th");
@@ -55,23 +65,20 @@ namespace BlazorVirtualGridComponent
         public void Clicked(UIMouseEventArgs e)
         {
             CompGrid a = parent as CompGrid;
-            a._parent.bvgGrid.SelectColumn(bvgColumn.ID);
+            a._parent.bvgGrid.SelectColumn(bvgColumn);
            
         }
 
 
-
-
-
-        public void Refresh()
-        {
-            StateHasChanged();
-        }
+        //public void Refresh()
+        //{
+        //    StateHasChanged();
+        //}
 
 
         public void Dispose()
         {
-
+            bvgColumn.PropertyChanged -= BvgColumn_PropertyChanged;
         }
     }
 }

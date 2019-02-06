@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,12 +22,19 @@ namespace BlazorVirtualGridComponent
 
         protected override void OnInit()
         {
+            
             _parent = parent as CompRow;
+        }
+
+        private void BvgCell_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Console.WriteLine("BvgCell_PropertyChanged " + bvgCell.Value.ToString());
+            StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            Console.WriteLine("BuildRenderTree for cell");
+            bvgCell.PropertyChanged += BvgCell_PropertyChanged;
             int k = -1;
             builder.OpenElement(k++, "td");
 
@@ -34,7 +42,7 @@ namespace BlazorVirtualGridComponent
 
             builder.AddAttribute(k++, "onclick", Clicked);
             builder.AddContent(k++, bvgCell.Value.ToString());
-            Console.WriteLine(bvgCell.Value.ToString());
+           
             builder.CloseElement();
 
 
@@ -44,21 +52,23 @@ namespace BlazorVirtualGridComponent
 
         public void Clicked(UIMouseEventArgs e)
         {
-
+            Console.WriteLine("clicked " + bvgCell.Value.ToString());
             CompRow a = parent as CompRow;
             a._parent._parent.bvgGrid.SelectCell(bvgCell);
 
         }
 
-        public void Refresh()
-        {
-            StateHasChanged();
-        }
+
+
+        //public void Refresh()
+        //{
+        //    StateHasChanged();
+        //}
 
 
         public void Dispose()
         {
-
+            bvgCell.PropertyChanged -= BvgCell_PropertyChanged;
         }
     }
 }

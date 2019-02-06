@@ -24,13 +24,17 @@ namespace BlazorVirtualGridComponent
         protected override void OnInit()
         {
             _parent = parent as CompBlazorVirtualGrid;
-           
+            
         }
 
+        private void BvgGrid_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            StateHasChanged();
+        }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-
+            _parent.bvgGrid.PropertyChanged += BvgGrid_PropertyChanged;
             Cmd_RenderTable(builder);
 
 
@@ -41,6 +45,9 @@ namespace BlazorVirtualGridComponent
         protected void Cmd_RenderTable(RenderTreeBuilder builder)
         {
 
+
+            Console.WriteLine("Cmd_RenderTable");
+
             BvgGrid bvgGrid = _parent.bvgGrid;
 
             if(bvgGrid.Columns.Count == 0)
@@ -48,12 +55,6 @@ namespace BlazorVirtualGridComponent
                 return;
             }
 
-
-
-            //foreach (var item in bvgGrid.Columns)
-            //{
-            //    item.CompReference = null;
-            //}
 
 
             int k = -1;
@@ -71,19 +72,19 @@ namespace BlazorVirtualGridComponent
 
 
 
-            Console.WriteLine("starting rendering columns");
+
             foreach (BvgColumn c in bvgGrid.Columns.OrderBy(x=>x.SequenceNumber))
             {
-                Console.WriteLine("starting rendering columns - " + c.Name);
+                Console.WriteLine("Render Col " + c.Name);
                 builder.OpenComponent<CompColumn>(k++);
                 builder.AddAttribute(k++, "bvgColumn", c);
                 builder.AddAttribute(k++, "parent", this);
-                Console.WriteLine("before " + c.Name);
-                builder.AddComponentReferenceCapture(k++, (compReference) =>
-                {
-                    Console.WriteLine("AddComponentReferenceCapture - " + c.Name);
-                    c.CompReference = compReference as CompColumn;
-                });
+              
+
+                //builder.AddComponentReferenceCapture(k++, (compReference) =>
+                //{
+                //    c.CompReference = compReference as CompColumn;
+                //});
 
                 builder.CloseComponent();
                 
@@ -103,10 +104,10 @@ namespace BlazorVirtualGridComponent
                 builder.AddAttribute(k++, "parent", this);
 
 
-                builder.AddComponentReferenceCapture(k++, (compReference) =>
-                {
-                    r.CompReference = compReference as CompRow;
-                });
+                //builder.AddComponentReferenceCapture(k++, (compReference) =>
+                //{
+                //    r.CompReference = compReference as CompRow;
+                //});
 
                 builder.CloseComponent();
             }
@@ -131,14 +132,14 @@ namespace BlazorVirtualGridComponent
 
 
 
-        public void Refresh()
-        {
-            StateHasChanged();  
-        }
+        //public void Refresh()
+        //{
+        //    StateHasChanged();  
+        //}
 
         public void Dispose()
         {
-
+            _parent.bvgGrid.PropertyChanged -= BvgGrid_PropertyChanged;
         }
     }
 }

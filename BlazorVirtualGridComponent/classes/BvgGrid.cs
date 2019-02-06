@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgGrid
+    public class BvgGrid : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public int ID { get; set; }
 
         public bool IsReady { get; set; } = false;
@@ -19,7 +23,7 @@ namespace BlazorVirtualGridComponent.classes
         public List<BvgRow> Rows { get; set; } = new List<BvgRow>();
         public List<BvgColumn> Columns { get; set; } = new List<BvgColumn>();
 
-        public CompGrid CompReference { get; set; }
+        //public CompGrid CompReference { get; set; }
 
         public BvgCell ActiveCell;
         public BvgRow ActiveRow;
@@ -31,7 +35,7 @@ namespace BlazorVirtualGridComponent.classes
             ActiveRow = parCell.bvgRow;
             ActiveColumn = parCell.bvgColumn;
 
-
+            Console.WriteLine("Select cell " + parCell.Value.ToString());
             SelectActiveRow();
             SelectActiveCell(false);
         }
@@ -45,11 +49,11 @@ namespace BlazorVirtualGridComponent.classes
             SelectActiveRow();
         }
 
-        public void SelectColumn(int parColumnID)
+        public void SelectColumn(BvgColumn parColumn)
         {
             ActiveCell = null;
             ActiveRow = null;
-            ActiveColumn = Columns.Single(x=>x.ID==parColumnID);
+            ActiveColumn = parColumn;
 
 
             SelectActiveColumn();
@@ -77,11 +81,12 @@ namespace BlazorVirtualGridComponent.classes
             {
                 c.IsSelected = true;
                 c.bvgStyle = ActiveRow.bvgStyle;
-                c.CompReference.Refresh();
+                //c.CompReference.Refresh();
+                c.InvokePropertyChanged();
             }
 
-            ActiveRow.CompReference.Refresh();
-            CompReference.Refresh();
+            ActiveRow.InvokePropertyChanged();
+            InvokePropertyChanged();
         }
 
         private void SelectActiveColumn()
@@ -112,11 +117,11 @@ namespace BlazorVirtualGridComponent.classes
 
                 c.IsSelected = true;
                 c.bvgStyle = b;
-                c.CompReference.Refresh();
+                c.InvokePropertyChanged();
             }
 
 
-            ActiveColumn.CompReference.Refresh();
+            ActiveColumn.InvokePropertyChanged();
         }
 
 
@@ -137,14 +142,16 @@ namespace BlazorVirtualGridComponent.classes
             };
 
 
-            ActiveCell.CompReference.Refresh();
-
+            //ActiveCell.CompReference.Refresh();
+            ActiveCell.InvokePropertyChanged();
         }
 
 
         public void Cmd_Clear_Selection()
         {
-            foreach (var item in Rows)
+
+            Console.WriteLine("count " + Rows.Where(x => x.Cells.Any(y => y.IsSelected)).Count());
+            foreach (var item in Rows.Where(x=>x.Cells.Any(y=>y.IsSelected)))
             {
                 item.Cmd_Clear_Selection();
             }
@@ -154,7 +161,7 @@ namespace BlazorVirtualGridComponent.classes
             {
                 item.IsSelected = false;
                 item.bvgStyle = new BvgStyle();
-                item.CompReference.Refresh();
+                item.InvokePropertyChanged();
             }
 
         }
@@ -181,17 +188,22 @@ namespace BlazorVirtualGridComponent.classes
                     c.SequenceNumber = 0;
 
 
-                    if (CompReference != null)
-                    {
-                       
-
-                        CompReference.Refresh();
-
-
-
-                    }
+                    InvokePropertyChanged();
                 }
             }
+        }
+
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+
+        public void InvokePropertyChanged()
+        {
+            PropertyChanged?.Invoke(this, null);
         }
 
     }

@@ -21,13 +21,18 @@ namespace BlazorVirtualGridComponent
 
         protected override void OnInit()
         {
+            
             _parent = parent as CompGrid;
         }
 
+        private void BvgRow_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            StateHasChanged();
+        }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            Console.WriteLine("BuildRenderTree for row");
+            bvgRow.PropertyChanged += BvgRow_PropertyChanged;
             int k = -1;
             builder.OpenElement(k++, "tr");
 
@@ -47,10 +52,10 @@ namespace BlazorVirtualGridComponent
                 builder.AddAttribute(k++, "parent", this);
 
 
-                builder.AddComponentReferenceCapture(k++, (compReference) =>
-                {
-                    cell.CompReference = compReference as CompCell;
-                });
+                //builder.AddComponentReferenceCapture(k++, (compReference) =>
+                //{
+                //    cell.CompReference = compReference as CompCell;
+                //});
 
                 builder.CloseComponent();
             }
@@ -74,15 +79,15 @@ namespace BlazorVirtualGridComponent
             //b.SelectionChange(bcell.ID);
         }
 
-        public void Refresh()
-        {
-            StateHasChanged();
-        }
+        //public void Refresh()
+        //{
+        //    StateHasChanged();
+        //}
 
 
         public void Dispose()
         {
-
+            bvgRow.PropertyChanged -= BvgRow_PropertyChanged;
         }
     }
 }

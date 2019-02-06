@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgCell
+    public class BvgCell : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public int ID { get; set; }
 
@@ -25,7 +28,7 @@ namespace BlazorVirtualGridComponent.classes
         public bool IsSelected { get; set; }
 
 
-        public CompCell CompReference { get; set; }
+        //public CompCell CompReference { get; set; }
 
 
         public string GetStyle()
@@ -75,6 +78,18 @@ namespace BlazorVirtualGridComponent.classes
 
             return sb1.ToString();
 
+        }
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+
+        public void InvokePropertyChanged()
+        {
+            PropertyChanged?.Invoke(this, null);
         }
     }
 }

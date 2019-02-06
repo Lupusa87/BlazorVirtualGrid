@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgRow
+    public class BvgRow : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public int ID { get; set; }
         public int Index { get; set; }
 
@@ -22,12 +26,26 @@ namespace BlazorVirtualGridComponent.classes
             {
                 item.IsSelected = false;
                 item.bvgStyle = new BvgStyle();
-                item.CompReference.Refresh();
+                item.InvokePropertyChanged();
+                Console.WriteLine("Cmd_Clear_Selection " + item.Value.ToString());
             }
 
         }
 
 
-        public CompRow CompReference { get; set; }
+        //public CompRow CompReference { get; set; }
+
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+
+        public void InvokePropertyChanged()
+        {
+            PropertyChanged?.Invoke(this, null);
+        }
     }
 }

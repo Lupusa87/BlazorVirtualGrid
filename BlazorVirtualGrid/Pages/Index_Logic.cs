@@ -13,7 +13,6 @@ namespace BlazorVirtualGrid.Pages
     public class Index_Logic:ComponentBase
     {
 
-        Timer timer2;
 
         Random rnd1 = new Random();
 
@@ -29,46 +28,37 @@ namespace BlazorVirtualGrid.Pages
         private List<MyItem2> list2 = new List<MyItem2>();
 
         bool FirstLoad = true;
-      
+
+        public BvgGrid _bvgGrid = new BvgGrid();
+
+
 
         protected override void OnInit()
         {
-            timer2 = new Timer(Timer2Callback, null, 1, 1);
+            FillList();
+            _bvgGrid = GenericAdapter1.Convert(list1, "Table1");
+
             base.OnInit();
         }
 
+        //protected override void OnAfterRender()
+        //{
+        //    if (FirstLoad)
+        //    {
+        //        FirstLoad = false;
 
-        public void Timer2Callback(object o)
-        {
-            timer2.Dispose();
-
-            FillList();
-            CurrBVG.bvgGrid = GenericAdapter1.Convert(list1, "Table1");
-            CurrBVG.bvgGrid.FreezeColumn(nameof(MyItem.N3));
-            CurrBVG.Refresh();
-
-            
-        }
-
-        protected override void OnAfterRender()
-        {
-            if (FirstLoad)
-            {
-                FirstLoad = false;
-            }
+        //    }
 
 
-            base.OnAfterRender();
-        }
+        //    base.OnAfterRender();
+        //}
 
         public void CmdNewList1()
         {
             Console.WriteLine("________________");
 
             FillList();
-            CurrBVG.bvgGrid = GenericAdapter1.Convert(list1, "table 1");
-            CurrBVG.bvgGrid.FreezeColumn(nameof(MyItem.Date));
-            CurrBVG.Refresh();
+            _bvgGrid = GenericAdapter1.Convert(list1, "Table 1");
 
         }
 
@@ -78,10 +68,18 @@ namespace BlazorVirtualGrid.Pages
             Console.WriteLine("________________");
 
             FillList2();
-            CurrBVG.bvgGrid = GenericAdapter2.Convert(list2, "persons");
-            CurrBVG.bvgGrid.FreezeColumn(nameof(MyItem2.BirthDate));
-            CurrBVG.Refresh();
-          
+            _bvgGrid = GenericAdapter2.Convert(list2, "persons");
+
+        }
+
+        public void CmdPinColList1()
+        {
+            _bvgGrid.FreezeColumn(nameof(MyItem.N3));
+        }
+
+        public void CmdPinColList2()
+        {
+            _bvgGrid.FreezeColumn(nameof(MyItem2.LastName));
         }
 
         public BvgSettings getBvgSettings1()

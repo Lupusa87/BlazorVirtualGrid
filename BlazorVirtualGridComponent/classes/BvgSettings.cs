@@ -99,10 +99,10 @@ namespace BlazorVirtualGridComponent.classes
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void Invoke_PropertyChanged(string Par_PropertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(Par_PropertyName));
-        }
+        //public void Invoke_PropertyChanged(string Par_PropertyName)
+        //{
+        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(Par_PropertyName));
+        //}
 
         public void Invoke_PropertyChanged_For_All()
         {
