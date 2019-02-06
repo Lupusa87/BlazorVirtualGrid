@@ -1,5 +1,5 @@
 ﻿using BlazorVirtualGridComponent.classes;
-using Microsoft.AspNetCore.Blazor.Components;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompBlazorVirtualGrid_Logic:BlazorComponent 
+    public class CompBlazorVirtualGrid_Logic: ComponentBase
     {
         //[Parameter]
         public BvgGrid bvgGrid { get; set; } = new BvgGrid();

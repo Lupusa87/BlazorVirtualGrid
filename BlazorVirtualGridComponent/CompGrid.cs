@@ -1,7 +1,6 @@
 ﻿using BlazorVirtualGridComponent.classes;
-using Microsoft.AspNetCore.Blazor;
-using Microsoft.AspNetCore.Blazor.Components;
-using Microsoft.AspNetCore.Blazor.RenderTree;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +10,10 @@ namespace BlazorVirtualGridComponent
 {
 
 
-    public class CompGrid : BlazorComponent, IDisposable
+    public class CompGrid : ComponentBase, IDisposable
     {
         [Parameter]
-        protected BlazorComponent parent { get; set; }
+        protected ComponentBase parent { get; set; }
 
         public CompBlazorVirtualGrid _parent;
 
@@ -31,10 +30,6 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-
-
-           
-
 
             Cmd_RenderTable(builder);
 

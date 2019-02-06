@@ -1,7 +1,7 @@
 ﻿using BlazorVirtualGridComponent;
 using BlazorVirtualGridComponent.businessLayer;
 using BlazorVirtualGridComponent.classes;
-using Microsoft.AspNetCore.Blazor.Components;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGrid.Pages
 {
-    public class Index_Logic:BlazorComponent
+    public class Index_Logic:ComponentBase
     {
 
         Timer timer2;

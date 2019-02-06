@@ -1,7 +1,6 @@
 ﻿using BlazorVirtualGridComponent.classes;
-using Microsoft.AspNetCore.Blazor;
-using Microsoft.AspNetCore.Blazor.Components;
-using Microsoft.AspNetCore.Blazor.RenderTree;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompColumn : BlazorComponent, IDisposable
+    public class CompColumn : ComponentBase, IDisposable
     {
         [Parameter]
-        protected BlazorComponent parent { get; set; }
+        protected ComponentBase parent { get; set; }
 
 
         [Parameter]
