@@ -37,7 +37,7 @@ namespace BlazorVirtualGridComponent.classes
             StringBuilder sb1 = new StringBuilder();
 
 
-            sb1.Append("border-style:solid;width:70px;height:35px;margin:1px;padding:2px;");
+            sb1.Append("border-style:solid;width:"+bvgColumn.ColWidth+"px;height:35px;margin:1px;padding:2px;");
 
             if (!string.IsNullOrEmpty(bvgStyle.BackgroundColor))
             {

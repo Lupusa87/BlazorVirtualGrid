@@ -28,7 +28,6 @@ namespace BlazorVirtualGridComponent
 
         private void BvgCell_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Console.WriteLine("BvgCell_PropertyChanged " + bvgCell.Value.ToString());
             StateHasChanged();
         }
 
@@ -52,7 +51,7 @@ namespace BlazorVirtualGridComponent
 
         public void Clicked(UIMouseEventArgs e)
         {
-            Console.WriteLine("clicked " + bvgCell.Value.ToString());
+
             CompRow a = parent as CompRow;
             a._parent._parent.bvgGrid.SelectCell(bvgCell);
 

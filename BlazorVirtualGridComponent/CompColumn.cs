@@ -21,8 +21,6 @@ namespace BlazorVirtualGridComponent
 
         protected override void OnInit()
         {
-            Console.WriteLine("OnInit " + bvgColumn.Name);
-            
             _parent = parent as CompGrid;
         }
 
@@ -36,23 +34,32 @@ namespace BlazorVirtualGridComponent
 
             bvgColumn.PropertyChanged += BvgColumn_PropertyChanged;
 
-            Console.WriteLine("BuildRenderTree " + bvgColumn.Name);
+
             int k = -1;
 
             builder.OpenElement(k++, "th");
 
-            builder.AddAttribute(k++, "style",bvgColumn.GetStyle());
+            builder.AddAttribute(k++, "style", bvgColumn.GetStyleTh());
             builder.AddAttribute(k++, "onclick", Clicked);
-            
-            builder.AddContent(k++, bvgColumn.Name);
-            
-            
+
+
+     
             //builder.AddElementReferenceCapture(k++, (elementReference) =>
             //{
 
             //    Elementreferences_Dictionary.Add(_value_id, elementReference);
 
             //});
+
+
+            builder.OpenElement(k++, "div");
+            builder.AddAttribute(k++, "id", "MyDivColumn" + bvgColumn.ID);
+            builder.AddAttribute(k++, "style", bvgColumn.GetStyleDiv());
+
+            builder.AddAttribute(k++, "onmouseup", OnMouseUp);
+            builder.AddContent(k++, bvgColumn.Name);
+            builder.CloseElement(); //div
+
 
 
             builder.CloseElement(); //th
@@ -67,6 +74,16 @@ namespace BlazorVirtualGridComponent
             CompGrid a = parent as CompGrid;
             a._parent.bvgGrid.SelectColumn(bvgColumn);
            
+        }
+
+        public async void OnMouseUp(UIMouseEventArgs e)
+        {
+           double w = await BvgJsInterop.GetElementActualWidth("MyDivColumn" + bvgColumn.ID);
+
+           if (bvgColumn.ColWidth!=w)
+           {
+             bvgColumn.ColWidth = w;
+           }
         }
 
 

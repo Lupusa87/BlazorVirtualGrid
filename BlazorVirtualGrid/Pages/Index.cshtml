@@ -10,22 +10,16 @@
 <button class="btn btn-primary" style="margin:5px" onclick="@CmdNewList1">new list 1</button>
 
 
-<button class="btn btn-primary" style="margin:5px" onclick="@CmdPinColList1">Pin col list 1</button>
+<button class="btn btn-primary" style="margin:5px" onclick="@CmdPinColList1" disabled="@FirstOrSecond">Pin col list 1</button>
 
 
-<button class="btn btn-primary" style="margin:5px;margin-left:50px" onclick="@CmdNewList2">new list 2</button>
+<button class="btn btn-primary" style="margin:5px;margin-left:50px" onclick="@CmdNewList2" >new list 2</button>
 
 
-
-
-
-
-<button class="btn btn-primary" style="margin:5px" onclick="@CmdPinColList2">Pin col list 2</button>
+<button class="btn btn-primary" style="margin:5px" onclick="@CmdPinColList2" disabled="@(!FirstOrSecond)">Pin col list 2</button>
 
 <br />
 <br />
-
-@*<CompBlazorVirtualGrid ref="CurrBVG"></CompBlazorVirtualGrid>*@
 
 
 <CompBlazorVirtualGrid ref="CurrBVG" bvgGrid="@_bvgGrid"></CompBlazorVirtualGrid>

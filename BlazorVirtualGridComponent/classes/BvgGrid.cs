@@ -35,7 +35,7 @@ namespace BlazorVirtualGridComponent.classes
             ActiveRow = parCell.bvgRow;
             ActiveColumn = parCell.bvgColumn;
 
-            Console.WriteLine("Select cell " + parCell.Value.ToString());
+          
             SelectActiveRow();
             SelectActiveCell(false);
         }
@@ -150,7 +150,7 @@ namespace BlazorVirtualGridComponent.classes
         public void Cmd_Clear_Selection()
         {
 
-            Console.WriteLine("count " + Rows.Where(x => x.Cells.Any(y => y.IsSelected)).Count());
+          
             foreach (var item in Rows.Where(x=>x.Cells.Any(y=>y.IsSelected)))
             {
                 item.Cmd_Clear_Selection();
@@ -191,6 +191,57 @@ namespace BlazorVirtualGridComponent.classes
                     InvokePropertyChanged();
                 }
             }
+        }
+
+
+        public void SetWidthToColumn(string name, double Par_Width)
+        {
+            if (Columns.Any())
+            {
+                if (Columns.Any(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                {
+
+
+                    BvgColumn c = Columns.Single(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                    c.ColWidth = Par_Width;
+
+                    InvokePropertyChanged();
+                }
+            }
+        }
+
+
+        public void SetColumnWidths(Dictionary<string, double> dict)
+        {
+
+            foreach (var item in dict)
+            {
+                if (Columns.Any())
+                {
+                    if (Columns.Any(x => x.Name.Equals(item.Key, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        BvgColumn c = Columns.Single(x => x.Name.Equals(item.Key, StringComparison.InvariantCultureIgnoreCase));
+                        c.ColWidth = item.Value;
+                    }
+                }
+            }
+
+
+            InvokePropertyChanged();
+        }
+
+
+        public Dictionary<string, double> GetColumnWidths()
+        {
+            Dictionary<string, double> result = new Dictionary<string, double>();
+
+            foreach (var item in Columns)
+            {
+                result.Add(item.Name, item.ColWidth);
+            }
+
+
+            return result;
         }
 
 

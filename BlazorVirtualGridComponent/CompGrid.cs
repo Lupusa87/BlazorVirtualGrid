@@ -45,9 +45,6 @@ namespace BlazorVirtualGridComponent
         protected void Cmd_RenderTable(RenderTreeBuilder builder)
         {
 
-
-            Console.WriteLine("Cmd_RenderTable");
-
             BvgGrid bvgGrid = _parent.bvgGrid;
 
             if(bvgGrid.Columns.Count == 0)
@@ -75,7 +72,7 @@ namespace BlazorVirtualGridComponent
 
             foreach (BvgColumn c in bvgGrid.Columns.OrderBy(x=>x.SequenceNumber))
             {
-                Console.WriteLine("Render Col " + c.Name);
+          
                 builder.OpenComponent<CompColumn>(k++);
                 builder.AddAttribute(k++, "bvgColumn", c);
                 builder.AddAttribute(k++, "parent", this);

@@ -7,10 +7,19 @@ namespace BlazorVirtualGridComponent
     {
         public static Task<string> Prompt(string message)
         {
-            // Implemented in exampleJsInterop.js
             return JSRuntime.Current.InvokeAsync<string>(
-                "exampleJsFunctions.showPrompt",
+                "BvgJsFunctions.showPrompt",
                 message);
         }
+
+
+
+        public static Task<double> GetElementActualWidth(string elementID)
+        {
+            return JSRuntime.Current.InvokeAsync<double>(
+                "BvgJsFunctions.GetElementActualWidth", elementID);
+        }
+
+        
     }
 }

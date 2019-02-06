@@ -27,7 +27,7 @@ namespace BlazorVirtualGridComponent.classes
                 item.IsSelected = false;
                 item.bvgStyle = new BvgStyle();
                 item.InvokePropertyChanged();
-                Console.WriteLine("Cmd_Clear_Selection " + item.Value.ToString());
+
             }
 
         }

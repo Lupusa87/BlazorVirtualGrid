@@ -15,61 +15,78 @@ namespace BlazorVirtualGrid.Pages
 
 
         Random rnd1 = new Random();
-
-
-        GenericAdapter<MyItem> GenericAdapter1 = new GenericAdapter<MyItem>();
-        GenericAdapter<MyItem2> GenericAdapter2 = new GenericAdapter<MyItem2>();
+        readonly GenericAdapter<MyItem> GenericAdapter1 = new GenericAdapter<MyItem>();
+        readonly GenericAdapter<MyItem2> GenericAdapter2 = new GenericAdapter<MyItem2>();
 
         public CompBlazorVirtualGrid CurrBVG = new CompBlazorVirtualGrid();
+
+
+        public bool FirstOrSecond = false;
 
 
         private List<MyItem> list1 = new List<MyItem>();
 
         private List<MyItem2> list2 = new List<MyItem2>();
 
-        bool FirstLoad = true;
 
         public BvgGrid _bvgGrid = new BvgGrid();
 
-
+        Dictionary<string, Dictionary<string, double>> SavedColumnWitdths_Dict = new Dictionary<string, Dictionary<string, double>>();
 
         protected override void OnInit()
         {
             FillList();
             _bvgGrid = GenericAdapter1.Convert(list1, "Table1");
-
+            _bvgGrid.SetWidthToColumn(nameof(MyItem.N3), 200);
             base.OnInit();
         }
 
-        //protected override void OnAfterRender()
-        //{
-        //    if (FirstLoad)
-        //    {
-        //        FirstLoad = false;
 
-        //    }
+        public void GetColumnsWidth()
+        {
+            if (SavedColumnWitdths_Dict.ContainsKey(_bvgGrid.Name))
+            {
+                SavedColumnWitdths_Dict[_bvgGrid.Name] = _bvgGrid.GetColumnWidths();
+            }
+            else
+            {
+                SavedColumnWitdths_Dict.Add(_bvgGrid.Name, _bvgGrid.GetColumnWidths());
+            }
+        }
 
-
-        //    base.OnAfterRender();
-        //}
 
         public void CmdNewList1()
         {
-            Console.WriteLine("________________");
+            FirstOrSecond = false;
 
             FillList();
-            _bvgGrid = GenericAdapter1.Convert(list1, "Table 1");
+
+            GetColumnsWidth();
+            _bvgGrid = GenericAdapter1.Convert(list1, "Table1");
+
+
+            if (SavedColumnWitdths_Dict.ContainsKey(_bvgGrid.Name))
+            {
+                _bvgGrid.SetColumnWidths(SavedColumnWitdths_Dict[_bvgGrid.Name]);
+            }
+
 
         }
 
 
         public void CmdNewList2()
         {
-            Console.WriteLine("________________");
-
+            FirstOrSecond = true;
             FillList2();
+
+            GetColumnsWidth();
             _bvgGrid = GenericAdapter2.Convert(list2, "persons");
 
+
+            if (SavedColumnWitdths_Dict.ContainsKey(_bvgGrid.Name))
+            {
+                _bvgGrid.SetColumnWidths(SavedColumnWitdths_Dict[_bvgGrid.Name]);
+            }
         }
 
         public void CmdPinColList1()

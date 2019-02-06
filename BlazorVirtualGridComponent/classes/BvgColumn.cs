@@ -32,14 +32,16 @@ namespace BlazorVirtualGridComponent.classes
 
         //public CompColumn CompReference { get; set; }
 
+        public double ColWidth { get; set; } = 100;
 
-        public string GetStyle()
+
+        public string GetStyleTh()
         {
 
             StringBuilder sb1 = new StringBuilder();
 
 
-            sb1.Append("text-align:center;border-style:solid;width:100px;height:35px;margin:1px;padding:2px;");
+             sb1.Append("text-align:center;border-style:solid;margin:1px;padding:2px;");
 
             if (!string.IsNullOrEmpty(bvgStyle.BackgroundColor))
             {
@@ -82,6 +84,28 @@ namespace BlazorVirtualGridComponent.classes
 
         }
 
+
+        public string GetStyleDiv()
+        {
+
+            StringBuilder sb1 = new StringBuilder();
+
+
+            sb1.Append("width:"+ColWidth+"px;min-width:100px;height:35px;line-height:35px;resize:horizontal;");
+
+          
+
+            if (IsSelected)
+            {
+
+                sb1.Append("overflow:auto;");
+
+            }
+           
+
+            return sb1.ToString();
+
+        }
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
