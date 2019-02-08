@@ -18,6 +18,12 @@ namespace BlazorVirtualGridComponent.classes
 
         public bool IsSelected { get; set; }
 
+
+        public bool IsInView { get; set; }
+
+        public BvgGrid bvgGrid { get; set; } = new BvgGrid();
+
+
         public BvgStyle bvgStyle { get; set; } = new BvgStyle();
 
         public void Cmd_Clear_Selection()

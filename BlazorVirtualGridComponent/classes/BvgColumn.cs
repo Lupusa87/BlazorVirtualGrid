@@ -27,6 +27,8 @@ namespace BlazorVirtualGridComponent.classes
         public int SequenceNumber { get; set; }
 
 
+        public BvgGrid bvgGrid { get; set; } = new BvgGrid();
+
         public BvgStyle bvgStyle { get; set; } = new BvgStyle();
 
 
@@ -91,7 +93,7 @@ namespace BlazorVirtualGridComponent.classes
             StringBuilder sb1 = new StringBuilder();
 
 
-            sb1.Append("width:"+ColWidth+"px;min-width:100px;height:35px;line-height:35px;resize:horizontal;");
+            sb1.Append("width:"+ColWidth+"px;min-width:100px;height:"+bvgGrid.HeaderHeight+ "px;line-height:" + bvgGrid.HeaderHeight + "px;resize:horizontal;");
 
           
 

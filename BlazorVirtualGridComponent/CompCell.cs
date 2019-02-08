@@ -18,12 +18,12 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected BvgCell bvgCell { get; set; }
 
-        public CompRow _parent;
+        public CompBlazorVirtualGrid _parent;
 
         protected override void OnInit()
         {
             
-            _parent = parent as CompRow;
+            _parent = parent as CompBlazorVirtualGrid;
         }
 
         private void BvgCell_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -33,6 +33,8 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+
+
             bvgCell.PropertyChanged += BvgCell_PropertyChanged;
             int k = -1;
             builder.OpenElement(k++, "td");
@@ -51,18 +53,9 @@ namespace BlazorVirtualGridComponent
 
         public void Clicked(UIMouseEventArgs e)
         {
-
-            CompRow a = parent as CompRow;
-            a._parent._parent.bvgGrid.SelectCell(bvgCell);
+            _parent.bvgGrid.SelectCell(bvgCell);
 
         }
-
-
-
-        //public void Refresh()
-        //{
-        //    StateHasChanged();
-        //}
 
 
         public void Dispose()

@@ -35,9 +35,9 @@ namespace BlazorVirtualGrid.Pages
 
         protected override void OnInit()
         {
-            FillList();
+            FillList(200,300);
             _bvgGrid = GenericAdapter1.Convert(list1, "Table1");
-            _bvgGrid.SetWidthToColumn(nameof(MyItem.N3), 200);
+           // _bvgGrid.SetWidthToColumn(nameof(MyItem.N3), 200);
             base.OnInit();
         }
 
@@ -59,7 +59,7 @@ namespace BlazorVirtualGrid.Pages
         {
             FirstOrSecond = false;
 
-            FillList();
+            FillList(200,300);
 
             GetColumnsWidth();
             _bvgGrid = GenericAdapter1.Convert(list1, "Table1");
@@ -77,7 +77,7 @@ namespace BlazorVirtualGrid.Pages
         public void CmdNewList2()
         {
             FirstOrSecond = true;
-            FillList2();
+            FillList2(200,300);
 
             GetColumnsWidth();
             _bvgGrid = GenericAdapter2.Convert(list2, "persons");
@@ -141,10 +141,11 @@ namespace BlazorVirtualGrid.Pages
             };
         }
 
-            private void FillList()
+        private void FillList(int Par_Min, int Par_Max)
         {
+
             list1 = new List<MyItem>();
-            for (int i = 1; i <= rnd1.Next(4, 10); i++)
+            for (int i = 1; i <= rnd1.Next(Par_Min, Par_Max); i++)
             {
                 list1.Add(new MyItem
                 {
@@ -164,10 +165,10 @@ namespace BlazorVirtualGrid.Pages
             }
         }
 
-        private void FillList2()
+        private void FillList2(int Par_Min, int Par_Max)
         {
             list2 = new List<MyItem2>();
-            for (int i = 1; i <= rnd1.Next(2, 10); i++)
+            for (int i = 1; i <= rnd1.Next(Par_Min, Par_Max); i++)
             {
                 list2.Add(new MyItem2
                 {

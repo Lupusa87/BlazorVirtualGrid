@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent.classes
@@ -28,6 +29,40 @@ namespace BlazorVirtualGridComponent.classes
         public BvgCell ActiveCell;
         public BvgRow ActiveRow;
         public BvgColumn ActiveColumn;
+
+
+        public BvgScroll VericalScroll { get; set; } = null;
+        public BvgScroll HorizontalScroll { get; set; } = null;
+
+
+        public double width { get; set; } = 1000;
+        public double height { get; set; } = 600;
+
+        public double HeaderHeight { get; set; } = 50;
+        public double RowHeight { get; set; } = 40;
+
+        public double ColMinWidth { get; set; } = 100;
+
+
+        public int DisplayedRowsCount { get; set; }
+
+
+        public int CurrScrollPosition { get; set; } = 0;
+
+
+        public BvgAreaRows bvgAreaRows { get; set; } = new BvgAreaRows();
+
+
+        public string GetStyle()
+        {
+
+            StringBuilder sb1 = new StringBuilder();
+
+            sb1.Append("table-layout:fixed;width:" + width + "px;");
+
+            return sb1.ToString();
+
+        }
 
         public void SelectCell(BvgCell parCell)
         {
@@ -255,6 +290,43 @@ namespace BlazorVirtualGridComponent.classes
         public void InvokePropertyChanged()
         {
             PropertyChanged?.Invoke(this, null);
+        }
+
+
+
+        public void OnVerticalScroll()
+        {
+
+            foreach (var item in Rows.Where(x => x.IsInView))
+            {
+                item.IsInView = false;
+            }
+
+
+
+            int Curr_Skip = (int)(CurrScrollPosition / RowHeight);
+
+
+            if (Curr_Skip > 0)
+            {
+
+                foreach (var item in Rows.Skip(Curr_Skip).Take(DisplayedRowsCount))
+                {
+                    item.IsInView = true;
+                }
+            }
+            else
+            {
+                foreach (var item in Rows.Take(DisplayedRowsCount))
+                {
+                    item.IsInView = true;
+                }
+
+            }
+
+            bvgAreaRows.InvokePropertyChanged();
+
+
         }
 
     }

@@ -17,11 +17,11 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         public BvgColumn bvgColumn { get; set; }
 
-        public CompGrid _parent;
+        public CompBlazorVirtualGrid _parent;
 
         protected override void OnInit()
         {
-            _parent = parent as CompGrid;
+            _parent = parent as CompBlazorVirtualGrid;
         }
 
         private void BvgColumn_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -42,16 +42,6 @@ namespace BlazorVirtualGridComponent
             builder.AddAttribute(k++, "style", bvgColumn.GetStyleTh());
             builder.AddAttribute(k++, "onclick", Clicked);
 
-
-     
-            //builder.AddElementReferenceCapture(k++, (elementReference) =>
-            //{
-
-            //    Elementreferences_Dictionary.Add(_value_id, elementReference);
-
-            //});
-
-
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", "MyDivColumn" + bvgColumn.ID);
             builder.AddAttribute(k++, "style", bvgColumn.GetStyleDiv());
@@ -71,8 +61,8 @@ namespace BlazorVirtualGridComponent
 
         public void Clicked(UIMouseEventArgs e)
         {
-            CompGrid a = parent as CompGrid;
-            a._parent.bvgGrid.SelectColumn(bvgColumn);
+
+            _parent.bvgGrid.SelectColumn(bvgColumn);
            
         }
 
@@ -85,12 +75,6 @@ namespace BlazorVirtualGridComponent
              bvgColumn.ColWidth = w;
            }
         }
-
-
-        //public void Refresh()
-        //{
-        //    StateHasChanged();
-        //}
 
 
         public void Dispose()

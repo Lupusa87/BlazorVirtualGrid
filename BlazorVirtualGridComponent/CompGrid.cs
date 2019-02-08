@@ -27,6 +27,15 @@ namespace BlazorVirtualGridComponent
             
         }
 
+
+        protected override void OnAfterRender()
+        {
+           // BvgJsInterop.SetScrollTopPosition("VerticalScroll" + _parent.bvgGrid.VericalScroll.ID,0);
+           // BvgJsInterop.SetScrollTopPosition("HorizontalScroll" + _parent.bvgGrid.HorizontalScroll.ID, 0);
+
+            base.OnAfterRender();
+        }
+
         private void BvgGrid_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             StateHasChanged();
@@ -34,6 +43,7 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+
             _parent.bvgGrid.PropertyChanged += BvgGrid_PropertyChanged;
             Cmd_RenderTable(builder);
 
@@ -45,6 +55,9 @@ namespace BlazorVirtualGridComponent
         protected void Cmd_RenderTable(RenderTreeBuilder builder)
         {
 
+
+            
+
             BvgGrid bvgGrid = _parent.bvgGrid;
 
             if(bvgGrid.Columns.Count == 0)
@@ -55,18 +68,17 @@ namespace BlazorVirtualGridComponent
 
 
             int k = -1;
+
             builder.OpenElement(k++, "table");
-          
+            builder.OpenElement(k++, "tr");
+            builder.OpenElement(k++, "td");
+            builder.AddAttribute(k++, "valign", "top");
+
+            builder.OpenElement(k++, "table");
+            builder.AddAttribute(k++, "style", bvgGrid.GetStyle());
+
             builder.OpenElement(k++, "thead");
             builder.OpenElement(k++, "tr");
-
-            //builder.OpenElement(k++, "th");
-
-            //builder.AddAttribute(k++, "style", "width:20px;height:35px;margin:1px;padding:2px");
-            //builder.AddContent(k++, "");
-
-            //builder.CloseElement(); //th
-
 
 
 
@@ -75,14 +87,7 @@ namespace BlazorVirtualGridComponent
           
                 builder.OpenComponent<CompColumn>(k++);
                 builder.AddAttribute(k++, "bvgColumn", c);
-                builder.AddAttribute(k++, "parent", this);
-              
-
-                //builder.AddComponentReferenceCapture(k++, (compReference) =>
-                //{
-                //    c.CompReference = compReference as CompColumn;
-                //});
-
+                builder.AddAttribute(k++, "parent", parent);
                 builder.CloseComponent();
                 
             }
@@ -91,28 +96,52 @@ namespace BlazorVirtualGridComponent
             builder.CloseElement(); //tr
             builder.CloseElement(); //thead
 
-            builder.OpenElement(k++, "tbody");
+            builder.OpenComponent<CompAreaRows>(k++);
+            builder.AddAttribute(k++, "bvgAreaRows", bvgGrid.bvgAreaRows);
+            builder.AddAttribute(k++, "parent", parent);
+            builder.CloseComponent();
+
+            builder.CloseElement(); //table
 
 
-            foreach (var r in bvgGrid.Rows)
-            {
-                builder.OpenComponent<CompRow>(k++);
-                builder.AddAttribute(k++, "bvgRow", r);
-                builder.AddAttribute(k++, "parent", this);
 
 
-                //builder.AddComponentReferenceCapture(k++, (compReference) =>
-                //{
-                //    r.CompReference = compReference as CompRow;
-                //});
-
-                builder.CloseComponent();
-            }
 
 
-            builder.CloseElement(); //tbody
+            builder.CloseElement(); //td
+            builder.OpenElement(k++, "td");
 
-            builder.CloseElement(); //table  
+            builder.OpenComponent<CompScroll>(k++);
+            builder.AddAttribute(k++, "bvgScroll", bvgGrid.VericalScroll);
+            builder.AddAttribute(k++, "parent", parent);
+
+            builder.CloseComponent();
+
+            builder.CloseElement(); //td
+
+
+
+
+            
+            builder.CloseElement(); //tr
+
+            builder.OpenElement(k++, "tr");
+            builder.OpenElement(k++, "td");
+
+
+            builder.OpenComponent<CompScroll>(k++);
+            builder.AddAttribute(k++, "bvgScroll", bvgGrid.HorizontalScroll);
+            builder.AddAttribute(k++, "parent", parent);
+
+            builder.CloseComponent();
+
+
+
+            builder.CloseElement(); //td
+            builder.CloseElement(); //tr
+
+            builder.CloseElement(); //table
+
 
         }
 
@@ -126,13 +155,6 @@ namespace BlazorVirtualGridComponent
             //b.SelectionChange(bcell.ID);
         }
 
-
-
-
-        //public void Refresh()
-        //{
-        //    StateHasChanged();  
-        //}
 
         public void Dispose()
         {

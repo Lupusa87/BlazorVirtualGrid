@@ -21,7 +21,7 @@ namespace BlazorVirtualGridComponent.classes
         public BvgColumn bvgColumn { get; set; } = new BvgColumn();
         public BvgRow bvgRow { get; set; } = new BvgRow();
 
-
+        public BvgGrid bvgGrid { get; set; } = new BvgGrid();
 
         public BvgStyle bvgStyle { get; set; } = new BvgStyle();
 
@@ -35,9 +35,10 @@ namespace BlazorVirtualGridComponent.classes
         {
 
             StringBuilder sb1 = new StringBuilder();
+           
 
-
-            sb1.Append("border-style:solid;width:"+bvgColumn.ColWidth+"px;height:35px;margin:1px;padding:2px;");
+            sb1.Append("border-style:solid;width:" + bvgColumn.ColWidth+ "px;height:" + bvgGrid.RowHeight + "px;");
+            sb1.Append("overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin:1px;padding:2px;");
 
             if (!string.IsNullOrEmpty(bvgStyle.BackgroundColor))
             {
