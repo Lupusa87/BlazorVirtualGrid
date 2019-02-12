@@ -19,4 +19,13 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Build" Version="3.0.0-preview-19075-0444" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="BlazorScrollbarComponent">
+      <HintPath>..\..\BlazorScrollbar\BlazorScrollbarComponent\bin\Debug\netstandard2.0\BlazorScrollbarComponent.dll</HintPath>
+    </Reference>
+    <Reference Include="BlazorSplitterComponent">
+      <HintPath>..\..\BlazorSplitter\BlazorSplitterComponent\bin\Debug\netstandard2.0\BlazorSplitterComponent.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

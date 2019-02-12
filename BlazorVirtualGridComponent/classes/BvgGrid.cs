@@ -16,6 +16,8 @@ namespace BlazorVirtualGridComponent.classes
 
         public bool IsReady { get; set; } = false;
 
+        public string GridDivElementID { get; set; } = "GridDiv"+ Guid.NewGuid().ToString("d").Substring(1, 4);
+
 
         public string Name { get; set; } = "null";
 
@@ -35,7 +37,14 @@ namespace BlazorVirtualGridComponent.classes
         public BvgScroll HorizontalScroll { get; set; } = null;
 
 
-        public double width { get; set; } = 1000;
+        public double totalWidth { get; set; } = 1000;
+
+
+        public double FrozenWidth { get; set; } = 0;
+        public double NotFrozenWidth { get; set; } = 0;
+
+        public double HorizontalScrollBarScale { get; set; } = 0;
+
         public double height { get; set; } = 600;
 
         public double HeaderHeight { get; set; } = 50;
@@ -53,12 +62,38 @@ namespace BlazorVirtualGridComponent.classes
         public BvgAreaRows bvgAreaRows { get; set; } = new BvgAreaRows();
 
 
-        public string GetStyle()
+        public string GetStyleTable(bool ForFrozen)
         {
 
             StringBuilder sb1 = new StringBuilder();
 
-            sb1.Append("table-layout:fixed;width:" + width + "px;");
+            //sb1.Append("table-layout:fixed;width:" + width + "px;");
+
+            if (ForFrozen)
+            {
+                sb1.Append("border: 1px solid black;width:" + FrozenWidth + "px;");
+            }
+            else
+            {
+                sb1.Append("border: 1px solid black;width:" + NotFrozenWidth + "px;");
+            }
+
+
+            sb1.Append("margin:0;padding:0;");
+
+
+            return sb1.ToString();
+
+        }
+
+
+        public string GetStyleDiv()
+        {
+
+            StringBuilder sb1 = new StringBuilder();
+
+            sb1.Append("margin:0;padding:0;");
+            sb1.Append("width:" + (NotFrozenWidth + 5) + "px;height:" + height+ "px;overflow-x:scroll;overflow-y:hidden;");
 
             return sb1.ToString();
 
@@ -156,7 +191,13 @@ namespace BlazorVirtualGridComponent.classes
             }
 
 
+
+            ActiveColumn.BSplitter.SetColor(ActiveColumn.bvgStyle.BackgroundColor);
+
             ActiveColumn.InvokePropertyChanged();
+
+            
+
         }
 
 
@@ -196,6 +237,7 @@ namespace BlazorVirtualGridComponent.classes
             {
                 item.IsSelected = false;
                 item.bvgStyle = new BvgStyle();
+                item.BSplitter.SetColor(item.bvgStyle.BackgroundColor);
                 item.InvokePropertyChanged();
             }
 
@@ -210,7 +252,9 @@ namespace BlazorVirtualGridComponent.classes
                 if (Columns.Any(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
                 {
 
+                   
                     Cmd_Clear_Selection();
+                   
 
                     foreach (var item in Columns.Where(x => x.IsFrozen))
                     {
@@ -223,8 +267,35 @@ namespace BlazorVirtualGridComponent.classes
                     c.SequenceNumber = 0;
 
 
+                    CalculateWidths();
+
                     InvokePropertyChanged();
                 }
+            }
+        }
+
+
+        public void FreezeColumns(List<string> names)
+        {
+            if (Columns.Any())
+            {
+                Cmd_Clear_Selection();
+
+
+                for (int i = 0; i < names.Count; i++)
+                {
+                    if (Columns.Any(x => x.Name.Equals(names[i], StringComparison.InvariantCultureIgnoreCase)))
+                    {
+
+                        BvgColumn c = Columns.Single(x => x.Name.Equals(names[i], StringComparison.InvariantCultureIgnoreCase));
+                        c.IsFrozen = true;
+                        c.SequenceNumber = 0 - names.Count+i;
+                    }
+                }
+
+                CalculateWidths();
+
+                InvokePropertyChanged();
             }
         }
 
@@ -235,7 +306,6 @@ namespace BlazorVirtualGridComponent.classes
             {
                 if (Columns.Any(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
                 {
-
 
                     BvgColumn c = Columns.Single(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                     c.ColWidth = Par_Width;
@@ -329,5 +399,63 @@ namespace BlazorVirtualGridComponent.classes
 
         }
 
+        public void UpdateHorizontalScroll()
+        {
+            double b = Columns.Where(x => x.IsFrozen == false).Sum(x => x.ColWidth);
+
+            Console.WriteLine("b " + b);
+
+            Console.WriteLine("HorizontalScrollBarScale " + HorizontalScrollBarScale);
+
+            Console.WriteLine("scrollable width " + HorizontalScroll.bsbSettings.ThumbWaySize);
+           
+         
+
+
+            if (b * HorizontalScrollBarScale > HorizontalScroll.bsbSettings.ThumbWaySize)
+            {
+
+                Console.WriteLine("inside");
+
+                //HorizontalScroll.compBlazorScrollbar.SetScrollWidth(b * HorizontalScrollBarScale);
+
+
+                if (!HorizontalScroll.IsVisible)
+                {
+                    Console.WriteLine("inside 2");
+                    HorizontalScroll.IsVisible = true;
+                    //HorizontalScroll.compBlazorScrollbar.SetVisibility(HorizontalScroll.bsbSettings.IsVisible);
+                    InvokePropertyChanged();
+                }
+
+            }
+            else
+            {
+
+                Console.WriteLine("inside 3");
+
+                if (HorizontalScroll.IsVisible)
+                {
+                    HorizontalScroll.IsVisible = false;
+                   
+
+                    InvokePropertyChanged();
+                }
+            }
+        }
+
+
+        public void CalculateWidths()
+        {
+            FrozenWidth = Columns.Where(x => x.IsFrozen).Sum(x => x.ColWidth);
+            NotFrozenWidth = Columns.Where(x => x.IsFrozen == false).Sum(x => x.ColWidth);
+
+            HorizontalScroll.bsbSettings.ThumbWaySize = totalWidth + 5 - HorizontalScroll.bsbSettings.ButtonSize * 2;
+            HorizontalScrollBarScale = HorizontalScroll.bsbSettings.ThumbWaySize / NotFrozenWidth;
+            if (HorizontalScrollBarScale < 1)
+            {
+                HorizontalScrollBarScale = 1;
+            }
+        }
     }
 }

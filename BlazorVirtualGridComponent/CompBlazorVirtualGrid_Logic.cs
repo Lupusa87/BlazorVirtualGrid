@@ -17,6 +17,8 @@ namespace BlazorVirtualGridComponent
         public CompGrid CompGrid1 = new CompGrid();
 
 
+        private bool FirstLoad = true;
+
         protected override void OnInit()
         {
             //bvgGrid.OnChange = OnChange;
@@ -28,6 +30,8 @@ namespace BlazorVirtualGridComponent
         protected override void OnAfterRender()
         {
             //bvgGrid.CompReference = CompGrid1;
+
+           
 
             base.OnAfterRender();
         }

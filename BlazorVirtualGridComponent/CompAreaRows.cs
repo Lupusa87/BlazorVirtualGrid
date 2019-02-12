@@ -16,6 +16,9 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected BvgAreaRows bvgAreaRows { get; set; }
 
+        [Parameter]
+        protected bool ForFrozen { get; set; }
+
         public CompBlazorVirtualGrid _parent;
 
         protected override void OnInit()
@@ -40,6 +43,7 @@ namespace BlazorVirtualGridComponent
             foreach (var r in _parent.bvgGrid.Rows.Where(x => x.IsInView))
             {
                 builder.OpenComponent<CompRow>(k++);
+                builder.AddAttribute(k++, "ForFrozen", ForFrozen);
                 builder.AddAttribute(k++, "bvgRow", r);
                 builder.AddAttribute(k++, "parent", parent);
                 builder.CloseComponent();

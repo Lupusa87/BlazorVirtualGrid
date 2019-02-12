@@ -37,7 +37,17 @@ namespace BlazorVirtualGrid.Pages
         {
             FillList(200,300);
             _bvgGrid = GenericAdapter1.Convert(list1, "Table1");
-           // _bvgGrid.SetWidthToColumn(nameof(MyItem.N3), 200);
+
+
+            //List<string> frozenCols = new List<string>();
+
+            //frozenCols.Add(nameof(MyItem.N3));
+            //frozenCols.Add(nameof(MyItem.Date));
+
+            //_bvgGrid.FreezeColumns(frozenCols);
+            
+
+            // _bvgGrid.SetWidthToColumn(nameof(MyItem.N3), 200);
             base.OnInit();
         }
 
@@ -73,6 +83,11 @@ namespace BlazorVirtualGrid.Pages
 
         }
 
+        public void Cmdqwer()
+        {
+            _bvgGrid.UpdateHorizontalScroll();
+        }
+            
 
         public void CmdNewList2()
         {
@@ -159,7 +174,7 @@ namespace BlazorVirtualGrid.Pages
                     N3 = Guid.NewGuid().ToString("d").Substring(1, 4),
                     N4 = Guid.NewGuid().ToString("d").Substring(1, 4),
                     N5 = Guid.NewGuid().ToString("d").Substring(1, 4),
-
+                    N6 = Guid.NewGuid().ToString("d").Substring(1, 4),
 
                 });
             }
@@ -193,7 +208,8 @@ namespace BlazorVirtualGrid.Pages
             public string N3 { get; set; }
             public string N4 { get; set; }
             public string N5 { get; set; }
-         
+            public string N6 { get; set; }
+
         }
 
 

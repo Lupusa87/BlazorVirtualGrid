@@ -1,4 +1,6 @@
-﻿using BlazorVirtualGridComponent.classes;
+﻿using BlazorScrollbarComponent.classes;
+using BlazorSplitterComponent;
+using BlazorVirtualGridComponent.classes;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,7 +25,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (PropertyInfo prop in Props)
             {
-               
+
                 var t = (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>) ? Nullable.GetUnderlyingType(prop.PropertyType) : prop.PropertyType);
 
                 BvgColumn col = new BvgColumn
@@ -68,39 +70,59 @@ namespace BlazorVirtualGridComponent.businessLayer
             }
 
 
-            double cw =Math.Round(result.width / result.Columns.Count-5,2);
-          
+            double cw =Math.Round(result.totalWidth / result.Columns.Count,2);
+
             foreach (var item in result.Columns)
             {
                 item.ColWidth = cw;
+             
+                item.bsSettings = new BsSettings
+                {
+                    VerticalOrHorizontal = false,
+                    index = result.Columns.Count,
+                    width = 5,
+                    height = result.HeaderHeight - item.bvgStyle.BorderWidth*2,
+                    //BgColor = item.bvgStyle.BackgroundColor,
+                    BgColor = "red",
+                };
             }
 
             
             result.VericalScroll = new BvgScroll
             {
-                IsVerticalOrHorizontal = true,
                 ID = Guid.NewGuid().ToString("d").Substring(1, 4),
-                ScrollWidth = 16,
-                ScrollHeight = result.height,
-                ContentSize = result.Rows.Count * (result.RowHeight+2.05),
+                bsbSettings = new BsbSettings {
+
+                     VerticalOrHorizontal = true,
+                     width = 16,
+                     height = result.height,
+                     ScrollSize = result.Rows.Count * result.RowHeight,
+
+                 }
             };
 
             result.HorizontalScroll = new BvgScroll
             {
-                IsVerticalOrHorizontal = false,
+               
                 ID = Guid.NewGuid().ToString("d").Substring(1, 4),
-                ScrollWidth = result.width,
-                ScrollHeight = 16,
-                ContentSize = 3000,
+                bsbSettings = new BsbSettings
+                {
+
+                    VerticalOrHorizontal = false,
+                    width = result.totalWidth+5,
+                    height = 16,
+                    ScrollSize = 2000,
+
+                }
             };
 
 
 
             result.DisplayedRowsCount = (int)((result.height - result.HeaderHeight) / result.RowHeight);
-            result.RowHeight =Math.Round((result.height - result.HeaderHeight) / result.DisplayedRowsCount);
+            result.RowHeight = Math.Round((result.height - result.HeaderHeight) / result.DisplayedRowsCount);
 
 
-            
+            result.CalculateWidths();
 
             result.OnVerticalScroll();
 

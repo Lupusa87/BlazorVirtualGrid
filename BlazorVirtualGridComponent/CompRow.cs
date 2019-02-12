@@ -17,6 +17,11 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected BvgRow bvgRow { get; set; }
 
+
+        [Parameter]
+        protected bool ForFrozen { get; set; }
+
+
         public CompBlazorVirtualGrid _parent;
 
         protected override void OnInit()
@@ -40,10 +45,13 @@ namespace BlazorVirtualGridComponent
 
             foreach (var cell in bvgRow.Cells.OrderBy(x=>x.bvgColumn.SequenceNumber))
             {
-                builder.OpenComponent<CompCell>(k++);
-                builder.AddAttribute(k++, "bvgCell", cell);
-                builder.AddAttribute(k++, "parent", parent);
-                builder.CloseComponent();
+                if (cell.bvgColumn.IsFrozen == ForFrozen)
+                {
+                    builder.OpenComponent<CompCell>(k++);
+                    builder.AddAttribute(k++, "bvgCell", cell);
+                    builder.AddAttribute(k++, "parent", parent);
+                    builder.CloseComponent();
+                }
             }
 
             builder.CloseElement(); //tr

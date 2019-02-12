@@ -31,14 +31,14 @@ namespace BlazorVirtualGridComponent.classes
         //public CompCell CompReference { get; set; }
 
 
-        public string GetStyle()
+        public string GetStyleTD()
         {
 
             StringBuilder sb1 = new StringBuilder();
-           
 
-            sb1.Append("border-style:solid;width:" + bvgColumn.ColWidth+ "px;height:" + bvgGrid.RowHeight + "px;");
-            sb1.Append("overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin:1px;padding:2px;");
+            sb1.Append("margin:0px;padding:0px;");
+            sb1.Append("border-style:solid;width:" + bvgColumn.ColWidth + "px;height:" + bvgGrid.RowHeight + "px;");
+
 
             if (!string.IsNullOrEmpty(bvgStyle.BackgroundColor))
             {
@@ -72,10 +72,22 @@ namespace BlazorVirtualGridComponent.classes
                 sb1.Append("border-width:" + bvgStyle.BorderWidth + "px;");
             }
 
-            else
-            {
-                sb1.Append("border-width:1px;");
-            }
+            
+
+            return sb1.ToString();
+
+        }
+
+
+        public string GetStyleDiv()
+        {
+
+            StringBuilder sb1 = new StringBuilder();
+
+           
+            sb1.Append("width:" + (bvgColumn.ColWidth- bvgStyle.BorderWidth) + "px;height:" + (bvgGrid.RowHeight- bvgStyle.BorderWidth) + "px;line-height:" + (bvgGrid.RowHeight - bvgStyle.BorderWidth) + "px;");
+            sb1.Append("overflow:hidden;white-space:nowrap;text-overflow:ellipsis;");
+            sb1.Append("margin:0px;padding:0px;");
 
             return sb1.ToString();
 

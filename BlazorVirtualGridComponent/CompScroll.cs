@@ -1,4 +1,6 @@
-﻿using BlazorVirtualGridComponent.classes;
+﻿using BlazorScrollbarComponent;
+using BlazorScrollbarComponent.classes;
+using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 using System;
@@ -20,11 +22,32 @@ namespace BlazorVirtualGridComponent
 
         public CompBlazorVirtualGrid _parent;
 
+        private bool FirstLoad = true;
+
         protected override void OnInit()
         {
-
+            bvgScroll.PropertyChanged += BvgScroll_PropertyChanged;
             _parent = parent as CompBlazorVirtualGrid;
         }
+
+        protected override void OnAfterRender()
+        {
+
+            if (FirstLoad)
+            {
+                FirstLoad = false;
+                
+                if (!bvgScroll.bsbSettings.VerticalOrHorizontal)
+                {
+                    Console.WriteLine("abc");
+                    _parent.bvgGrid.UpdateHorizontalScroll();
+                }
+            }
+
+            base.OnAfterRender();
+        }
+
+
 
         private void BvgScroll_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -33,46 +56,30 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            bvgScroll.PropertyChanged += BvgScroll_PropertyChanged;
+            Console.WriteLine("BuildRenderTree scroll");
 
             int k = -1;
-            builder.OpenElement(k++, "div");
-
-
-            if (bvgScroll.IsVerticalOrHorizontal)
+            builder.OpenComponent<CompBlazorScrollbar>(k++);
+            builder.AddAttribute(k++, "bsbSettings", RuntimeHelpers.TypeCheck<BsbSettings>(bvgScroll.bsbSettings));
+            builder.AddAttribute(k++, "OnPositionChange", new Action<int>(onscroll));
+            builder.AddComponentReferenceCapture(k++, (c) =>
             {
-                builder.AddAttribute(k++, "id", "VerticalScroll" + bvgScroll.ID);
-            }
-            else
-            {
-                builder.AddAttribute(k++, "id", "HorizontalScroll" + bvgScroll.ID);
-            }
+                Console.WriteLine("component reference captured");
+                bvgScroll.compBlazorScrollbar = c as CompBlazorScrollbar;
+            });
 
-            builder.AddAttribute(k++, "style", bvgScroll.GetStyleDiv());
-            builder.AddAttribute(k++, "onscroll", onscroll);
-
-
-
-
-            builder.OpenElement(k++, "canvas");
-            builder.AddAttribute(k++, "style", bvgScroll.GetStyleCanvas());
-            builder.CloseElement();
-            
-            
-
-            builder.CloseElement();
+            builder.CloseComponent();
 
             base.BuildRenderTree(builder);
         }
 
 
-        public async void onscroll(UIEventArgs e)
+        private void onscroll(int ScrollPosition)
         {
-            int ScrollPosition = 0;
-            if (bvgScroll.IsVerticalOrHorizontal)
-            {
-                ScrollPosition = await BvgJsInterop.GetScrollTopPosition("VerticalScroll" + bvgScroll.ID);
 
+            if (bvgScroll.bsbSettings.VerticalOrHorizontal)
+            {
+             
                 if (Math.Abs(ScrollPosition - _parent.bvgGrid.CurrScrollPosition) > _parent.bvgGrid.RowHeight)
                 {
                     _parent.bvgGrid.CurrScrollPosition = ScrollPosition;
@@ -81,7 +88,7 @@ namespace BlazorVirtualGridComponent
             }
             else
             {
-                ScrollPosition = await BvgJsInterop.GetScrollLeftPosition("HorizontalScroll" + bvgScroll.ID);
+                BvgJsInterop.SetElementScrollLeft(_parent.bvgGrid.GridDivElementID, ScrollPosition * _parent.bvgGrid.HorizontalScrollBarScale);
             }
 
         }

@@ -22,7 +22,7 @@ namespace BlazorVirtualGridComponent
 
         protected override void OnInit()
         {
-            
+            bvgCell.PropertyChanged += BvgCell_PropertyChanged;
             _parent = parent as CompBlazorVirtualGrid;
         }
 
@@ -34,16 +34,27 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
 
+            //Console.WriteLine("BuildRenderTree cell");
+            
 
-            bvgCell.PropertyChanged += BvgCell_PropertyChanged;
             int k = -1;
             builder.OpenElement(k++, "td");
 
-            builder.AddAttribute(k++, "style", bvgCell.GetStyle());
+            builder.AddAttribute(k++, "align", "center");
+            builder.AddAttribute(k++, "valign", "middle");
+            builder.AddAttribute(k++, "style", bvgCell.GetStyleTD());
+
 
             builder.AddAttribute(k++, "onclick", Clicked);
+
+
+            builder.OpenElement(k++, "div");
+            builder.AddAttribute(k++, "style", bvgCell.GetStyleDiv());
             builder.AddContent(k++, bvgCell.Value.ToString());
-           
+            builder.CloseElement(); //div
+
+
+
             builder.CloseElement();
 
 
