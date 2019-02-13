@@ -13,6 +13,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public int ID { get; set; } = 1;
 
+        public BvgGrid bvgGrid { get; set; }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

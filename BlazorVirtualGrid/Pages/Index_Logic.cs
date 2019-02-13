@@ -18,7 +18,7 @@ namespace BlazorVirtualGrid.Pages
         readonly GenericAdapter<MyItem> GenericAdapter1 = new GenericAdapter<MyItem>();
         readonly GenericAdapter<MyItem2> GenericAdapter2 = new GenericAdapter<MyItem2>();
 
-        public CompBlazorVirtualGrid CurrBVG = new CompBlazorVirtualGrid();
+        public CompBlazorVirtualGrid CurrBVG;
 
 
         public bool FirstOrSecond = false;
@@ -29,39 +29,44 @@ namespace BlazorVirtualGrid.Pages
         private List<MyItem2> list2 = new List<MyItem2>();
 
 
-        public BvgGrid _bvgGrid = new BvgGrid();
+        public BvgGrid _bvgGrid;
 
         Dictionary<string, Dictionary<string, double>> SavedColumnWitdths_Dict = new Dictionary<string, Dictionary<string, double>>();
 
         protected override void OnInit()
         {
-            FillList(200,300);
+            FillList(200, 300);
+
+          
+
             _bvgGrid = GenericAdapter1.Convert(list1, "Table1");
 
 
-            //List<string> frozenCols = new List<string>();
+            List<string> frozenCols = new List<string>
+            {
+                nameof(MyItem.N3),
+                nameof(MyItem.Date)
+            };
 
-            //frozenCols.Add(nameof(MyItem.N3));
-            //frozenCols.Add(nameof(MyItem.Date));
+            _bvgGrid.FreezeColumns(frozenCols, false);
 
-            //_bvgGrid.FreezeColumns(frozenCols);
-            
 
-            // _bvgGrid.SetWidthToColumn(nameof(MyItem.N3), 200);
+            _bvgGrid.SetWidthToColumn(nameof(MyItem.N1), 300, false);
+
             base.OnInit();
         }
 
 
         public void GetColumnsWidth()
         {
-            if (SavedColumnWitdths_Dict.ContainsKey(_bvgGrid.Name))
-            {
-                SavedColumnWitdths_Dict[_bvgGrid.Name] = _bvgGrid.GetColumnWidths();
-            }
-            else
-            {
-                SavedColumnWitdths_Dict.Add(_bvgGrid.Name, _bvgGrid.GetColumnWidths());
-            }
+            //if (SavedColumnWitdths_Dict.ContainsKey(_bvgGrid.Name))
+            //{
+            //    SavedColumnWitdths_Dict[_bvgGrid.Name] = _bvgGrid.GetColumnWidths();
+            //}
+            //else
+            //{
+            //    SavedColumnWitdths_Dict.Add(_bvgGrid.Name, _bvgGrid.GetColumnWidths());
+            //}
         }
 
 
@@ -69,7 +74,7 @@ namespace BlazorVirtualGrid.Pages
         {
             FirstOrSecond = false;
 
-            FillList(200,300);
+            FillList(200, 300);
 
             GetColumnsWidth();
             _bvgGrid = GenericAdapter1.Convert(list1, "Table1");
@@ -77,7 +82,7 @@ namespace BlazorVirtualGrid.Pages
 
             if (SavedColumnWitdths_Dict.ContainsKey(_bvgGrid.Name))
             {
-                _bvgGrid.SetColumnWidths(SavedColumnWitdths_Dict[_bvgGrid.Name]);
+                _bvgGrid.SetColumnWidths(SavedColumnWitdths_Dict[_bvgGrid.Name], false);
             }
 
 
@@ -85,14 +90,16 @@ namespace BlazorVirtualGrid.Pages
 
         public void Cmdqwer()
         {
-            _bvgGrid.UpdateHorizontalScroll();
+           
+            
+           _bvgGrid.UpdateHorizontalScroll();
         }
             
 
         public void CmdNewList2()
         {
             FirstOrSecond = true;
-            FillList2(200,300);
+            FillList2(200, 300);
 
             GetColumnsWidth();
             _bvgGrid = GenericAdapter2.Convert(list2, "persons");
@@ -100,18 +107,18 @@ namespace BlazorVirtualGrid.Pages
 
             if (SavedColumnWitdths_Dict.ContainsKey(_bvgGrid.Name))
             {
-                _bvgGrid.SetColumnWidths(SavedColumnWitdths_Dict[_bvgGrid.Name]);
+                _bvgGrid.SetColumnWidths(SavedColumnWitdths_Dict[_bvgGrid.Name], false);
             }
         }
 
         public void CmdPinColList1()
         {
-            _bvgGrid.FreezeColumn(nameof(MyItem.N3));
+            _bvgGrid.FreezeColumn(nameof(MyItem.N3), true);
         }
 
         public void CmdPinColList2()
         {
-            _bvgGrid.FreezeColumn(nameof(MyItem2.LastName));
+            _bvgGrid.FreezeColumn(nameof(MyItem2.LastName), true);
         }
 
         public BvgSettings getBvgSettings1()

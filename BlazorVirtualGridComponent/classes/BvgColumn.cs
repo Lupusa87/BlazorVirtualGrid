@@ -24,7 +24,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public bool IsFrozen { get; set; }
 
-
+        public bool HasManualSize { get; set; }
         public int SequenceNumber { get; set; }
 
 

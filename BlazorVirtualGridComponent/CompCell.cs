@@ -11,19 +11,17 @@ namespace BlazorVirtualGridComponent
 {
     public class CompCell : ComponentBase, IDisposable
     {
-        [Parameter]
-        protected ComponentBase parent { get; set; }
 
 
         [Parameter]
         protected BvgCell bvgCell { get; set; }
 
-        public CompBlazorVirtualGrid _parent;
+
 
         protected override void OnInit()
         {
             bvgCell.PropertyChanged += BvgCell_PropertyChanged;
-            _parent = parent as CompBlazorVirtualGrid;
+           
         }
 
         private void BvgCell_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -64,7 +62,7 @@ namespace BlazorVirtualGridComponent
 
         public void Clicked(UIMouseEventArgs e)
         {
-            _parent.bvgGrid.SelectCell(bvgCell);
+            bvgCell.bvgGrid.SelectCell(bvgCell);
 
         }
 

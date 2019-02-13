@@ -10,8 +10,6 @@ namespace BlazorVirtualGridComponent
 {
     public class CompAreaRows : ComponentBase, IDisposable
     {
-        [Parameter]
-        protected ComponentBase parent { get; set; }
 
         [Parameter]
         protected BvgAreaRows bvgAreaRows { get; set; }
@@ -19,13 +17,12 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected bool ForFrozen { get; set; }
 
-        public CompBlazorVirtualGrid _parent;
+
 
         protected override void OnInit()
         {
             bvgAreaRows.PropertyChanged += BvgAreaRows_PropertyChanged;
 
-            _parent = parent as CompBlazorVirtualGrid;
         }
 
         private void BvgAreaRows_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -39,13 +36,12 @@ namespace BlazorVirtualGridComponent
 
             builder.OpenElement(k++, "tbody");
 
-
-            foreach (var r in _parent.bvgGrid.Rows.Where(x => x.IsInView))
+            Console.WriteLine("rows" + bvgAreaRows.bvgGrid.Rows.Count);
+            foreach (var r in bvgAreaRows.bvgGrid.Rows.Where(x => x.IsInView))
             {
                 builder.OpenComponent<CompRow>(k++);
                 builder.AddAttribute(k++, "ForFrozen", ForFrozen);
                 builder.AddAttribute(k++, "bvgRow", r);
-                builder.AddAttribute(k++, "parent", parent);
                 builder.CloseComponent();
             }
 

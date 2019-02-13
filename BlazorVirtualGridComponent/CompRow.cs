@@ -10,10 +10,7 @@ namespace BlazorVirtualGridComponent
 {
     public class CompRow : ComponentBase, IDisposable
     {
-        [Parameter]
-        protected ComponentBase parent { get; set; }
-
-
+       
         [Parameter]
         protected BvgRow bvgRow { get; set; }
 
@@ -22,12 +19,12 @@ namespace BlazorVirtualGridComponent
         protected bool ForFrozen { get; set; }
 
 
-        public CompBlazorVirtualGrid _parent;
+     
 
         protected override void OnInit()
         {
             
-            _parent = parent as CompBlazorVirtualGrid;
+            
         }
 
         private void BvgRow_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -37,7 +34,7 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-
+            Console.WriteLine("BuildRenderTree row");
 
             bvgRow.PropertyChanged += BvgRow_PropertyChanged;
             int k = -1;
@@ -49,7 +46,6 @@ namespace BlazorVirtualGridComponent
                 {
                     builder.OpenComponent<CompCell>(k++);
                     builder.AddAttribute(k++, "bvgCell", cell);
-                    builder.AddAttribute(k++, "parent", parent);
                     builder.CloseComponent();
                 }
             }

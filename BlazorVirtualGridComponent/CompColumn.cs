@@ -11,18 +11,17 @@ namespace BlazorVirtualGridComponent
 {
     public class CompColumn : ComponentBase, IDisposable
     {
-        [Parameter]
-        protected ComponentBase parent { get; set; }
+
 
 
         [Parameter]
         public BvgColumn bvgColumn { get; set; }
 
-        public CompBlazorVirtualGrid _parent;
+
 
         protected override void OnInit()
         {
-            _parent = parent as CompBlazorVirtualGrid;
+           
         }
 
         private void BvgColumn_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -78,7 +77,7 @@ namespace BlazorVirtualGridComponent
         public void Clicked(UIMouseEventArgs e)
         {
 
-            _parent.bvgGrid.SelectColumn(bvgColumn);
+            bvgColumn.bvgGrid.SelectColumn(bvgColumn);
            
         }
 
@@ -89,6 +88,7 @@ namespace BlazorVirtualGridComponent
         {
             if (!b)
             {
+
 
                 double old_Value_col = bvgColumn.ColWidth;
 
@@ -108,16 +108,26 @@ namespace BlazorVirtualGridComponent
                 if (bvgColumn.ColWidth != old_Value_col)
                 {
                     StateHasChanged();
-                    foreach (var item in _parent.bvgGrid.Rows)
+
+                    foreach (var item in bvgColumn.bvgGrid.Rows)
                     {
                         BvgCell c = item.Cells.Single(x => x.bvgColumn.ID == bvgColumn.ID);
                         c.InvokePropertyChanged();
                     }
 
-                    _parent.bvgGrid.UpdateHorizontalScroll();
+
+
+                    if (bvgColumn.IsFrozen)
+                    {
+                        bvgColumn.bvgGrid.FrozenTableWidth += p;
+                        bvgColumn.bvgGrid.NotFrozenTableWidth -= p;
+                        bvgColumn.bvgGrid.InvokePropertyChanged();
+                    }
+                    else
+                    {
+                        bvgColumn.bvgGrid.UpdateHorizontalScroll();
+                    }
                 }
-
-
 
             }
 

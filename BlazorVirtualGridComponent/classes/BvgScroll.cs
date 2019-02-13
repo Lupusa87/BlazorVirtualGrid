@@ -15,7 +15,10 @@ namespace BlazorVirtualGridComponent.classes
 
         public string ID { get; set; }
 
-        public bool IsVisible { get; set; }
+
+        public BvgGrid bvgGrid { get; set; } = new BvgGrid();
+
+        public bool IsVisible { get; set; } = false;
         
 
         public BsbSettings bsbSettings { get; set; } = new BsbSettings();

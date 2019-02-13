@@ -13,40 +13,70 @@ namespace BlazorVirtualGridComponent
     public class CompGrid : ComponentBase, IDisposable
     {
         [Parameter]
-        protected ComponentBase parent { get; set; }
+        public BvgGrid bvgGrid { get; set; }
 
-        public CompBlazorVirtualGrid _parent;
 
 
         bool FirtsLoad = true;
 
         protected override void OnInit()
         {
-            _parent = parent as CompBlazorVirtualGrid;
+            Console.WriteLine("OnInit bvgGrid.compGrid = this;");
+            bvgGrid.compGrid = this;
 
+            Subscribe();
+        }
+
+
+        protected override void OnParametersSet()
+        {
+
+            Console.WriteLine("OnParametersSet");
+
+            base.OnParametersSet();
         }
 
 
         protected override void OnAfterRender()
         {
-            if (FirtsLoad)
-            {
-                FirtsLoad = false;
-                _parent.bvgGrid.PropertyChanged += BvgGrid_PropertyChanged;
+            //if (FirtsLoad)
+            //{
+            //    FirtsLoad = false;
 
-                base.OnAfterRender();
+
+            //}
+
+            Console.WriteLine("OnAfterRender compgrid");
+            if (bvgGrid.compGrid == null)
+            {
+                Console.WriteLine("bvgGrid.compGrid = this");
+                bvgGrid.compGrid = this;
             }
+
+            base.OnAfterRender();
         }
+
+
+
+        public void Subscribe()
+        {
+            bvgGrid.PropertyChanged += BvgGrid_PropertyChanged;
+
+        }
+
 
         private void BvgGrid_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            Console.WriteLine("BvgGrid_PropertyChanged");
             StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            //Console.WriteLine("BuildRenderTree grid");
 
+            Console.WriteLine("BuildRenderTree grid");
+
+           
             Cmd_RenderTable(builder);
 
 
@@ -57,7 +87,6 @@ namespace BlazorVirtualGridComponent
         protected void Cmd_RenderTable(RenderTreeBuilder builder)
         {
 
-            BvgGrid bvgGrid = _parent.bvgGrid;
 
             if (bvgGrid.Columns.Count == 0)
             {
@@ -67,9 +96,6 @@ namespace BlazorVirtualGridComponent
 
 
             int k = -1;
-
-            builder.OpenElement(k++, "table");
-            builder.AddAttribute(k++, "style", "margin:0;padding:0;");
 
             #region FirstRow
             builder.OpenElement(k++, "tr");
@@ -83,8 +109,6 @@ namespace BlazorVirtualGridComponent
                 builder.AddAttribute(k++, "valign", "top");
                 builder.AddAttribute(k++, "style", "margin:0;padding:0;");
 
-                //builder.OpenElement(k++, "div");
-                //builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv());
 
                 builder.OpenElement(k++, "table");
                 builder.AddAttribute(k++, "style", bvgGrid.GetStyleTable(true));
@@ -99,7 +123,6 @@ namespace BlazorVirtualGridComponent
 
                     builder.OpenComponent<CompColumn>(k++);
                     builder.AddAttribute(k++, "bvgColumn", c);
-                    builder.AddAttribute(k++, "parent", parent);
                     builder.CloseComponent();
 
                 }
@@ -108,16 +131,15 @@ namespace BlazorVirtualGridComponent
                 builder.CloseElement(); //tr
                 builder.CloseElement(); //thead
 
+
+                
                 builder.OpenComponent<CompAreaRows>(k++);
                 builder.AddAttribute(k++, "ForFrozen", true);
                 builder.AddAttribute(k++, "bvgAreaRows", bvgGrid.bvgAreaRows);
-                builder.AddAttribute(k++, "parent", parent);
                 builder.CloseComponent();
 
                 builder.CloseElement(); //table
-                //builder.CloseElement(); //div
-
-
+              
                 builder.CloseElement(); //td
 
 
@@ -150,7 +172,6 @@ namespace BlazorVirtualGridComponent
 
                 builder.OpenComponent<CompColumn>(k++);
                 builder.AddAttribute(k++, "bvgColumn", c);
-                builder.AddAttribute(k++, "parent", parent);
                 builder.CloseComponent();
 
             }
@@ -162,7 +183,6 @@ namespace BlazorVirtualGridComponent
             builder.OpenComponent<CompAreaRows>(k++);
             builder.AddAttribute(k++, "ForFrozen", false);
             builder.AddAttribute(k++, "bvgAreaRows", bvgGrid.bvgAreaRows);
-            builder.AddAttribute(k++, "parent", parent);
             builder.CloseComponent();
 
             builder.CloseElement(); //table
@@ -177,7 +197,7 @@ namespace BlazorVirtualGridComponent
 
             builder.OpenComponent<CompScroll>(k++);
             builder.AddAttribute(k++, "bvgScroll", bvgGrid.VericalScroll);
-            builder.AddAttribute(k++, "parent", parent);
+
 
             builder.CloseComponent();
 
@@ -188,6 +208,8 @@ namespace BlazorVirtualGridComponent
 
             #endregion firstrow
 
+
+            #region SecondRow
 
             builder.OpenElement(k++, "tr");
             builder.AddAttribute(k++, "valign", "top");
@@ -203,9 +225,9 @@ namespace BlazorVirtualGridComponent
             Console.WriteLine("amerika" + bvgGrid.HorizontalScroll.IsVisible);
             if (bvgGrid.HorizontalScroll.IsVisible)
             {
+                Console.WriteLine("OpenComponent CompScroll");
                 builder.OpenComponent<CompScroll>(k++);
                 builder.AddAttribute(k++, "bvgScroll", bvgGrid.HorizontalScroll);
-                builder.AddAttribute(k++, "parent", parent);
                 builder.CloseComponent();
             }
 
@@ -214,25 +236,17 @@ namespace BlazorVirtualGridComponent
 
             builder.CloseElement(); //tr
 
-            builder.CloseElement(); //table
+            #endregion
 
 
         }
 
-        public void Clicked(UIMouseEventArgs e)
-        {
 
-            //CompTable a = parent as CompTable;
-
-            //CompBlazorSpreadsheet b = a.parent as CompBlazorSpreadsheet;
-
-            //b.SelectionChange(bcell.ID);
-        }
 
 
         public void Dispose()
         {
-            _parent.bvgGrid.PropertyChanged -= BvgGrid_PropertyChanged;
+            bvgGrid.PropertyChanged -= BvgGrid_PropertyChanged;
         }
     }
 }
