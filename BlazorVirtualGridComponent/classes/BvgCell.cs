@@ -12,11 +12,12 @@ namespace BlazorVirtualGridComponent.classes
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public int ID { get; set; }
-
+        public string ID { get; set; }
+        
 
         public object Value { get; set; }
 
+        public bool FocusRequired { get; set; } = false;
 
         public BvgColumn bvgColumn { get; set; } = new BvgColumn();
         public BvgRow bvgRow { get; set; } = new BvgRow();
@@ -27,7 +28,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public bool IsSelected { get; set; }
 
-
+        public bool IsActive { get; set; }
         //public CompCell CompReference { get; set; }
 
 
@@ -58,7 +59,7 @@ namespace BlazorVirtualGridComponent.classes
             {
 
                 sb1.Append("cursor:pointer;");
-
+                
             }
             else
             {
@@ -72,7 +73,12 @@ namespace BlazorVirtualGridComponent.classes
                 sb1.Append("border-width:" + bvgStyle.BorderWidth + "px;");
             }
 
-            
+            if (IsActive)
+            {
+                sb1.Append("outline:" + bvgStyle.OutlineWidth + "px solid " + bvgStyle.OutlineColor + ";");
+
+            }
+
 
             return sb1.ToString();
 

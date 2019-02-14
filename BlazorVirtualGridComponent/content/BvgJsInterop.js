@@ -1,3 +1,7 @@
+
+
+
+
 window.BvgJsFunctions = {
     GetElementActualWidth: function (el) {
 
@@ -38,9 +42,28 @@ window.BvgJsFunctions = {
     SetElementScrollLeft: function (el, val) {
         if (document.getElementById(el) !== null) {
             document.getElementById(el).scrollLeft=val;
-            return tru;
+            return true;
         }
         else {
+            return false;
+        }
+    },
+    GetElementScrollLeft: function (el) {
+        if (document.getElementById(el) !== null) {
+            return document.getElementById(el).scrollLeft + document.getElementById(el).clientWidth;
+        }
+        else {
+            return 0;
+        }
+    },
+    SetFocus: function (el) {
+        if (document.getElementById(el) !== null) {
+            console.log("js set focus to " + el);
+            document.getElementById(el).focus();
+            return true;
+        }
+        else {
+            console.log("js set focus not found " + el);
             return false;
         }
     },

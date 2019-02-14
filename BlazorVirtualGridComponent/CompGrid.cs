@@ -13,43 +13,21 @@ namespace BlazorVirtualGridComponent
     public class CompGrid : ComponentBase, IDisposable
     {
         [Parameter]
-        public BvgGrid bvgGrid { get; set; }
+        protected BvgGrid bvgGrid { get; set; }
 
-
-
-        bool FirtsLoad = true;
 
         protected override void OnInit()
         {
-            Console.WriteLine("OnInit bvgGrid.compGrid = this;");
             bvgGrid.compGrid = this;
 
             Subscribe();
         }
 
-
-        protected override void OnParametersSet()
-        {
-
-            Console.WriteLine("OnParametersSet");
-
-            base.OnParametersSet();
-        }
-
-
         protected override void OnAfterRender()
         {
-            //if (FirtsLoad)
-            //{
-            //    FirtsLoad = false;
 
-
-            //}
-
-            Console.WriteLine("OnAfterRender compgrid");
             if (bvgGrid.compGrid == null)
             {
-                Console.WriteLine("bvgGrid.compGrid = this");
                 bvgGrid.compGrid = this;
             }
 
@@ -67,14 +45,14 @@ namespace BlazorVirtualGridComponent
 
         private void BvgGrid_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            Console.WriteLine("BvgGrid_PropertyChanged");
+
             StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
 
-            Console.WriteLine("BuildRenderTree grid");
+            //Console.WriteLine("BuildRenderTree grid");
 
            
             Cmd_RenderTable(builder);
@@ -222,10 +200,10 @@ namespace BlazorVirtualGridComponent
             builder.AddAttribute(k++, "style", "margin:0;padding:0;");
 
 
-            Console.WriteLine("amerika" + bvgGrid.HorizontalScroll.IsVisible);
+
             if (bvgGrid.HorizontalScroll.IsVisible)
             {
-                Console.WriteLine("OpenComponent CompScroll");
+              
                 builder.OpenComponent<CompScroll>(k++);
                 builder.AddAttribute(k++, "bvgScroll", bvgGrid.HorizontalScroll);
                 builder.CloseComponent();

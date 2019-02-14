@@ -33,13 +33,23 @@ namespace BlazorVirtualGridComponent
 
         public static Task<bool> SetElementScrollLeft(string elementID, double val)
         {
-
-            Console.WriteLine("SetElementScrollLeft " + elementID +" "+ val);
-
             return JSRuntime.Current.InvokeAsync<bool>(
                 "BvgJsFunctions.SetElementScrollLeft", elementID, val);
         }
 
-        
+        public static Task<double> GetElementScrollLeft(string elementID)
+        {
+           
+            return JSRuntime.Current.InvokeAsync<double>(
+                "BvgJsFunctions.GetElementScrollLeft", elementID);
+        }
+
+        public static Task<bool> SetFocus(string elementID)
+        {
+            return JSRuntime.Current.InvokeAsync<bool>(
+                "BvgJsFunctions.SetFocus", elementID);
+        }
+
+
     }
 }

@@ -35,7 +35,7 @@ namespace BlazorVirtualGrid.Pages
 
         protected override void OnInit()
         {
-            FillList(200, 300);
+            FillList(100, 200);
 
           
 

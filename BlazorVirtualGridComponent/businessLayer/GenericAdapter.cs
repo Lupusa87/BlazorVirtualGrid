@@ -56,12 +56,13 @@ namespace BlazorVirtualGridComponent.businessLayer
                 {
                     BvgCell cell = new BvgCell
                     {
-
                         Value = p.GetValue(item, null),
                         bvgRow = row,
                         bvgColumn = result.Columns.Single(x => x.Name.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)),
                         bvgGrid = result,
                     };
+
+                    cell.ID = "C" + cell.bvgColumn.ID + "R" + cell.bvgRow.ID;
 
                     row.Cells.Add(cell);
                 }

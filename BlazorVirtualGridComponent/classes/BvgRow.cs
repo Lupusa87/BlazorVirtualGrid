@@ -31,6 +31,7 @@ namespace BlazorVirtualGridComponent.classes
             foreach (var item in Cells.Where(x=>x.IsSelected))
             {
                 item.IsSelected = false;
+                item.IsActive = false;
                 item.bvgStyle = new BvgStyle();
                 item.InvokePropertyChanged();
 

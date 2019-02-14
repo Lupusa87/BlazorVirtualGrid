@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorVirtualGrid
 {
+
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)

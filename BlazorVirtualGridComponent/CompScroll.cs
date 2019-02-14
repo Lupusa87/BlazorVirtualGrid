@@ -20,11 +20,9 @@ namespace BlazorVirtualGridComponent
 
       
 
-        private bool FirstLoad = true;
-
         protected override void OnInit()
         {
-            Console.WriteLine("OnInit CompScroll");
+
             bvgScroll.PropertyChanged += BvgScroll_PropertyChanged;
           
         }
@@ -44,7 +42,7 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            Console.WriteLine("BuildRenderTree CompScroll");
+            //Console.WriteLine("BuildRenderTree CompScroll");
 
             int k = -1;
             builder.OpenComponent<CompBlazorScrollbar>(k++);
@@ -52,7 +50,7 @@ namespace BlazorVirtualGridComponent
             builder.AddAttribute(k++, "OnPositionChange", new Action<double>(onscroll));
             builder.AddComponentReferenceCapture(k++, (c) =>
             {
-                Console.WriteLine("reference captured");
+
                 bvgScroll.compBlazorScrollbar = c as CompBlazorScrollbar;
             });
 
@@ -76,7 +74,7 @@ namespace BlazorVirtualGridComponent
             }
             else
             {
-                Console.WriteLine("onscroll " + ScrollPosition);
+ 
                 BvgJsInterop.SetElementScrollLeft(bvgScroll.bvgGrid.GridDivElementID, ScrollPosition);
             }
 

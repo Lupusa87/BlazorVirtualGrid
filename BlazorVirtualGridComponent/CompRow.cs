@@ -34,7 +34,7 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            Console.WriteLine("BuildRenderTree row");
+            //Console.WriteLine("BuildRenderTree row");
 
             bvgRow.PropertyChanged += BvgRow_PropertyChanged;
             int k = -1;

@@ -11,7 +11,7 @@ namespace BlazorVirtualGridComponent
     public class CompBlazorVirtualGrid_Logic: ComponentBase
     {
         [Parameter]
-        public BvgGrid bvgGrid { get; set; }
+        protected BvgGrid bvgGrid { get; set; }
 
         public bool ActualRender { get; set; } =false;
 
@@ -54,7 +54,7 @@ namespace BlazorVirtualGridComponent
 
         public async void GetActualWidthAndHeight()
         {
-            Console.WriteLine("aaa0000");
+
             bvgGrid.totalWidth = await BvgJsInterop.GetElementActualWidth(bvgGrid.GridTableElementID)-20;
 
 
@@ -64,11 +64,7 @@ namespace BlazorVirtualGridComponent
             bvgGrid.height = windowHeight - top - 40;
 
 
-            Console.WriteLine("Table width " + bvgGrid.totalWidth);
-            Console.WriteLine("Table height " + bvgGrid.height);
 
-
-            Console.WriteLine("aaaaaaa");
             bvgGrid.AdjustSize();
 
             bvgGrid.UpdateHorizontalScroll();

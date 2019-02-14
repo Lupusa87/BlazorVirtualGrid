@@ -15,7 +15,7 @@ namespace BlazorVirtualGridComponent
 
 
         [Parameter]
-        public BvgColumn bvgColumn { get; set; }
+        protected BvgColumn bvgColumn { get; set; }
 
 
 

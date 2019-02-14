@@ -24,6 +24,8 @@ namespace BlazorVirtualGridComponent.classes
 
         public string Name { get; set; } = "null";
 
+
+
         //public Action OnChange { get; set; }
 
         public List<BvgRow> Rows { get; set; } = new List<BvgRow>();
@@ -100,7 +102,7 @@ namespace BlazorVirtualGridComponent.classes
 
         }
 
-        public void SelectCell(BvgCell parCell)
+        public void SelectCell(BvgCell parCell, bool doFocus)
         {
             ActiveCell = parCell;
             ActiveRow = parCell.bvgRow;
@@ -109,7 +111,22 @@ namespace BlazorVirtualGridComponent.classes
           
             SelectActiveRow();
             SelectActiveCell(false);
+
+            if (doFocus)
+            {
+                ActiveCellFocus();
+            }
         }
+
+        public void ActiveCellFocus()
+        {
+            if (ActiveCell != null)
+            {
+                BvgJsInterop.SetFocus(ActiveCell.ID);
+            }
+        }
+
+
 
         public void SelectRow(BvgRow parRow)
         {
@@ -210,11 +227,12 @@ namespace BlazorVirtualGridComponent.classes
             }
 
             ActiveCell.IsSelected = true;
+            ActiveCell.IsActive = true;
 
             ActiveCell.bvgStyle = new BvgStyle()
             {
                 BorderColor = "blue",
-                BorderWidth = 2,
+               // BorderWidth = 2,
                 BackgroundColor = "wheat",
             };
 
@@ -267,6 +285,12 @@ namespace BlazorVirtualGridComponent.classes
                     c.IsFrozen = true;
                     c.SequenceNumber = 0;
 
+                    int k = 0;
+                    foreach (var item in Columns.OrderBy(x => x.SequenceNumber))
+                    {
+                        item.SequenceNumber = k;
+                        k++;
+                    }
 
                     if (par_AffectUI)
                     {
@@ -293,12 +317,17 @@ namespace BlazorVirtualGridComponent.classes
 
                         BvgColumn c = Columns.Single(x => x.Name.Equals(names[i], StringComparison.InvariantCultureIgnoreCase));
                         c.IsFrozen = true;
-                        c.SequenceNumber = 0 - names.Count+i;
+                        c.SequenceNumber = -names.Count+i+1;
                     }
                 }
 
 
-
+                int k = 0;
+                foreach (var item in Columns.OrderBy(x=>x.SequenceNumber))
+                {
+                    item.SequenceNumber = k;
+                    k++;
+                }
 
                 if (par_AffectUI)
                 {
@@ -448,35 +477,25 @@ namespace BlazorVirtualGridComponent.classes
             if (b > NotFrozenTableWidth)
             {
 
-                Console.WriteLine("inside");
-
-                Console.WriteLine("HorizontalScroll.IsVisible " + HorizontalScroll.IsVisible);
                 if (!HorizontalScroll.IsVisible)
                 {
-                    Console.WriteLine("inside 2");
+      
                     HorizontalScroll.IsVisible = true;
 
 
                     HorizontalScroll.bsbSettings.ScrollTotalSize=b;
 
-                    Console.WriteLine("HorizontalScroll.IsVisible " + HorizontalScroll.IsVisible);
 
                     InvokePropertyChanged();
                 }
                 else
                 {
-                    Console.WriteLine("set scroll width "  + b);
-
-
-
                     HorizontalScroll.compBlazorScrollbar.SetScrollTotalWidth(b);
                 }
 
             }
             else
             {
-
-                Console.WriteLine("inside 3");
 
                 if (HorizontalScroll.IsVisible)
                 {
@@ -490,7 +509,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public void CalculateWidths()
         {
-            Console.WriteLine("======Calculate Widths=========");
+
             FrozenTableWidth = Columns.Where(x => x.IsFrozen).Sum(x => x.ColWidth);
             NotFrozenTableWidth = Columns.Where(x => x.IsFrozen == false).Sum(x => x.ColWidth);
 

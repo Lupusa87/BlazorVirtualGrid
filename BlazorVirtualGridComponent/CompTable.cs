@@ -10,11 +10,11 @@ namespace BlazorVirtualGridComponent
     public class CompTable : ComponentBase, IDisposable
     {
         [Parameter]
-        public BvgGrid bvgGrid { get; set; }
+        protected BvgGrid bvgGrid { get; set; }
 
 
         [Parameter]
-        public bool ActualRender { get; set; }
+        protected bool ActualRender { get; set; }
 
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)

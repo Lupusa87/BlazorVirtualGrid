@@ -25,6 +25,22 @@ namespace BlazorVirtualGridComponent
 
         }
 
+
+
+        protected override void OnAfterRender()
+        {
+            if (bvgAreaRows.bvgGrid.ActiveCell != null)
+            {
+                if (bvgAreaRows.bvgGrid.ActiveCell.FocusRequired)
+                {
+                    bvgAreaRows.bvgGrid.ActiveCell.FocusRequired = false;
+                    Console.WriteLine("CompAreaRows OnAfterRender");
+                    bvgAreaRows.bvgGrid.ActiveCellFocus();
+                }
+            }
+            base.OnAfterRender();
+        }
+
         private void BvgAreaRows_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             StateHasChanged();
@@ -36,7 +52,7 @@ namespace BlazorVirtualGridComponent
 
             builder.OpenElement(k++, "tbody");
 
-            Console.WriteLine("rows" + bvgAreaRows.bvgGrid.Rows.Count);
+
             foreach (var r in bvgAreaRows.bvgGrid.Rows.Where(x => x.IsInView))
             {
                 builder.OpenComponent<CompRow>(k++);
