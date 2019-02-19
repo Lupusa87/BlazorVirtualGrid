@@ -13,8 +13,7 @@ namespace BlazorVirtualGridComponent.classes
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public int ID { get; set; }
-        public int Index { get; set; }
+        public ushort ID { get; set; }
 
         public string Name { get; set; }
 
@@ -22,10 +21,14 @@ namespace BlazorVirtualGridComponent.classes
         public bool IsSelected { get; set; }
 
 
+        public bool IsSorted { get; set; }
+
+        public bool IsAscendingOrDescending { get; set; }
+
         public bool IsFrozen { get; set; }
 
         public bool HasManualSize { get; set; }
-        public int SequenceNumber { get; set; }
+        public byte SequenceNumber { get; set; }
 
 
         public BvgGrid bvgGrid { get; set; } = new BvgGrid();

@@ -62,14 +62,18 @@ namespace BlazorVirtualGridComponent
 
         private void onscroll(double ScrollPosition)
         {
+            
 
             if (bvgScroll.bsbSettings.VerticalOrHorizontal)
             {
-             
+
                 if (Math.Abs(ScrollPosition - bvgScroll.bvgGrid.CurrScrollPosition) > bvgScroll.bvgGrid.RowHeight)
                 {
+
+                    Console.WriteLine("passed " + ScrollPosition);
                     bvgScroll.bvgGrid.CurrScrollPosition = ScrollPosition;
-                    bvgScroll.bvgGrid.OnVerticalScroll();
+                    bvgScroll.bvgGrid.OnScroll?.Invoke((int)(ScrollPosition / bvgScroll.bvgGrid.RowHeight));
+
                 }
             }
             else

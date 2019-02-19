@@ -54,6 +54,14 @@ namespace BlazorVirtualGridComponent
             builder.AddContent(k++, bvgColumn.Name);
             builder.CloseElement(); //span
 
+            if (bvgColumn.IsSorted)
+            {
+                builder.OpenComponent<CompSort>(k++);
+                builder.AddAttribute(k++, "bvgColumn", bvgColumn);
+                builder.CloseComponent();
+            }
+
+
             builder.OpenComponent<CompBlazorSplitter>(k++);
             builder.AddAttribute(k++, "bsSettings", bvgColumn.bsSettings);
             builder.AddAttribute(k++, "OnPositionChange", new Action<bool, int, int>(OnPositionChange));
@@ -77,8 +85,8 @@ namespace BlazorVirtualGridComponent
         public void Clicked(UIMouseEventArgs e)
         {
 
-            bvgColumn.bvgGrid.SelectColumn(bvgColumn);
-           
+            // bvgColumn.bvgGrid.SelectColumn(bvgColumn);
+            bvgColumn.bvgGrid.SortColumn(bvgColumn);
         }
 
 

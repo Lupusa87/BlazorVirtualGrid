@@ -15,43 +15,42 @@ namespace BlazorVirtualGrid.Pages
 
 
         Random rnd1 = new Random();
-        readonly GenericAdapter<MyItem> GenericAdapter1 = new GenericAdapter<MyItem>();
-        readonly GenericAdapter<MyItem2> GenericAdapter2 = new GenericAdapter<MyItem2>();
 
-        public CompBlazorVirtualGrid CurrBVG;
+        public CompBlazorVirtualGrid<MyItem> CurrBVG1;
+        public CompBlazorVirtualGrid<MyItem2> CurrBVG2;
 
-
-        public bool FirstOrSecond = false;
+        public bool FirstOrSecond = true;
 
 
-        private List<MyItem> list1 = new List<MyItem>();
+        public string TableName1 { get; set; } = "Table 1";
+        public string TableName2 { get; set; } = "Table 2";
 
-        private List<MyItem2> list2 = new List<MyItem2>();
+        public IList<MyItem> list1 { get; set; } = new List<MyItem>();
 
+        public IList<MyItem2> list2 { get; set; } = new List<MyItem2>();
 
-        public BvgGrid _bvgGrid;
+        
 
         Dictionary<string, Dictionary<string, double>> SavedColumnWitdths_Dict = new Dictionary<string, Dictionary<string, double>>();
 
+
+       
         protected override void OnInit()
         {
-            FillList(100, 200);
+            FillList(200, 300);
 
-          
+      
 
-            _bvgGrid = GenericAdapter1.Convert(list1, "Table1");
+            //List<string> frozenCols = new List<string>
+            //{
+            //    nameof(MyItem.N3),
+            //    nameof(MyItem.Date)
+            //};
 
-
-            List<string> frozenCols = new List<string>
-            {
-                nameof(MyItem.N3),
-                nameof(MyItem.Date)
-            };
-
-            _bvgGrid.FreezeColumns(frozenCols, false);
+            //_bvgGrid.FreezeColumns(frozenCols, false);
 
 
-            _bvgGrid.SetWidthToColumn(nameof(MyItem.N1), 300, false);
+            //_bvgGrid.SetWidthToColumn(nameof(MyItem.N1), 300, false);
 
             base.OnInit();
         }
@@ -77,12 +76,12 @@ namespace BlazorVirtualGrid.Pages
             FillList(200, 300);
 
             GetColumnsWidth();
-            _bvgGrid = GenericAdapter1.Convert(list1, "Table1");
+            //_bvgGrid = GenericAdapter1.Convert(list1, "Table1");
 
 
-            if (SavedColumnWitdths_Dict.ContainsKey(_bvgGrid.Name))
+            if (SavedColumnWitdths_Dict.ContainsKey(TableName1))
             {
-                _bvgGrid.SetColumnWidths(SavedColumnWitdths_Dict[_bvgGrid.Name], false);
+                CurrBVG1.bvgGrid.SetColumnWidths(SavedColumnWitdths_Dict[TableName1], false);
             }
 
 
@@ -90,9 +89,8 @@ namespace BlazorVirtualGrid.Pages
 
         public void Cmdqwer()
         {
-           
-            
-           _bvgGrid.UpdateHorizontalScroll();
+
+            CurrBVG1.bvgGrid.UpdateHorizontalScroll();
         }
             
 
@@ -102,23 +100,23 @@ namespace BlazorVirtualGrid.Pages
             FillList2(200, 300);
 
             GetColumnsWidth();
-            _bvgGrid = GenericAdapter2.Convert(list2, "persons");
+            //_bvgGrid = GenericAdapter2.Convert(list2, "persons");
 
 
-            if (SavedColumnWitdths_Dict.ContainsKey(_bvgGrid.Name))
+            if (SavedColumnWitdths_Dict.ContainsKey(TableName2))
             {
-                _bvgGrid.SetColumnWidths(SavedColumnWitdths_Dict[_bvgGrid.Name], false);
+                CurrBVG2.bvgGrid.SetColumnWidths(SavedColumnWitdths_Dict[TableName2], false);
             }
         }
 
         public void CmdPinColList1()
         {
-            _bvgGrid.FreezeColumn(nameof(MyItem.N3), true);
+            CurrBVG1.bvgGrid.FreezeColumn(nameof(MyItem.N3), true);
         }
 
         public void CmdPinColList2()
         {
-            _bvgGrid.FreezeColumn(nameof(MyItem2.LastName), true);
+            CurrBVG1.bvgGrid.FreezeColumn(nameof(MyItem2.LastName), true);
         }
 
         public BvgSettings getBvgSettings1()

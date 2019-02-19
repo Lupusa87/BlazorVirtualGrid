@@ -34,7 +34,7 @@ namespace BlazorVirtualGridComponent
                 if (bvgAreaRows.bvgGrid.ActiveCell.FocusRequired)
                 {
                     bvgAreaRows.bvgGrid.ActiveCell.FocusRequired = false;
-                    Console.WriteLine("CompAreaRows OnAfterRender");
+                   
                     bvgAreaRows.bvgGrid.ActiveCellFocus();
                 }
             }
@@ -53,7 +53,7 @@ namespace BlazorVirtualGridComponent
             builder.OpenElement(k++, "tbody");
 
 
-            foreach (var r in bvgAreaRows.bvgGrid.Rows.Where(x => x.IsInView))
+            foreach (var r in bvgAreaRows.bvgGrid.Rows)
             {
                 builder.OpenComponent<CompRow>(k++);
                 builder.AddAttribute(k++, "ForFrozen", ForFrozen);

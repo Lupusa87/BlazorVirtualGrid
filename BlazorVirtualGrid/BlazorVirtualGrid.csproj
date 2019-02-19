@@ -7,8 +7,17 @@
     <RunCommand>dotnet</RunCommand>
     <RunArguments>blazor serve</RunArguments>
     <LangVersion>7.3</LangVersion>
-    <!--<BlazorLinkOnBuild>false</BlazorLinkOnBuild>-->
+    <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
+
   </PropertyGroup>
+
+
+
+  <!--<ItemGroup>
+    <BlazorLinkerDescriptor Include="Linker.xml" />
+  </ItemGroup>-->
+
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="0.8.0-preview-19104-04" />
@@ -18,12 +27,16 @@
   </ItemGroup>
 
   
-  <ItemGroup> <Watch Include="\**\*.cshtml" /> </ItemGroup>  
+  <ItemGroup> <Watch Include="\**\*.cshtml" /> </ItemGroup>
+
+  
+ 
   
   <ItemGroup>
     <ProjectReference Include="..\BlazorVirtualGridComponent\BlazorVirtualGridComponent.csproj" />
   </ItemGroup>
-  
+
+
 
 
 </Project>

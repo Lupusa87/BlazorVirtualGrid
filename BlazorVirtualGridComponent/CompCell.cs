@@ -55,7 +55,8 @@ namespace BlazorVirtualGridComponent
 
 
             builder.AddContent(k++, bvgCell.Value.ToString());
-            
+           
+
             builder.CloseElement(); //div
 
 
@@ -84,8 +85,8 @@ namespace BlazorVirtualGridComponent
 
                 a = a.Replace("arrow", null);
 
-                Console.WriteLine(e.Key.ToString());
-                Console.WriteLine(bvgCell.Value.ToString() + " " +  bvgCell.bvgColumn.Name);
+                //Console.WriteLine(e.Key.ToString());
+                //Console.WriteLine(bvgCell.Value.ToString() + " " +  bvgCell.bvgColumn.Name);
 
                 switch (a)
                 {
@@ -109,7 +110,7 @@ namespace BlazorVirtualGridComponent
             
             
         }
-        public async void SelectNeightbourCell(MoveDirection d, bool HasCtrl)
+        public void SelectNeightbourCell(MoveDirection d, bool HasCtrl)
         {
 
             BvgCell result = new BvgCell();

@@ -5,25 +5,23 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 
 namespace BlazorVirtualGridComponent.businessLayer
 {
-    public class GenericAdapter<T> where T : class
+    public static class GenericAdapter<T> 
     {
 
-        public BvgGrid Convert(List<T> GenericList, string Name)
+        public static void GetColumns(IQueryable<T> GenericList, BvgGrid result)
         {
-
-            BvgGrid result = new BvgGrid
-            {
-                IsReady = true,
-                Name = Name,
-            };
-
-
+            result.ColumnsDictionary = new Dictionary<string, BvgColumn>();
+            result.Columns = new List<BvgColumn>();
             PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            ushort k = 0;
             foreach (PropertyInfo prop in Props)
             {
 
@@ -31,44 +29,16 @@ namespace BlazorVirtualGridComponent.businessLayer
 
                 BvgColumn col = new BvgColumn
                 {
-                    ID = result.Columns.Count + 1,
+                    ID = k++,
                     Name = prop.Name,
                     type = t,
-                    SequenceNumber = result.Columns.Count + 1,
+                    SequenceNumber = (byte)k,
                     bvgGrid = result,
                 };
-
+                result.ColumnsDictionary.Add(prop.Name, col);
                 result.Columns.Add(col);
             }
 
-
-      
-            foreach (T item in GenericList)
-            {
-
-                BvgRow row = new BvgRow
-                {
-                    ID = result.Rows.Count + 1,
-                    bvgGrid = result,
-                };
-
-                foreach (PropertyInfo p in Props)
-                {
-                    BvgCell cell = new BvgCell
-                    {
-                        Value = p.GetValue(item, null),
-                        bvgRow = row,
-                        bvgColumn = result.Columns.Single(x => x.Name.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)),
-                        bvgGrid = result,
-                    };
-
-                    cell.ID = "C" + cell.bvgColumn.ID + "R" + cell.bvgRow.ID;
-
-                    row.Cells.Add(cell);
-                }
-
-                result.Rows.Add(row);
-            }
 
 
             foreach (var item in result.Columns)
@@ -83,11 +53,60 @@ namespace BlazorVirtualGridComponent.businessLayer
                     BgColor = "red",
                 };
             }
-            
-            return result;
+
         }
 
-     
+        public static IEnumerable<T> GetSortedList(IQueryable<T> GenericList, string OrderByClause)
+        {
+            return GenericList.OrderBy(OrderByClause);
+        }
+
+
+        public static void GetRows(IEnumerable<T> GenericList, BvgGrid result)
+        {
+
+            result.Rows = new List<BvgRow>();
+
+
+            PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            ushort k = 0;
+            BvgColumn col;
+
+            foreach (T item in GenericList)
+            {
+
+                BvgRow row = new BvgRow
+                {
+                    ID = k++,
+                    bvgGrid = result,
+                };
+
+                foreach (PropertyInfo p in Props)
+                {
+
+                    result.ColumnsDictionary.TryGetValue(p.Name, out col);
+
+                    BvgCell cell = new BvgCell
+                    {
+                        Value = p.GetValue(item, null),
+                        bvgRow = row,
+                        bvgColumn = col,
+                        bvgGrid = result,
+                    };
+
+                    cell.ID = "C" + col.ID + "R" + row.ID;
+
+                    row.Cells.Add(cell);
+                }
+
+                result.Rows.Add(row);
+            }
+
+
+
+           
+        }
 
     }
 }

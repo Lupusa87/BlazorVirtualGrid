@@ -1,5 +1,6 @@
 ﻿using BlazorScrollbarComponent.classes;
 using BlazorSplitterComponent;
+using BlazorVirtualGridComponent.businessLayer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,15 +22,20 @@ namespace BlazorVirtualGridComponent.classes
         public string GridTableElementID { get; set; } = "GridTable" + Guid.NewGuid().ToString("d").Substring(1, 4);
         public string GridDivElementID { get; set; } = "GridDiv"+ Guid.NewGuid().ToString("d").Substring(1, 4);
 
+        public Dictionary<string, BvgColumn> ColumnsDictionary { get; set; }
 
         public string Name { get; set; } = "null";
 
 
 
-        //public Action OnChange { get; set; }
+        public Action<string> OnSort { get; set; }
 
-        public List<BvgRow> Rows { get; set; } = new List<BvgRow>();
-        public List<BvgColumn> Columns { get; set; } = new List<BvgColumn>();
+        public Action<int> OnScroll { get; set; }
+
+        public IList<BvgRow> Rows { get; set; } = new List<BvgRow>();
+        public IList<BvgColumn> Columns { get; set; } = new List<BvgColumn>();
+
+        public int RowsTotalCount { get; set; }
 
         public CompGrid compGrid { get; set; }
 
@@ -219,6 +225,41 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
+        public void SortColumn(BvgColumn parColumn)
+        {
+
+            
+            if (parColumn.IsSorted)
+            {
+               
+                parColumn.IsAscendingOrDescending = !parColumn.IsAscendingOrDescending;
+
+            }
+            else
+            {
+                foreach (var item in Columns.Where(x => x.IsSorted))
+                {
+                    item.IsSorted = false;
+                    item.InvokePropertyChanged();
+                }
+
+                parColumn.IsSorted = true;
+                parColumn.IsAscendingOrDescending = false;
+            }
+
+            parColumn.InvokePropertyChanged();
+
+            if (!parColumn.IsAscendingOrDescending)
+            {
+                OnSort?.Invoke(parColumn.Name);
+            }
+            else
+            {
+                OnSort?.Invoke(parColumn.Name + " desc");
+            }
+
+        }
+
         private void SelectActiveCell(bool DoClear = true)
         {
             if (DoClear)
@@ -278,14 +319,14 @@ namespace BlazorVirtualGridComponent.classes
                     foreach (var item in Columns.Where(x => x.IsFrozen))
                     {
                         item.IsFrozen = false;
-                        item.SequenceNumber = item.ID;
+                        item.SequenceNumber = (byte)item.ID;
                     }
 
                     BvgColumn c = Columns.Single(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                     c.IsFrozen = true;
                     c.SequenceNumber = 0;
 
-                    int k = 0;
+                    byte k = 0;
                     foreach (var item in Columns.OrderBy(x => x.SequenceNumber))
                     {
                         item.SequenceNumber = k;
@@ -317,12 +358,12 @@ namespace BlazorVirtualGridComponent.classes
 
                         BvgColumn c = Columns.Single(x => x.Name.Equals(names[i], StringComparison.InvariantCultureIgnoreCase));
                         c.IsFrozen = true;
-                        c.SequenceNumber = -names.Count+i+1;
+                        c.SequenceNumber = (byte)(-names.Count+i+1);
                     }
                 }
 
 
-                int k = 0;
+                byte k = 0;
                 foreach (var item in Columns.OrderBy(x=>x.SequenceNumber))
                 {
                     item.SequenceNumber = k;
@@ -433,40 +474,6 @@ namespace BlazorVirtualGridComponent.classes
 
 
 
-        public void OnVerticalScroll()
-        {
-
-            foreach (var item in Rows.Where(x => x.IsInView))
-            {
-                item.IsInView = false;
-            }
-
-
-
-            int Curr_Skip = (int)(CurrScrollPosition / RowHeight);
-
-
-            if (Curr_Skip > 0)
-            {
-
-                foreach (var item in Rows.Skip(Curr_Skip).Take(DisplayedRowsCount))
-                {
-                    item.IsInView = true;
-                }
-            }
-            else
-            {
-                foreach (var item in Rows.Take(DisplayedRowsCount))
-                {
-                    item.IsInView = true;
-                }
-
-            }
-
-            bvgAreaRows.InvokePropertyChanged();
-
-
-        }
 
         public void UpdateHorizontalScroll()
         {
@@ -539,7 +546,7 @@ namespace BlazorVirtualGridComponent.classes
                     width = 16,
                     height = height,
                     ScrollVisibleSize = height-HeaderHeight - Columns[0].bvgStyle.BorderWidth*2,
-                    ScrollTotalSize = Rows.Count * (RowHeight+Rows[0].Cells[0].bvgStyle.BorderWidth*2)+10,
+                    ScrollTotalSize = RowsTotalCount * (RowHeight + new BvgCell().bvgStyle.BorderWidth*2)+10,
                 }
             };
             VericalScroll.bsbSettings.initialize();
@@ -571,7 +578,7 @@ namespace BlazorVirtualGridComponent.classes
 
             bvgAreaRows.bvgGrid = this;
 
-            OnVerticalScroll();
+           
         }
     }
 }

@@ -1,14 +1,17 @@
-﻿@inherits CompBlazorVirtualGrid_Logic
+﻿
+@typeparam TItem
+
+@inherits CompBlazorVirtualGrid_Logic<TItem>
 
 
 
 @if (bvgGrid.IsReady)
 {
 
-<h3>@bvgGrid.Name Count @bvgGrid.Rows.Count</h3>
+    <h3>@bvgGrid.Name Count @bvgGrid.Rows.Count</h3>
 
-    
-    <CompTable bvgGrid="@bvgGrid" ActualRender="ActualRender"></CompTable>
+
+    <CompTable bvgGrid="@bvgGrid" ActualRender="@ActualRender"></CompTable>
 }
 else
 {

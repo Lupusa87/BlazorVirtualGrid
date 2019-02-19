@@ -11,10 +11,9 @@ namespace BlazorVirtualGridComponent.classes
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public int ID { get; set; }
-        public int Index { get; set; }
+        public ushort ID { get; set; }
 
-        public List<BvgCell> Cells { get; set; } = new List<BvgCell>();
+        public IList<BvgCell> Cells { get; set; } = new List<BvgCell>();
 
         public bool IsSelected { get; set; }
 
