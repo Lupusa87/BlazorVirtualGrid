@@ -4,12 +4,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgRow : INotifyPropertyChanged
+    public class BvgRow
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public Action PropertyChanged { get; set; }
 
         public ushort ID { get; set; }
 
@@ -18,12 +19,8 @@ namespace BlazorVirtualGridComponent.classes
         public bool IsSelected { get; set; }
 
 
-        public bool IsInView { get; set; }
-
         public BvgGrid bvgGrid { get; set; } = new BvgGrid();
 
-
-        public BvgStyle bvgStyle { get; set; } = new BvgStyle();
 
         public void Cmd_Clear_Selection()
         {
@@ -31,7 +28,7 @@ namespace BlazorVirtualGridComponent.classes
             {
                 item.IsSelected = false;
                 item.IsActive = false;
-                item.bvgStyle = new BvgStyle();
+                item.CssClass = CellStyle.CellRegular.ToString();
                 item.InvokePropertyChanged();
 
             }
@@ -39,19 +36,10 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
-        //public CompRow CompReference { get; set; }
-
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
 
         public void InvokePropertyChanged()
         {
-            PropertyChanged?.Invoke(this, null);
+            PropertyChanged?.Invoke();
         }
     }
 }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
@@ -26,13 +27,6 @@ namespace BlazorVirtualGridComponent
             bvgScroll.PropertyChanged += BvgScroll_PropertyChanged;
           
         }
-
-        protected override void OnAfterRender()
-        {
-
-            base.OnAfterRender();
-        }
-
 
 
         private void BvgScroll_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -67,12 +61,12 @@ namespace BlazorVirtualGridComponent
             if (bvgScroll.bsbSettings.VerticalOrHorizontal)
             {
 
-                if (Math.Abs(ScrollPosition - bvgScroll.bvgGrid.CurrScrollPosition) > bvgScroll.bvgGrid.RowHeight)
+                if (Math.Abs(ScrollPosition - bvgScroll.bvgGrid.CurrScrollPosition) > bvgScroll.bvgGrid.bvgSettings.RowHeight)
                 {
-
-                    Console.WriteLine("passed " + ScrollPosition);
+                    //BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
+                    //BlazorWindowHelper.BlazorTimeAnalyzer.Add("onscroll fired", MethodBase.GetCurrentMethod());
                     bvgScroll.bvgGrid.CurrScrollPosition = ScrollPosition;
-                    bvgScroll.bvgGrid.OnScroll?.Invoke((int)(ScrollPosition / bvgScroll.bvgGrid.RowHeight));
+                    bvgScroll.bvgGrid.OnScroll?.Invoke((int)(ScrollPosition / bvgScroll.bvgGrid.bvgSettings.RowHeight));
 
                 }
             }

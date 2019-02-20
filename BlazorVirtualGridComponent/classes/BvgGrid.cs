@@ -5,17 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent.classes
 {
     public class BvgGrid : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public int ID { get; set; }
 
         public bool IsReady { get; set; } = false;
 
@@ -26,7 +26,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public string Name { get; set; } = "null";
 
-
+        public PropertyInfo[] Props { get; set; }
 
         public Action<string> OnSort { get; set; }
 
@@ -44,23 +44,17 @@ namespace BlazorVirtualGridComponent.classes
         public BvgColumn ActiveColumn;
 
 
+        public BvgSettings bvgSettings { get; set; }
+
         public BvgScroll VericalScroll { get; set; } = null;
         public BvgScroll HorizontalScroll { get; set; } = null;
 
 
         public double totalWidth { get; set; } = 500;
-
+        public double height { get; set; } = 300;
 
         public double FrozenTableWidth { get; set; } = 0;
         public double NotFrozenTableWidth { get; set; } = 0;
-
-
-        public double height { get; set; } = 300;
-
-        public double HeaderHeight { get; set; } = 50;
-        public double RowHeight { get; set; } = 40;
-
-        public double ColMinWidth { get; set; } = 100;
 
 
         public int DisplayedRowsCount { get; set; }
@@ -80,15 +74,12 @@ namespace BlazorVirtualGridComponent.classes
             //sb1.Append("table-layout:fixed;");
             if (ForFrozen)
             {
-                sb1.Append("border: 1px solid black;width:" + FrozenTableWidth + "px;");
+                sb1.Append("width:" + FrozenTableWidth + "px;");
             }
             else
             {
-                sb1.Append("border: 1px solid black;width:" + NotFrozenTableWidth + "px;");
+                sb1.Append("width:" + NotFrozenTableWidth + "px;");
             }
-
-
-            sb1.Append("margin:0;padding:0;");
 
 
             return sb1.ToString();
@@ -101,8 +92,8 @@ namespace BlazorVirtualGridComponent.classes
 
             StringBuilder sb1 = new StringBuilder();
 
-            sb1.Append("margin:0;padding:0;");
-            sb1.Append("width:" + (NotFrozenTableWidth + 5) + "px;height:" + height+ "px;overflow-x:hidden;overflow-y:hidden;");
+    
+            sb1.Append("width:" + (NotFrozenTableWidth + 5) + "px;height:" + height+ "px;");
 
             return sb1.ToString();
 
@@ -163,19 +154,11 @@ namespace BlazorVirtualGridComponent.classes
 
             ActiveRow.IsSelected = true;
 
-            ActiveRow.bvgStyle = new BvgStyle()
-            {
-                BorderColor = "blue",
-                BorderWidth = 1,
-                BackgroundColor = "wheat",
-            };
-
 
             foreach (var c in ActiveRow.Cells)
             {
                 c.IsSelected = true;
-                c.bvgStyle = ActiveRow.bvgStyle;
-                //c.CompReference.Refresh();
+                c.CssClass = CellStyle.CellSelected.ToString();
                 c.InvokePropertyChanged();
             }
 
@@ -189,20 +172,7 @@ namespace BlazorVirtualGridComponent.classes
 
 
             ActiveColumn.IsSelected = true;
-
-            ActiveColumn.bvgStyle = new BvgStyle()
-            {
-                BorderColor = "blue",
-                BorderWidth = 2,
-                BackgroundColor = "wheat",
-            };
-
-
-            BvgStyle b = new BvgStyle()
-            {
-                BackgroundColor = "wheat",
-            };
-
+            ActiveColumn.CssClass = "columnActive";
 
             foreach (var item in Rows)
             {
@@ -210,13 +180,13 @@ namespace BlazorVirtualGridComponent.classes
                 BvgCell c = item.Cells.Single(x => x.bvgColumn.ID == ActiveColumn.ID);
 
                 c.IsSelected = true;
-                c.bvgStyle = b;
+                c.CssClass = "CellSelected";
                 c.InvokePropertyChanged();
             }
 
 
 
-            ActiveColumn.BSplitter.SetColor(ActiveColumn.bvgStyle.BackgroundColor);
+            ActiveColumn.BSplitter.SetColor(bvgSettings.HeaderStyle.BackgroundColor);
 
             ActiveColumn.InvokePropertyChanged();
 
@@ -269,16 +239,8 @@ namespace BlazorVirtualGridComponent.classes
 
             ActiveCell.IsSelected = true;
             ActiveCell.IsActive = true;
+            ActiveCell.CssClass = CellStyle.CellActive.ToString();
 
-            ActiveCell.bvgStyle = new BvgStyle()
-            {
-                BorderColor = "blue",
-               // BorderWidth = 2,
-                BackgroundColor = "wheat",
-            };
-
-
-            //ActiveCell.CompReference.Refresh();
             ActiveCell.InvokePropertyChanged();
         }
 
@@ -296,8 +258,8 @@ namespace BlazorVirtualGridComponent.classes
             foreach (var item in Columns.Where(x => x.IsSelected))
             {
                 item.IsSelected = false;
-                item.bvgStyle = new BvgStyle();
-                item.BSplitter.SetColor(item.bvgStyle.BackgroundColor);
+                item.CssClass = "ColumnRegular";
+                item.BSplitter.SetColor(bvgSettings.HeaderStyle.BackgroundColor);
                 item.InvokePropertyChanged();
             }
 
@@ -545,8 +507,8 @@ namespace BlazorVirtualGridComponent.classes
                     VerticalOrHorizontal = true,
                     width = 16,
                     height = height,
-                    ScrollVisibleSize = height-HeaderHeight - Columns[0].bvgStyle.BorderWidth*2,
-                    ScrollTotalSize = RowsTotalCount * (RowHeight + new BvgCell().bvgStyle.BorderWidth*2)+10,
+                    ScrollVisibleSize = height- bvgSettings.HeaderHeight - bvgSettings.HeaderStyle.BorderWidth*2,
+                    ScrollTotalSize = RowsTotalCount * (bvgSettings.RowHeight + bvgSettings.CellStyle.BorderWidth*2)+10,
                 }
             };
             VericalScroll.bsbSettings.initialize();
@@ -570,8 +532,8 @@ namespace BlazorVirtualGridComponent.classes
 
             CalculateWidths();
 
-            DisplayedRowsCount = (int)((height - HeaderHeight) / RowHeight);
-            RowHeight = Math.Round((height - HeaderHeight) / DisplayedRowsCount);
+            DisplayedRowsCount = (int)((height - bvgSettings.HeaderHeight) / bvgSettings.RowHeight);
+            bvgSettings.RowHeight = Math.Round((height - bvgSettings.HeaderHeight) / DisplayedRowsCount);
 
 
 

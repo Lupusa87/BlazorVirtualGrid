@@ -1,5 +1,8 @@
 using Microsoft.JSInterop;
+using Mono.WebAssembly.Interop;
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
@@ -50,6 +53,36 @@ namespace BlazorVirtualGridComponent
                 "BvgJsFunctions.SetFocus", elementID);
         }
 
+
+        public static bool UpdateElementContentBatchMonoString(string[] updatepkg)
+        {
+
+
+            if (JSRuntime.Current is MonoWebAssemblyJSRuntime mono)
+            {
+
+                return mono.InvokeUnmarshalled<string, bool>(
+                    "BvgJsFunctions.UpdateElementContentBatchMonoString",
+                    Json.Serialize(updatepkg));
+            }
+
+            return false;
+        }
+
+
+        public static bool UpdateElementContentBatchMonoByteArray(string[] updatepkg)
+        {
+
+            if (JSRuntime.Current is MonoWebAssemblyJSRuntime mono)
+            {
+
+                return mono.InvokeUnmarshalled<byte[], bool>(
+                    "BvgJsFunctions.UpdateElementContentBatchMonoByteArray",
+                    Encoding.UTF8.GetBytes(Json.Serialize(updatepkg)));
+            }
+
+            return false;
+        }
 
     }
 }

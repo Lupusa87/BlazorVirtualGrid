@@ -19,10 +19,10 @@ namespace BlazorVirtualGridComponent.businessLayer
         {
             result.ColumnsDictionary = new Dictionary<string, BvgColumn>();
             result.Columns = new List<BvgColumn>();
-            PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            result.Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             ushort k = 0;
-            foreach (PropertyInfo prop in Props)
+            foreach (PropertyInfo prop in result.Props)
             {
 
                 var t = (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>) ? Nullable.GetUnderlyingType(prop.PropertyType) : prop.PropertyType);
@@ -48,7 +48,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                     VerticalOrHorizontal = false,
                     index = result.Columns.Count,
                     width = 5,
-                    height = result.HeaderHeight - item.bvgStyle.BorderWidth * 2,
+                    height = result.bvgSettings.HeaderHeight - item.bvgGrid.bvgSettings.HeaderStyle.BorderWidth * 2,
                     //BgColor = item.bvgStyle.BackgroundColor,
                     BgColor = "red",
                 };
@@ -65,46 +65,78 @@ namespace BlazorVirtualGridComponent.businessLayer
         public static void GetRows(IEnumerable<T> GenericList, BvgGrid result)
         {
 
-            result.Rows = new List<BvgRow>();
-
-
-            PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
+           
             ushort k = 0;
+           
             BvgColumn col;
 
-            foreach (T item in GenericList)
+            if (result.Rows.Count == 0)
             {
-
-                BvgRow row = new BvgRow
-                {
-                    ID = k++,
-                    bvgGrid = result,
-                };
-
-                foreach (PropertyInfo p in Props)
+                foreach (T item in GenericList)
                 {
 
-                    result.ColumnsDictionary.TryGetValue(p.Name, out col);
-
-                    BvgCell cell = new BvgCell
+                    BvgRow row = new BvgRow
                     {
-                        Value = p.GetValue(item, null),
-                        bvgRow = row,
-                        bvgColumn = col,
+                        ID = k++,
                         bvgGrid = result,
                     };
 
-                    cell.ID = "C" + col.ID + "R" + row.ID;
+                    foreach (PropertyInfo p in result.Props)
+                    {
 
-                    row.Cells.Add(cell);
+                        result.ColumnsDictionary.TryGetValue(p.Name, out col);
+
+                        BvgCell cell = new BvgCell
+                        {
+                            Value = p.GetValue(item, null).ToString(),
+                            bvgRow = row,
+                            bvgColumn = col,
+                            bvgGrid = result,
+                        };
+
+                        cell.ID = "C" + col.ID + "R" + row.ID;
+
+                        row.Cells.Add(cell);
+                    }
+
+                    result.Rows.Add(row);
+                }
+            }
+            else
+            {
+
+
+
+                k = 0;
+                ushort j = 0;
+                short i = -1;
+
+                string[] UpdatePkg = new string[result.Rows.Count * result.Rows[0].Cells.Count * 2];
+               
+                foreach (T item in GenericList)
+                {
+                    j = 0;
+                    foreach (PropertyInfo p in result.Props)
+                    {
+
+                        result.Rows[k].Cells[j].Value = p.GetValue(item, null).ToString();
+                      
+                        
+                        UpdatePkg[++i] = result.Rows[k].Cells[j].ID;
+                        UpdatePkg[++i] = result.Rows[k].Cells[j].Value;
+
+                        j++;
+                    }
+                    k++;
                 }
 
-                result.Rows.Add(row);
+               
+                BvgJsInterop.UpdateElementContentBatchMonoString(UpdatePkg);
+
+
+                //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
             }
-
-
-
+            
            
         }
 

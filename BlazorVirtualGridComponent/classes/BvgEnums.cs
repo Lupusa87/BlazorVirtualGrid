@@ -14,5 +14,13 @@ namespace BlazorVirtualGridComponent.classes
             down
         }
 
+
+        public enum CellStyle
+        {
+            CellRegular,
+            CellSelected,
+            CellActive,
+        }
+
     }
 }

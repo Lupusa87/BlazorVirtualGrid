@@ -51,14 +51,10 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            base.BuildRenderTree(builder);
 
-            //Console.WriteLine("BuildRenderTree grid");
-
-           
             Cmd_RenderTable(builder);
 
-
-            base.BuildRenderTree(builder);
         }
 
 
@@ -77,7 +73,6 @@ namespace BlazorVirtualGridComponent
 
             #region FirstRow
             builder.OpenElement(k++, "tr");
-            builder.AddAttribute(k++, "style", "margin:0;padding:0;");
 
             #region frozenPart
 
@@ -85,16 +80,15 @@ namespace BlazorVirtualGridComponent
             {
                 builder.OpenElement(k++, "td");
                 builder.AddAttribute(k++, "valign", "top");
-                builder.AddAttribute(k++, "style", "margin:0;padding:0;");
 
 
                 builder.OpenElement(k++, "table");
+                builder.AddAttribute(k++, "class", "BorderedTable");
                 builder.AddAttribute(k++, "style", bvgGrid.GetStyleTable(true));
 
                 builder.OpenElement(k++, "thead");
                 builder.OpenElement(k++, "tr");
-                builder.AddAttribute(k++, "style", "margin:0;padding:0;");
-
+        
 
                 foreach (BvgColumn c in bvgGrid.Columns.Where(x => x.IsFrozen).OrderBy(x => x.SequenceNumber))
                 {
@@ -128,21 +122,19 @@ namespace BlazorVirtualGridComponent
             #region grid
             builder.OpenElement(k++, "td");
             builder.AddAttribute(k++, "valign", "top");
-            builder.AddAttribute(k++, "style", "margin:0;padding:0;");
-
 
 
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", bvgGrid.GridDivElementID);
+            builder.AddAttribute(k++, "class", "GridDiv");
             builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv());
 
-            builder.OpenElement(k++, "table");
+            builder.OpenElement(k++, "table"); 
+            builder.AddAttribute(k++, "class", "BorderedTable");
             builder.AddAttribute(k++, "style", bvgGrid.GetStyleTable(false));
 
             builder.OpenElement(k++, "thead");
             builder.OpenElement(k++, "tr");
-            builder.AddAttribute(k++, "style", "margin:0;padding:0;");
-
 
 
             foreach (BvgColumn c in bvgGrid.Columns.Where(x => x.IsFrozen == false).OrderBy(x => x.SequenceNumber))
@@ -191,15 +183,13 @@ namespace BlazorVirtualGridComponent
 
             builder.OpenElement(k++, "tr");
             builder.AddAttribute(k++, "valign", "top");
-            builder.AddAttribute(k++, "style", "margin:0;padding:0;");
+        
 
 
             builder.OpenElement(k++, "td");
             builder.AddAttribute(k++, "colspan", 2);
             builder.AddAttribute(k++, "valign", "top");
-            builder.AddAttribute(k++, "style", "margin:0;padding:0;");
-
-
+           
 
             if (bvgGrid.HorizontalScroll.IsVisible)
             {

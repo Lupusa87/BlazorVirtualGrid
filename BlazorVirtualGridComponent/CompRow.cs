@@ -19,46 +19,34 @@ namespace BlazorVirtualGridComponent
         protected bool ForFrozen { get; set; }
 
 
-     
-
-        protected override void OnInit()
-        {
-            
-            
-        }
-
-        private void BvgRow_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void BvgRow_PropertyChanged()
         {
             StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            //Console.WriteLine("BuildRenderTree row");
 
-            bvgRow.PropertyChanged += BvgRow_PropertyChanged;
+            if (bvgRow.PropertyChanged == null)
+            {
+                bvgRow.PropertyChanged += BvgRow_PropertyChanged;
+            }
+
             int k = -1;
+
             builder.OpenElement(k++, "tr");
 
-            foreach (var cell in bvgRow.Cells.OrderBy(x=>x.bvgColumn.SequenceNumber))
+            foreach (var cell in bvgRow.Cells.Where(x=>x.bvgColumn.IsFrozen == ForFrozen).OrderBy(x=>x.bvgColumn.SequenceNumber))
             {
-                if (cell.bvgColumn.IsFrozen == ForFrozen)
-                {
-                    builder.OpenComponent<CompCell>(k++);
-                    builder.AddAttribute(k++, "bvgCell", cell);
-                    builder.CloseComponent();
-                }
+                builder.OpenComponent<CompCell>(k++);
+                builder.AddAttribute(k++, "bvgCell", cell);
+                builder.CloseComponent();
             }
 
             builder.CloseElement(); //tr
 
 
             base.BuildRenderTree(builder);
-        }
-
-
-        public void Clicked(UIMouseEventArgs e)
-        {
         }
 
 

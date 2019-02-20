@@ -29,7 +29,9 @@ namespace BlazorVirtualGrid.Pages
 
         public IList<MyItem2> list2 { get; set; } = new List<MyItem2>();
 
-        
+        public BvgSettings bvgSettings1 { get; set; } = new BvgSettings();
+
+        public BvgSettings bvgSettings2 { get; set; } = new BvgSettings();
 
         Dictionary<string, Dictionary<string, double>> SavedColumnWitdths_Dict = new Dictionary<string, Dictionary<string, double>>();
 
@@ -37,9 +39,12 @@ namespace BlazorVirtualGrid.Pages
        
         protected override void OnInit()
         {
+            ConfigureBvgSettings1();
+            ConfigureBvgSettings2();
+
             FillList(200, 300);
 
-      
+       
 
             //List<string> frozenCols = new List<string>
             //{
@@ -119,9 +124,9 @@ namespace BlazorVirtualGrid.Pages
             CurrBVG1.bvgGrid.FreezeColumn(nameof(MyItem2.LastName), true);
         }
 
-        public BvgSettings getBvgSettings1()
+        public void ConfigureBvgSettings1()
         {
-            return new BvgSettings
+            bvgSettings1 = new BvgSettings
             {
                 CellStyle = new BvgStyle
                 {
@@ -144,6 +149,13 @@ namespace BlazorVirtualGrid.Pages
                     BorderColor = "black",
                     BorderWidth = 1,
                 },
+                ActiveCellStyle = new BvgStyle
+                {
+                    BackgroundColor = "gray",
+                    ForeColor = "darkblue",
+                    BorderColor = "black",
+                    BorderWidth = 1,
+                },
                 SelectedHeaderStyle = new BvgStyle
                 {
                     BackgroundColor = "gray",
@@ -151,13 +163,54 @@ namespace BlazorVirtualGrid.Pages
                     BorderColor = "black",
                     BorderWidth = 2,
                 },
-                SelectedRowStyle = new BvgStyle
+                RowHeight = 40,
+                HeaderHeight = 50,
+            };
+        }
+
+
+
+        public void ConfigureBvgSettings2()
+        {
+            bvgSettings2 = new BvgSettings
+            {
+                CellStyle = new BvgStyle
+                {
+                    BackgroundColor = "silver",
+                    ForeColor = "darkblue",
+                    BorderColor = "black",
+                    BorderWidth = 1,
+                },
+                HeaderStyle = new BvgStyle
+                {
+                    BackgroundColor = "gray",
+                    ForeColor = "blue",
+                    BorderColor = "brown",
+                    BorderWidth = 2,
+                },
+                SelectedCellStyle = new BvgStyle
                 {
                     BackgroundColor = "gray",
                     ForeColor = "darkblue",
                     BorderColor = "black",
                     BorderWidth = 1,
-                }
+                },
+                ActiveCellStyle = new BvgStyle
+                {
+                    BackgroundColor = "gray",
+                    ForeColor = "darkblue",
+                    BorderColor = "black",
+                    BorderWidth = 1,
+                },
+                SelectedHeaderStyle = new BvgStyle
+                {
+                    BackgroundColor = "gray",
+                    ForeColor = "darkblue",
+                    BorderColor = "black",
+                    BorderWidth = 2,
+                },
+                RowHeight = 40,
+                HeaderHeight = 50,
             };
         }
 
@@ -169,7 +222,7 @@ namespace BlazorVirtualGrid.Pages
             {
                 list1.Add(new MyItem
                 {
-                    ID = i,
+                    ID = (ushort)i,
                     Name = "Item " + i,
 
                     SomeBool = rnd1.Next(0, 5) == 0,
@@ -192,7 +245,7 @@ namespace BlazorVirtualGrid.Pages
             {
                 list2.Add(new MyItem2
                 {
-                    ID = i,
+                    ID = (ushort)i,
                     FirstName = Guid.NewGuid().ToString("d").Substring(1, 4),
                     LastName = Guid.NewGuid().ToString("d").Substring(1, 4),
                     Gender = rnd1.Next(0, 5) == 0,
@@ -204,7 +257,7 @@ namespace BlazorVirtualGrid.Pages
 
         public class MyItem
         {
-            public int ID { get; set; }
+            public ushort ID { get; set; }
             public string Name { get; set; }
             public bool SomeBool { get; set; }
             public DateTime Date { get; set; }
@@ -220,7 +273,7 @@ namespace BlazorVirtualGrid.Pages
 
         public class MyItem2
         {
-            public int ID { get; set; }
+            public ushort ID { get; set; }
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public DateTime BirthDate { get; set; }

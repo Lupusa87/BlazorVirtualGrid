@@ -15,7 +15,7 @@ namespace BlazorVirtualGridComponent.classes
         public string ID { get; set; }
         
 
-        public object Value { get; set; }
+        public string Value { get; set; }
 
         public bool FocusRequired { get; set; } = false;
 
@@ -24,78 +24,96 @@ namespace BlazorVirtualGridComponent.classes
 
         public BvgGrid bvgGrid { get; set; } = new BvgGrid();
 
-        public BvgStyle bvgStyle { get; set; } = new BvgStyle();
-
         public bool IsSelected { get; set; }
 
         public bool IsActive { get; set; }
-        //public CompCell CompReference { get; set; }
+   
 
+        public string CssClass { get; set; }
+
+        public string StyleTD { get; set; }
+        public string StyleDiv { get; set; }
 
         public string GetStyleTD()
         {
 
-            StringBuilder sb1 = new StringBuilder();
-
-            sb1.Append("margin:0px;padding:0px;");
-            sb1.Append("border-style:solid;width:" + bvgColumn.ColWidth + "px;height:" + bvgGrid.RowHeight + "px;");
-
-
-            if (!string.IsNullOrEmpty(bvgStyle.BackgroundColor))
+            if (string.IsNullOrEmpty(StyleTD))
             {
-                sb1.Append("background-color:" + bvgStyle.BackgroundColor + ";");
-            }
+             
+                StringBuilder sb1 = new StringBuilder();
 
-            if (!string.IsNullOrEmpty(bvgStyle.ForeColor))
-            {
-                sb1.Append("color:" + bvgStyle.ForeColor + ";");
-            }
-            if (!string.IsNullOrEmpty(bvgStyle.BorderColor))
-            {
-                sb1.Append("border-color:" + bvgStyle.BorderColor + ";");
-            }
 
-            if (IsSelected)
-            {
+            
+                sb1.Append("border-style:solid;width:" + bvgColumn.ColWidth + "px;height:" + bvgGrid.bvgSettings.RowHeight + "px;");
 
-                sb1.Append("cursor:pointer;");
-                
+
+                if (!string.IsNullOrEmpty(bvgGrid.bvgSettings.CellStyle.BackgroundColor))
+                {
+                    sb1.Append("background-color:" + bvgGrid.bvgSettings.CellStyle.BackgroundColor + ";");
+                }
+
+                if (!string.IsNullOrEmpty(bvgGrid.bvgSettings.CellStyle.ForeColor))
+                {
+                    sb1.Append("color:" + bvgGrid.bvgSettings.CellStyle.ForeColor + ";");
+                }
+                if (!string.IsNullOrEmpty(bvgGrid.bvgSettings.CellStyle.BorderColor))
+                {
+                    sb1.Append("border-color:" + bvgGrid.bvgSettings.CellStyle.BorderColor + ";");
+                }
+
+                if (IsSelected)
+                {
+
+                    sb1.Append("cursor:pointer;");
+
+                }
+                else
+                {
+                    sb1.Append("cursor:cell;");
+
+                }
+
+
+                if (bvgGrid.bvgSettings.CellStyle.BorderWidth > -1)
+                {
+                    sb1.Append("border-width:" + bvgGrid.bvgSettings.CellStyle.BorderWidth + "px;");
+                }
+
+                if (IsActive)
+                {
+                    sb1.Append("outline:" + bvgGrid.bvgSettings.CellStyle.OutlineWidth + "px solid " + bvgGrid.bvgSettings.CellStyle.OutlineColor + ";");
+
+                }
+
+                StyleTD = sb1.ToString();
+
+                return StyleTD;
             }
             else
             {
-                sb1.Append("cursor:cell;");
-
+                return StyleTD;
             }
-
-
-            if (bvgStyle.BorderWidth > -1)
-            {
-                sb1.Append("border-width:" + bvgStyle.BorderWidth + "px;");
-            }
-
-            if (IsActive)
-            {
-                sb1.Append("outline:" + bvgStyle.OutlineWidth + "px solid " + bvgStyle.OutlineColor + ";");
-
-            }
-
-
-            return sb1.ToString();
-
         }
 
 
         public string GetStyleDiv()
         {
+            if (string.IsNullOrEmpty(StyleDiv))
+            {
+                StringBuilder sb1 = new StringBuilder();
 
-            StringBuilder sb1 = new StringBuilder();
 
-           
-            sb1.Append("width:" + (bvgColumn.ColWidth- bvgStyle.BorderWidth) + "px;height:" + (bvgGrid.RowHeight- bvgStyle.BorderWidth) + "px;line-height:" + (bvgGrid.RowHeight - bvgStyle.BorderWidth) + "px;");
-            sb1.Append("overflow:hidden;white-space:nowrap;text-overflow:ellipsis;");
-            sb1.Append("margin:0px;padding:0px;");
+                sb1.Append("width:" + (bvgColumn.ColWidth - bvgGrid.bvgSettings.CellStyle.BorderWidth) + "px;height:" + (bvgGrid.bvgSettings.RowHeight - bvgGrid.bvgSettings.CellStyle.BorderWidth) + "px;line-height:" + (bvgGrid.bvgSettings.RowHeight - bvgGrid.bvgSettings.CellStyle.BorderWidth) + "px;");
+               
 
-            return sb1.ToString();
+                StyleDiv = sb1.ToString();
+
+                return StyleDiv;
+            }
+            else
+            {
+                return StyleDiv;
+            }
 
         }
 

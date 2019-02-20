@@ -18,13 +18,7 @@ namespace BlazorVirtualGridComponent
         protected BvgColumn bvgColumn { get; set; }
 
 
-
-        protected override void OnInit()
-        {
-           
-        }
-
-        private void BvgColumn_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void BvgColumn_PropertyChanged()
         {
             StateHasChanged();
         }
@@ -32,9 +26,10 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
 
-
-            bvgColumn.PropertyChanged += BvgColumn_PropertyChanged;
-
+            if (bvgColumn.PropertyChanged == null)
+            {
+                bvgColumn.PropertyChanged += BvgColumn_PropertyChanged;
+            }
 
             int k = -1;
 
@@ -46,10 +41,12 @@ namespace BlazorVirtualGridComponent
 
 
             builder.OpenElement(k++, "div");
+            builder.AddAttribute(k++, "class", "ColumnDiv");
             builder.AddAttribute(k++, "style", bvgColumn.GetStyleDiv());
 
 
             builder.OpenElement(k++, "span");
+            builder.AddAttribute(k++, "class", "ColumnSpan");
             builder.AddAttribute(k++, "style", bvgColumn.GetStyleSpan());
             builder.AddContent(k++, bvgColumn.Name);
             builder.CloseElement(); //span
@@ -144,7 +141,7 @@ namespace BlazorVirtualGridComponent
 
         public void Dispose()
         {
-            bvgColumn.PropertyChanged -= BvgColumn_PropertyChanged;
+            bvgColumn.PropertyChanged = null;
         }
     }
 }

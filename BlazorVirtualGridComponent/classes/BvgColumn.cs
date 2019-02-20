@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgColumn : INotifyPropertyChanged
+    public class BvgColumn 
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public Action PropertyChanged { get; set; }
 
         public ushort ID { get; set; }
 
@@ -20,6 +20,7 @@ namespace BlazorVirtualGridComponent.classes
         public Type type { get; set; }
         public bool IsSelected { get; set; }
 
+        public string CssClass { get; set; }
 
         public bool IsSorted { get; set; }
 
@@ -32,8 +33,6 @@ namespace BlazorVirtualGridComponent.classes
 
 
         public BvgGrid bvgGrid { get; set; } = new BvgGrid();
-
-        public BvgStyle bvgStyle { get; set; } = new BvgStyle();
 
 
         public BsSettings bsSettings { get; set; } = new BsSettings();
@@ -50,21 +49,20 @@ namespace BlazorVirtualGridComponent.classes
 
             StringBuilder sb1 = new StringBuilder();
 
-            sb1.Append("margin:0px;padding:0px;");
-            sb1.Append("text-align:center;border-style:solid;");
+           
 
-            if (!string.IsNullOrEmpty(bvgStyle.BackgroundColor))
+            if (!string.IsNullOrEmpty(bvgGrid.bvgSettings.HeaderStyle.BackgroundColor))
             {
-                sb1.Append("background-color:" + bvgStyle.BackgroundColor + ";");
+                sb1.Append("background-color:" + bvgGrid.bvgSettings.HeaderStyle.BackgroundColor + ";");
             }
 
-            if (!string.IsNullOrEmpty(bvgStyle.ForeColor))
+            if (!string.IsNullOrEmpty(bvgGrid.bvgSettings.HeaderStyle.ForeColor))
             {
-                sb1.Append("color:" + bvgStyle.ForeColor + ";");
+                sb1.Append("color:" + bvgGrid.bvgSettings.HeaderStyle.ForeColor + ";");
             }
-            if (!string.IsNullOrEmpty(bvgStyle.BorderColor))
+            if (!string.IsNullOrEmpty(bvgGrid.bvgSettings.HeaderStyle.BorderColor))
             {
-                sb1.Append("border-color:" + bvgStyle.BorderColor + ";");
+                sb1.Append("border-color:" + bvgGrid.bvgSettings.HeaderStyle.BorderColor + ";");
             }
 
             if (IsSelected)
@@ -80,9 +78,9 @@ namespace BlazorVirtualGridComponent.classes
             }
 
 
-            if (bvgStyle.BorderWidth > -1)
+            if (bvgGrid.bvgSettings.HeaderStyle.BorderWidth > -1)
             {
-                sb1.Append("border-width:" + bvgStyle.BorderWidth + "px;");
+                sb1.Append("border-width:" + bvgGrid.bvgSettings.HeaderStyle.BorderWidth + "px;");
             }
 
 
@@ -96,10 +94,8 @@ namespace BlazorVirtualGridComponent.classes
 
             StringBuilder sb1 = new StringBuilder();
 
-
-            sb1.Append("display:flex;flex-direction:row;width:" + (ColWidth - bvgStyle.BorderWidth)+"px;");
-            sb1.Append("height:" + (bvgGrid.HeaderHeight- bvgStyle.BorderWidth) + "px;line-height:" + (bvgGrid.HeaderHeight - bvgStyle.BorderWidth) + "px;");
-            sb1.Append("margin:0px;padding:0px;");
+            sb1.Append("width:" + (ColWidth - bvgGrid.bvgSettings.HeaderStyle.BorderWidth)+"px;");
+            sb1.Append("height:" + (bvgGrid.bvgSettings.HeaderHeight - bvgGrid.bvgSettings.HeaderStyle.BorderWidth) + "px;line-height:" + (bvgGrid.bvgSettings.HeaderHeight - bvgGrid.bvgSettings.HeaderStyle.BorderWidth) + "px;");
 
             return sb1.ToString();
 
@@ -112,7 +108,7 @@ namespace BlazorVirtualGridComponent.classes
             StringBuilder sb1 = new StringBuilder();
 
 
-            sb1.Append("color:blue;width:" + (ColWidth - 5) + "px;height:" + bvgGrid.HeaderHeight + "px;text-align:center;");
+            sb1.Append("width:" + (ColWidth - 5) + "px;height:" + bvgGrid.bvgSettings.HeaderHeight + "px");
        
 
             return sb1.ToString();
@@ -120,16 +116,12 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
 
 
         public void InvokePropertyChanged()
         {
-            PropertyChanged?.Invoke(this, null);
+            PropertyChanged?.Invoke();
         }
 
     }

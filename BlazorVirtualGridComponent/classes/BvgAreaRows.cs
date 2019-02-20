@@ -11,7 +11,6 @@ namespace BlazorVirtualGridComponent.classes
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public int ID { get; set; } = 1;
 
         public BvgGrid bvgGrid { get; set; }
 

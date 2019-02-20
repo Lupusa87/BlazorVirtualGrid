@@ -1,5 +1,23 @@
+function getTime() {
+    var d = new Date();
+    var h = addZero(d.getHours());
+    var m = addZero(d.getMinutes());
+    var s = addZero(d.getSeconds());
+    var ms = addZero(d.getMilliseconds(), 2);
+    return h + ":" + m + ":" + s + "." + ms;
+}
 
-
+function addZero(i, j = 1) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    if (j === 2) {
+        if (i < 100) {
+            i = "0" + i;
+        }
+    }
+    return i;
+}
 
 
 window.BvgJsFunctions = {
@@ -67,4 +85,29 @@ window.BvgJsFunctions = {
             return false;
         }
     },
+    UpdateElementContentBatchMonoString: function (l) {
+
+        b = JSON.parse(Blazor.platform.toJavaScriptString(l));
+
+        for (var i = 0; i < b.length; i += 2) {
+            if (document.getElementById(b[i]) !== null) {
+                document.getElementById(b[i]).innerText = b[i + 1];
+            }
+        }
+
+        return true;
+    },
+    UpdateElementContentBatchMonoByteArray: function (l) {
+
+        b = JSON.parse(new TextDecoder("utf-8").decode(Blazor.platform.toUint8Array(l)));
+
+        for (var i = 0; i < b.length; i += 2) {
+            if (document.getElementById(b[i]) !== null) {
+                document.getElementById(b[i]).innerText = b[i + 1];
+            }
+        }
+
+        return true;
+    },
+    
 };

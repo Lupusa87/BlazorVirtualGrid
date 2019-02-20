@@ -63,6 +63,22 @@ namespace BlazorVirtualGridComponent.classes
             }
         }
 
+
+        private BvgStyle _ActiveCellStyle { get; set; } = new BvgStyle();
+        public BvgStyle ActiveCellStyle
+        {
+            get
+            {
+                return _ActiveCellStyle;
+
+            }
+            set
+            {
+                _ActiveCellStyle = value;
+                OnPropertyChanged();
+            }
+        }
+
         private BvgStyle _SelectedHeaderStyle { get; set; } = new BvgStyle();
         public BvgStyle SelectedHeaderStyle
         {
@@ -79,30 +95,50 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
-        private BvgStyle _SelectedRowStyle { get; set; } = new BvgStyle();
-        public BvgStyle SelectedRowStyle
+       
+
+
+
+        private double _RowHeight { get; set; } = 40;
+        public double RowHeight
         {
             get
             {
-                return _SelectedRowStyle;
+                return _RowHeight;
 
             }
             set
             {
-                _SelectedRowStyle = value;
+                _RowHeight = value;
                 OnPropertyChanged();
             }
         }
+
+
+        private double _HeaderHeight { get; set; } = 50;
+        public double HeaderHeight
+        {
+            get
+            {
+                return _HeaderHeight;
+
+            }
+            set
+            {
+                _HeaderHeight = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+       
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        //public void Invoke_PropertyChanged(string Par_PropertyName)
-        //{
-        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(Par_PropertyName));
-        //}
+
 
         public void Invoke_PropertyChanged_For_All()
         {

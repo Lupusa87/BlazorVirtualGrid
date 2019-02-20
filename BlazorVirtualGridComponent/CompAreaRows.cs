@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
@@ -39,6 +40,10 @@ namespace BlazorVirtualGridComponent
                 }
             }
             base.OnAfterRender();
+
+
+
+            //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
         }
 
         private void BvgAreaRows_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -48,6 +53,12 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+
+            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaRows BuildRenderTree", MethodBase.GetCurrentMethod());
+
+            base.BuildRenderTree(builder);
+
+
             int k = -1;
 
             builder.OpenElement(k++, "tbody");
@@ -65,7 +76,7 @@ namespace BlazorVirtualGridComponent
             builder.CloseElement(); //tbody
 
 
-            base.BuildRenderTree(builder);
+            
         }
 
 

@@ -18,11 +18,10 @@ namespace BlazorVirtualGridComponent
         protected BvgCell bvgCell { get; set; }
 
 
-
         protected override void OnInit()
         {
             bvgCell.PropertyChanged += BvgCell_PropertyChanged;
-           
+            
         }
 
         private void BvgCell_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -32,15 +31,13 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-
+            base.BuildRenderTree(builder);
             //Console.WriteLine("BuildRenderTree cell");
-            
+
 
             int k = -1;
             builder.OpenElement(k++, "td");
 
-            builder.AddAttribute(k++, "align", "center");
-            builder.AddAttribute(k++, "valign", "middle");
             builder.AddAttribute(k++, "style", bvgCell.GetStyleTD());
 
 
@@ -49,13 +46,14 @@ namespace BlazorVirtualGridComponent
 
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", bvgCell.ID);
+            builder.AddAttribute(k++, "class", "CellDiv");
             builder.AddAttribute(k++, "tabindex",0); // without this div can't get focus and don't fires keyboard events
             builder.AddAttribute(k++, "style", bvgCell.GetStyleDiv());
             builder.AddAttribute(k++, "onkeydown", OnKeyDown);
 
 
-            builder.AddContent(k++, bvgCell.Value.ToString());
-           
+            builder.AddContent(k++, bvgCell.Value);
+            
 
             builder.CloseElement(); //div
 
@@ -64,7 +62,7 @@ namespace BlazorVirtualGridComponent
             builder.CloseElement();
 
 
-            base.BuildRenderTree(builder);
+            
         }
 
 
@@ -185,20 +183,20 @@ namespace BlazorVirtualGridComponent
                         BvgCell c = bvgCell.bvgGrid.Rows.Single(x=>x.ID==sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
                       
 
-                        if (!c.bvgRow.IsInView)
-                        {
-                            c.FocusRequired = true;
+                        //if (!c.bvgRow.IsInView)
+                        //{
+                        //    c.FocusRequired = true;
 
-                            if (HasCtrl)
-                            {
-                                bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.SetScrollPosition(0);
-                            }
-                            else
-                            {
-                                bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.bsbScrollbar.CmdWhell(false);
-                            }
+                        //    if (HasCtrl)
+                        //    {
+                        //        bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.SetScrollPosition(0);
+                        //    }
+                        //    else
+                        //    {
+                        //        bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.bsbScrollbar.CmdWhell(false);
+                        //    }
                             
-                        }
+                        //}
 
 
 
@@ -223,23 +221,23 @@ namespace BlazorVirtualGridComponent
                         BvgCell c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
                         
                        
-                        if (!c.bvgRow.IsInView)
-                        {
-                            c.FocusRequired = true;
+                        //if (!c.bvgRow.IsInView)
+                        //{
+                        //    c.FocusRequired = true;
 
 
 
-                            if (HasCtrl)
-                            {
-                                bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.SetScrollPosition(bvgCell.bvgGrid.Rows.Count* bvgCell.bvgGrid.RowHeight);
-                            }
-                            else
-                            {
-                                bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.bsbScrollbar.CmdWhell(true);
-                            }
+                        //    if (HasCtrl)
+                        //    {
+                        //        bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.SetScrollPosition(bvgCell.bvgGrid.Rows.Count* bvgCell.bvgGrid.bvgSettings.RowHeight);
+                        //    }
+                        //    else
+                        //    {
+                        //        bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.bsbScrollbar.CmdWhell(true);
+                        //    }
                             
 
-                        }
+                        //}
                         bvgCell.bvgGrid.SelectCell(c, true);
                     }
 

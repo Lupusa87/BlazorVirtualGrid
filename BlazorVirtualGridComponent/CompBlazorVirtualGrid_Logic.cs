@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,17 +19,23 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected string TableName { get; set; }
 
-        
+        [Parameter]
+        protected BvgSettings bvgSettings { get; set; } = new BvgSettings();
+
+
+
         public BvgGrid bvgGrid { get; set; }
 
 
-        protected IEnumerable<TItem> SortedList { get; set; }
+        protected TItem[] SortedList { get; set; }
 
 
         public bool ActualRender { get; set; } =false;
 
 
-        public BvgSettings GridSettings { get; set; } = new BvgSettings();
+        public bool NeedsRefreshFromDotNet { get; set; } = true;
+
+        
 
         Timer timer1;
 
@@ -47,19 +54,24 @@ namespace BlazorVirtualGridComponent
                 IsReady = true,
                 Name = TableName,
                 RowsTotalCount = SourceList.Count(),
+                bvgSettings = bvgSettings,
             };
 
             GenericAdapter<TItem>.GetColumns(SourceList.AsQueryable(), bvgGrid);
-            SortedList = SourceList.AsEnumerable();
+            SortedList = SourceList.ToArray();
           
             base.OnParametersSet();
         }
 
 
+
+   
+
         public void SortGrid(string s)
         {
+            
 
-            SortedList = GenericAdapter<TItem>.GetSortedList(SourceList.AsQueryable(), s);
+            SortedList = GenericAdapter<TItem>.GetSortedList(SourceList.AsQueryable(), s).ToArray();
 
             bvgGrid.CurrScrollPosition = 0;
             LastSkip = -1;
@@ -70,12 +82,15 @@ namespace BlazorVirtualGridComponent
         public void RenderGrid(int skip)
         {
 
-
+  
             if (skip != LastSkip)
             {
+
+              
                 LastSkip = skip;
                 if (skip > 0)
                 {
+
                     GenericAdapter<TItem>.GetRows(SortedList.Skip(skip).Take(bvgGrid.DisplayedRowsCount), bvgGrid);
                 }
                 else
@@ -83,7 +98,13 @@ namespace BlazorVirtualGridComponent
                     GenericAdapter<TItem>.GetRows(SortedList.Take(bvgGrid.DisplayedRowsCount), bvgGrid);
                 }
 
-                bvgGrid.bvgAreaRows.InvokePropertyChanged();
+
+
+                if (NeedsRefreshFromDotNet)
+                {
+                    Console.WriteLine("!!!!!bvgGrid.bvgAreaRows.InvokePropertyChanged()");
+                    bvgGrid.bvgAreaRows.InvokePropertyChanged();
+                }
             }
         }
 
@@ -97,7 +118,7 @@ namespace BlazorVirtualGridComponent
             {
 
                 RenderGrid(0);
-
+                NeedsRefreshFromDotNet = false;
                 timer1.Dispose();
             }
         }

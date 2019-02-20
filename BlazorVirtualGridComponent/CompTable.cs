@@ -24,7 +24,7 @@ namespace BlazorVirtualGridComponent
 
             builder.OpenElement(k++, "table");
             builder.AddAttribute(k++, "id", bvgGrid.GridTableElementID);
-            builder.AddAttribute(k++, "style", "table-layout:auto;width:100%;margin:0;padding:0;");
+            builder.AddAttribute(k++, "style", "table-layout:auto;width:100%;");
             builder.AddAttribute(k++, "onwheel", OnWheel);
 
             if (ActualRender)
