@@ -8,6 +8,12 @@ namespace BlazorVirtualGridComponent.businessLayer
     {
         public List<BCssItem> Children = new List<BCssItem>();
 
+        public string ToBase64String()
+        {
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(ToString()));
+        }
+            
+
         public override string ToString()
         {
 
@@ -20,7 +26,6 @@ namespace BlazorVirtualGridComponent.businessLayer
                 sb1.Append(item.Selector);
                 sb1.Append("{");
 
-
                 foreach (var i in item.Values)
                 {
                     sb1.Append(i.Key);
@@ -28,15 +33,11 @@ namespace BlazorVirtualGridComponent.businessLayer
                     sb1.Append(i.Value);
                     sb1.Append(";");
                 }
-
-
                 sb1.Append("}");
 
             }
 
-
             return sb1.ToString().Replace(";}", "}");
-
         }
     }
 
@@ -44,7 +45,7 @@ namespace BlazorVirtualGridComponent.businessLayer
     {
 
 
-        public string Selector { get; set; }
+        public string Selector { get; private set; }
 
 
         public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();

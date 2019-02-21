@@ -68,35 +68,21 @@ namespace BlazorVirtualGridComponent.classes
 
         public string GetStyleTable(bool ForFrozen)
         {
-
-            StringBuilder sb1 = new StringBuilder();
-
-            //sb1.Append("table-layout:fixed;");
             if (ForFrozen)
             {
-                sb1.Append("width:" + FrozenTableWidth + "px;");
+                return "width:" + FrozenTableWidth + "px;";
             }
             else
             {
-                sb1.Append("width:" + NotFrozenTableWidth + "px;");
+                return "width:" + NotFrozenTableWidth + "px;";
             }
-
-
-            return sb1.ToString();
 
         }
 
 
         public string GetStyleDiv()
         {
-
-            StringBuilder sb1 = new StringBuilder();
-
-    
-            sb1.Append("width:" + (NotFrozenTableWidth + 5) + "px;height:" + height+ "px;");
-
-            return sb1.ToString();
-
+            return "width:" + (NotFrozenTableWidth + 5) + "px;height:" + height + "px;";
         }
 
         public void SelectCell(BvgCell parCell, bool doFocus)
@@ -172,7 +158,7 @@ namespace BlazorVirtualGridComponent.classes
 
 
             ActiveColumn.IsSelected = true;
-            ActiveColumn.CssClass = "columnActive";
+            ActiveColumn.CssClass = HeaderStyle.HeaderActive.ToString();
 
             foreach (var item in Rows)
             {
@@ -180,7 +166,7 @@ namespace BlazorVirtualGridComponent.classes
                 BvgCell c = item.Cells.Single(x => x.bvgColumn.ID == ActiveColumn.ID);
 
                 c.IsSelected = true;
-                c.CssClass = "CellSelected";
+                c.CssClass = CellStyle.CellSelected.ToString();
                 c.InvokePropertyChanged();
             }
 
@@ -258,7 +244,7 @@ namespace BlazorVirtualGridComponent.classes
             foreach (var item in Columns.Where(x => x.IsSelected))
             {
                 item.IsSelected = false;
-                item.CssClass = "ColumnRegular";
+                item.CssClass = HeaderStyle.HeaderRegular.ToString();
                 item.BSplitter.SetColor(bvgSettings.HeaderStyle.BackgroundColor);
                 item.InvokePropertyChanged();
             }

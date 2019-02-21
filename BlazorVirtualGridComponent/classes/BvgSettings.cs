@@ -29,24 +29,23 @@ namespace BlazorVirtualGridComponent.classes
             set
             {
                 _CellStyle = value;
-                OnPropertyChanged();
             }
         }
 
-        private BvgStyle _HeaderStyle { get; set; } = new BvgStyle();
-        public BvgStyle HeaderStyle
+        private BvgStyle _AlternatedCellStyle { get; set; } = new BvgStyle();
+        public BvgStyle AlternatedCellStyle
         {
             get
             {
-                return _HeaderStyle;
+                return _AlternatedCellStyle;
 
             }
             set
             {
-                _HeaderStyle = value;
-                OnPropertyChanged();
+                _AlternatedCellStyle = value;
             }
         }
+
 
         private BvgStyle _SelectedCellStyle { get; set; } = new BvgStyle();
         public BvgStyle SelectedCellStyle
@@ -59,7 +58,6 @@ namespace BlazorVirtualGridComponent.classes
             set
             {
                 _SelectedCellStyle = value;
-                OnPropertyChanged();
             }
         }
 
@@ -75,22 +73,36 @@ namespace BlazorVirtualGridComponent.classes
             set
             {
                 _ActiveCellStyle = value;
-                OnPropertyChanged();
             }
         }
 
-        private BvgStyle _SelectedHeaderStyle { get; set; } = new BvgStyle();
-        public BvgStyle SelectedHeaderStyle
+
+        private BvgStyle _HeaderStyle { get; set; } = new BvgStyle();
+        public BvgStyle HeaderStyle
         {
             get
             {
-                return _SelectedHeaderStyle;
+                return _HeaderStyle;
 
             }
             set
             {
-                _SelectedHeaderStyle = value;
-                OnPropertyChanged();
+                _HeaderStyle = value;
+            }
+        }
+
+
+        private BvgStyle _ActiveHeaderStyle { get; set; } = new BvgStyle();
+        public BvgStyle ActiveHeaderStyle
+        {
+            get
+            {
+                return _ActiveHeaderStyle;
+
+            }
+            set
+            {
+                _ActiveHeaderStyle = value;
             }
         }
 
@@ -110,7 +122,6 @@ namespace BlazorVirtualGridComponent.classes
             set
             {
                 _RowHeight = value;
-                OnPropertyChanged();
             }
         }
 
@@ -126,7 +137,6 @@ namespace BlazorVirtualGridComponent.classes
             set
             {
                 _HeaderHeight = value;
-                OnPropertyChanged();
             }
         }
 

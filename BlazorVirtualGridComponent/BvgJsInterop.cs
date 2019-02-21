@@ -84,5 +84,15 @@ namespace BlazorVirtualGridComponent
             return false;
         }
 
+
+        public static Task<bool> SetValueToCheckBox(string el, string val)
+        {
+
+
+
+            return JSRuntime.Current.InvokeAsync<bool>(
+                 "BvgJsFunctions.SetValueToCheckBox", el, val);
+        }
+
     }
 }

@@ -27,9 +27,9 @@
 
 @if (FirstOrSecond)
 {
-    <CompBlazorVirtualGrid ref="CurrBVG1" SourceList="@list1" TableName="@TableName1"></CompBlazorVirtualGrid>
+    <CompBlazorVirtualGrid ref="CurrBVG1" SourceList="@list1" TableName="@TableName1" bvgSettings="@bvgSettings1"></CompBlazorVirtualGrid>
 }
 else
 {
-    <CompBlazorVirtualGrid ref="CurrBVG2" SourceList="@list2" TableName="@TableName2"></CompBlazorVirtualGrid>
+    <CompBlazorVirtualGrid ref="CurrBVG2" SourceList="@list2" TableName="@TableName2" bvgSettings="@bvgSettings1"></CompBlazorVirtualGrid>
 }

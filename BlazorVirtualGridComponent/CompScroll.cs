@@ -63,8 +63,11 @@ namespace BlazorVirtualGridComponent
 
                 if (Math.Abs(ScrollPosition - bvgScroll.bvgGrid.CurrScrollPosition) > bvgScroll.bvgGrid.bvgSettings.RowHeight)
                 {
-                    //BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
-                    //BlazorWindowHelper.BlazorTimeAnalyzer.Add("onscroll fired", MethodBase.GetCurrentMethod());
+                    BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
+                    BlazorWindowHelper.BlazorTimeAnalyzer.Add("onscroll fired", MethodBase.GetCurrentMethod());
+
+                    bvgScroll.bvgGrid.Cmd_Clear_Selection();
+
                     bvgScroll.bvgGrid.CurrScrollPosition = ScrollPosition;
                     bvgScroll.bvgGrid.OnScroll?.Invoke((int)(ScrollPosition / bvgScroll.bvgGrid.bvgSettings.RowHeight));
 

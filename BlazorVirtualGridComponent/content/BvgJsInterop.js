@@ -89,9 +89,20 @@ window.BvgJsFunctions = {
 
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));
 
-        for (var i = 0; i < b.length; i += 2) {
-            if (document.getElementById(b[i]) !== null) {
-                document.getElementById(b[i]).innerText = b[i + 1];
+        for (var i = 0; i < b.length; i += 3) {
+            if (b[i + 2] === "b") {
+              
+                if (b[i + 1].toLowerCase() === "true") {
+                    document.getElementById("checkbox" + b[i]).checked = true;
+                }
+                else {
+                    document.getElementById("checkbox" + b[i]).checked = false;
+                }
+            }
+            else {
+                if (document.getElementById(b[i]) !== null) {
+                    document.getElementById(b[i]).innerText = b[i + 1];
+                }
             }
         }
 
@@ -109,5 +120,20 @@ window.BvgJsFunctions = {
 
         return true;
     },
+    SetValueToCheckBox: function (el, val) {
+
+        if (document.getElementById(el) !== null) {
+            if (val.toLowerCase() === "true") {
+                document.getElementById(el).checked = true;
+            }
+            else {
+                document.getElementById(el).checked = false;
+            }
+        }
+
+
+        return true;
+    },
+    
     
 };

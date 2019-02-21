@@ -3,7 +3,12 @@
 
 @inherits CompBlazorVirtualGrid_Logic<TItem>
 
-<CompCSS></CompCSS>
+
+
+@if (ActualRender)
+{
+<CompCSS bvgGrid="@bvgGrid"></CompCSS>
+}
 
 
 @if (bvgGrid.IsReady)

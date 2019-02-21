@@ -22,5 +22,11 @@ namespace BlazorVirtualGridComponent.classes
             CellActive,
         }
 
+
+        public enum HeaderStyle
+        {
+            HeaderRegular,
+            HeaderActive,
+        }
     }
 }

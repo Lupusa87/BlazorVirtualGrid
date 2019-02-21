@@ -32,18 +32,14 @@ namespace BlazorVirtualGridComponent
         {
             if (bvgAreaRows.bvgGrid.ActiveCell != null)
             {
-                if (bvgAreaRows.bvgGrid.ActiveCell.FocusRequired)
-                {
-                    bvgAreaRows.bvgGrid.ActiveCell.FocusRequired = false;
-                   
-                    bvgAreaRows.bvgGrid.ActiveCellFocus();
-                }
+                bvgAreaRows.bvgGrid.ActiveCellFocus();
             }
+
             base.OnAfterRender();
 
 
 
-            //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
+            BlazorWindowHelper.BlazorTimeAnalyzer.Log();
         }
 
         private void BvgAreaRows_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -54,7 +50,7 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
 
-            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaRows BuildRenderTree", MethodBase.GetCurrentMethod());
+            BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaRows BuildRenderTree", MethodBase.GetCurrentMethod());
 
             base.BuildRenderTree(builder);
 

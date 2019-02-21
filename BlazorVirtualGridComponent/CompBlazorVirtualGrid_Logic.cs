@@ -33,10 +33,6 @@ namespace BlazorVirtualGridComponent
         public bool ActualRender { get; set; } =false;
 
 
-        public bool NeedsRefreshFromDotNet { get; set; } = true;
-
-        
-
         Timer timer1;
 
         public bool ForceStateHasChaned { get; set; } = false;
@@ -82,11 +78,9 @@ namespace BlazorVirtualGridComponent
         public void RenderGrid(int skip)
         {
 
-  
             if (skip != LastSkip)
             {
 
-              
                 LastSkip = skip;
                 if (skip > 0)
                 {
@@ -98,29 +92,14 @@ namespace BlazorVirtualGridComponent
                     GenericAdapter<TItem>.GetRows(SortedList.Take(bvgGrid.DisplayedRowsCount), bvgGrid);
                 }
 
-
-
-                if (NeedsRefreshFromDotNet)
-                {
-                    Console.WriteLine("!!!!!bvgGrid.bvgAreaRows.InvokePropertyChanged()");
-                    bvgGrid.bvgAreaRows.InvokePropertyChanged();
-                }
+                // bvgGrid.bvgAreaRows.InvokePropertyChanged();
             }
         }
 
         public void Timer1Callback(object o)
         {
-            if (ActualRender == false)
-            {
-                GetActualWidthAndHeight();      
-            }
-            else
-            {
-
-                RenderGrid(0);
-                NeedsRefreshFromDotNet = false;
-                timer1.Dispose();
-            }
+            GetActualWidthAndHeight();
+            timer1.Dispose();
         }
 
         protected override void OnAfterRender()
@@ -145,10 +124,6 @@ namespace BlazorVirtualGridComponent
                 timer1 = new Timer(Timer1Callback, null, 1, 1);
             }
 
-
-
-
-
             base.OnAfterRender();
         }
 
@@ -165,14 +140,16 @@ namespace BlazorVirtualGridComponent
             bvgGrid.height = windowHeight - top - 40;
 
 
-
             bvgGrid.AdjustSize();
 
             bvgGrid.UpdateHorizontalScroll();
 
 
+            RenderGrid(0);
+            
             ActualRender = true;
             StateHasChanged();
+
         }
 
 

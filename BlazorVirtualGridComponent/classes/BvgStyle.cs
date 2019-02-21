@@ -10,7 +10,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public string OutlineColor { get; set; } = "blue";
         public string BorderColor { get; set; } = "black";
-        public string BackgroundColor { get; set; } = "lightgreen";
+        public string BackgroundColor { get; set; } = "white";
         public string ForeColor { get; set; } = "blue";
         public double BorderWidth { get; set; } = 1;
 

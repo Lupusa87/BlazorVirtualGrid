@@ -34,20 +34,19 @@ namespace BlazorVirtualGridComponent
             int k = -1;
 
             builder.OpenElement(k++, "th");
-
-            builder.AddAttribute(k++, "style", bvgColumn.GetStyleTh());
+            builder.AddAttribute(k++, "class", bvgColumn.CssClass);
             builder.AddAttribute(k++, "onclick", Clicked);
 
 
 
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "class", "ColumnDiv");
-            builder.AddAttribute(k++, "style", bvgColumn.GetStyleDiv());
+            builder.AddAttribute(k++, "style", "width:" + bvgColumn.ColWidthDiv + "px");
 
 
             builder.OpenElement(k++, "span");
             builder.AddAttribute(k++, "class", "ColumnSpan");
-            builder.AddAttribute(k++, "style", bvgColumn.GetStyleSpan());
+            builder.AddAttribute(k++, "style", "width:" + bvgColumn.ColWidthSpan + "px");
             builder.AddContent(k++, bvgColumn.Name);
             builder.CloseElement(); //span
 

@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
+using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent.businessLayer
 {
@@ -34,6 +35,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                     type = t,
                     SequenceNumber = (byte)k,
                     bvgGrid = result,
+                    CssClass = HeaderStyle.HeaderRegular.ToString(),
                 };
                 result.ColumnsDictionary.Add(prop.Name, col);
                 result.Columns.Add(col);
@@ -67,8 +69,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
            
             ushort k = 0;
-           
-            BvgColumn col;
+
 
             if (result.Rows.Count == 0)
             {
@@ -84,7 +85,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                     foreach (PropertyInfo p in result.Props)
                     {
 
-                        result.ColumnsDictionary.TryGetValue(p.Name, out col);
+                        result.ColumnsDictionary.TryGetValue(p.Name, out BvgColumn col);
 
                         BvgCell cell = new BvgCell
                         {
@@ -92,6 +93,8 @@ namespace BlazorVirtualGridComponent.businessLayer
                             bvgRow = row,
                             bvgColumn = col,
                             bvgGrid = result,
+                            CssClass = CellStyle.CellRegular.ToString(),
+                            ValueType = p.PropertyType,
                         };
 
                         cell.ID = "C" + col.ID + "R" + row.ID;
@@ -108,11 +111,11 @@ namespace BlazorVirtualGridComponent.businessLayer
 
 
                 k = 0;
-                ushort j = 0;
+                ushort j;
                 short i = -1;
 
-                string[] UpdatePkg = new string[result.Rows.Count * result.Rows[0].Cells.Count * 2];
-               
+                string[] UpdatePkg = new string[result.Rows.Count * result.Rows[0].Cells.Count * 3];
+
                 foreach (T item in GenericList)
                 {
                     j = 0;
@@ -120,24 +123,32 @@ namespace BlazorVirtualGridComponent.businessLayer
                     {
 
                         result.Rows[k].Cells[j].Value = p.GetValue(item, null).ToString();
-                      
+
                         
                         UpdatePkg[++i] = result.Rows[k].Cells[j].ID;
                         UpdatePkg[++i] = result.Rows[k].Cells[j].Value;
 
+                        if (p.PropertyType.Equals(typeof(bool)))
+                        {
+                            UpdatePkg[++i] = "b";
+                        }
+                        else
+                        {
+                            UpdatePkg[++i] = string.Empty;
+                        }
                         j++;
                     }
                     k++;
                 }
 
-               
+
                 BvgJsInterop.UpdateElementContentBatchMonoString(UpdatePkg);
 
 
-                //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
+                BlazorWindowHelper.BlazorTimeAnalyzer.Log();
             }
-            
-           
+
+
         }
 
     }
