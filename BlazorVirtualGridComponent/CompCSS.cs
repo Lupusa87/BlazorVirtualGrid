@@ -37,8 +37,8 @@ namespace BlazorVirtualGridComponent
             _CellDiv.Values.Add("text-overflow", "ellipsis");
             _CellDiv.Values.Add("margin", "0px");
             _CellDiv.Values.Add("padding", "0px");
-            _CellDiv.Values.Add("height", (bvgGrid.bvgSettings.RowHeight - bvgGrid.bvgSettings.CellStyle.BorderWidth) + "px");
-            _CellDiv.Values.Add("line-height", (bvgGrid.bvgSettings.RowHeight - bvgGrid.bvgSettings.CellStyle.BorderWidth) + "px");
+            _CellDiv.Values.Add("height", (bvgGrid.bvgSettings.RowHeight - bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth) + "px");
+            _CellDiv.Values.Add("line-height", (bvgGrid.bvgSettings.RowHeight - bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth) + "px");
             blazorCSS.Children.Add(_CellDiv);
 
 
@@ -100,27 +100,47 @@ namespace BlazorVirtualGridComponent
         private void GenerateCellCSS()
         {
 
-            BCssItem _CellRegular = new BCssItem(".CellRegular");
-            _CellRegular.Values.Add("border-style", "solid");
-            _CellRegular.Values.Add("height", bvgGrid.bvgSettings.RowHeight + "px");
-            _CellRegular.Values.Add("background-color", bvgGrid.bvgSettings.CellStyle.BackgroundColor);
-            _CellRegular.Values.Add("color", bvgGrid.bvgSettings.CellStyle.ForeColor);
-            _CellRegular.Values.Add("border-color", bvgGrid.bvgSettings.CellStyle.BorderColor);
-            _CellRegular.Values.Add("border-width", bvgGrid.bvgSettings.CellStyle.BorderWidth + "px;");
-            _CellRegular.Values.Add("cursor", "cell");
-            blazorCSS.Children.Add(_CellRegular);
+            BCssItem _CellNonFrozen = new BCssItem(".CellNonFrozen");
+            _CellNonFrozen.Values.Add("border-style", "solid");
+            _CellNonFrozen.Values.Add("height", bvgGrid.bvgSettings.RowHeight + "px");
+            _CellNonFrozen.Values.Add("background-color", bvgGrid.bvgSettings.NonFrozenCellStyle.BackgroundColor);
+            _CellNonFrozen.Values.Add("color", bvgGrid.bvgSettings.NonFrozenCellStyle.ForeColor);
+            _CellNonFrozen.Values.Add("border-color", bvgGrid.bvgSettings.NonFrozenCellStyle.BorderColor);
+            _CellNonFrozen.Values.Add("border-width", bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth + "px;");
+            _CellNonFrozen.Values.Add("cursor", "cell");
+            blazorCSS.Children.Add(_CellNonFrozen);
 
 
-            BCssItem _CellAlternated = new BCssItem(".CellAlternated");
-            _CellAlternated.Values.Add("border-style", "solid");
-            _CellAlternated.Values.Add("height", bvgGrid.bvgSettings.RowHeight + "px");
-            _CellAlternated.Values.Add("background-color", bvgGrid.bvgSettings.AlternatedCellStyle.BackgroundColor);
-            _CellAlternated.Values.Add("color", bvgGrid.bvgSettings.AlternatedCellStyle.ForeColor);
-            _CellAlternated.Values.Add("border-color", bvgGrid.bvgSettings.AlternatedCellStyle.BorderColor);
-            _CellAlternated.Values.Add("border-width", bvgGrid.bvgSettings.AlternatedCellStyle.BorderWidth + "px;");
-            _CellAlternated.Values.Add("cursor", "cell");
-            blazorCSS.Children.Add(_CellAlternated);
-            Console.WriteLine("bvgGrid.bvgSettings.AlternatedCellStyle.BackgroundColor" + bvgGrid.bvgSettings.AlternatedCellStyle.BackgroundColor);
+            BCssItem _CellAlternatedNonFrozen = new BCssItem(".CellNonFrozenAlternated");
+            _CellAlternatedNonFrozen.Values.Add("border-style", "solid");
+            _CellAlternatedNonFrozen.Values.Add("height", bvgGrid.bvgSettings.RowHeight + "px");
+            _CellAlternatedNonFrozen.Values.Add("background-color", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.BackgroundColor);
+            _CellAlternatedNonFrozen.Values.Add("color", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.ForeColor);
+            _CellAlternatedNonFrozen.Values.Add("border-color", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.BorderColor);
+            _CellAlternatedNonFrozen.Values.Add("border-width", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.BorderWidth + "px;");
+            _CellAlternatedNonFrozen.Values.Add("cursor", "cell");
+            blazorCSS.Children.Add(_CellAlternatedNonFrozen);
+
+            BCssItem _CellFrozen = new BCssItem(".CellFrozen");
+            _CellFrozen.Values.Add("border-style", "solid");
+            _CellFrozen.Values.Add("height", bvgGrid.bvgSettings.RowHeight + "px");
+            _CellFrozen.Values.Add("background-color", bvgGrid.bvgSettings.FrozenCellStyle.BackgroundColor);
+            _CellFrozen.Values.Add("color", bvgGrid.bvgSettings.FrozenCellStyle.ForeColor);
+            _CellFrozen.Values.Add("border-color", bvgGrid.bvgSettings.FrozenCellStyle.BorderColor);
+            _CellFrozen.Values.Add("border-width", bvgGrid.bvgSettings.FrozenCellStyle.BorderWidth + "px;");
+            _CellFrozen.Values.Add("cursor", "cell");
+            blazorCSS.Children.Add(_CellFrozen);
+
+
+            BCssItem _CellAlternatedFrozen = new BCssItem(".CellFrozenAlternated");
+            _CellAlternatedFrozen.Values.Add("border-style", "solid");
+            _CellAlternatedFrozen.Values.Add("height", bvgGrid.bvgSettings.RowHeight + "px");
+            _CellAlternatedFrozen.Values.Add("background-color", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.BackgroundColor);
+            _CellAlternatedFrozen.Values.Add("color", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.ForeColor);
+            _CellAlternatedFrozen.Values.Add("border-color", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.BorderColor);
+            _CellAlternatedFrozen.Values.Add("border-width", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.BorderWidth + "px;");
+            _CellAlternatedFrozen.Values.Add("cursor", "cell");
+            blazorCSS.Children.Add(_CellAlternatedFrozen);
 
             BCssItem _CellSelected = new BCssItem(".CellSelected");
             _CellSelected.Values.Add("border-style", "solid");

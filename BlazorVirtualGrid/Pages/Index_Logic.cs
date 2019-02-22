@@ -30,62 +30,94 @@ namespace BlazorVirtualGrid.Pages
         public IList<MyItem2> list2 { get; set; } = new List<MyItem2>();
 
         public BvgSettings bvgSettings1 { get; set; } = new BvgSettings();
+        public BvgSettings bvgSettings2 { get; set; } = new BvgSettings();
 
-
-        Dictionary<string, Dictionary<string, double>> SavedColumnWitdths_Dict = new Dictionary<string, Dictionary<string, double>>();
+        Dictionary<string, Dictionary<string, int>> SavedColumnWitdths_Dict = new Dictionary<string, Dictionary<string, int>>();
 
 
        
         protected override void OnInit()
         {
+            
+
+            FillList(50, 70);
+
+
+            bvgSettings1 = new BvgSettings();
+
             ConfigureBvgSettings1();
 
-            FillList(200, 300);
+            bvgSettings1.FrozenColumnsListOrdered = new List<string>
+            {
+                nameof(MyItem.N3),
+                nameof(MyItem.Date)
+            };
 
-       
-
-            //List<string> frozenCols = new List<string>
-            //{
-            //    nameof(MyItem.N3),
-            //    nameof(MyItem.Date)
-            //};
-
-            //_bvgGrid.FreezeColumns(frozenCols, false);
-
-
-            //_bvgGrid.SetWidthToColumn(nameof(MyItem.N1), 300, false);
+            bvgSettings1.ColumnWidthsDictionary.Add(nameof(MyItem.N3), 200);
+            bvgSettings1.ColumnWidthsDictionary.Add(nameof(MyItem.Date), 200);
+            bvgSettings1.ColumnWidthsDictionary.Add(nameof(MyItem.N1), 300);
+           
 
             base.OnInit();
         }
 
 
-        public void GetColumnsWidth()
+        public void GetColumnsWidth1()
         {
-            //if (SavedColumnWitdths_Dict.ContainsKey(_bvgGrid.Name))
-            //{
-            //    SavedColumnWitdths_Dict[_bvgGrid.Name] = _bvgGrid.GetColumnWidths();
-            //}
-            //else
-            //{
-            //    SavedColumnWitdths_Dict.Add(_bvgGrid.Name, _bvgGrid.GetColumnWidths());
-            //}
+
+            if (SavedColumnWitdths_Dict.ContainsKey(CurrBVG1.bvgGrid.Name))
+            {
+                SavedColumnWitdths_Dict[CurrBVG1.bvgGrid.Name] = CurrBVG1.bvgGrid.GetColumnWidths();
+            }
+            else
+            {
+                SavedColumnWitdths_Dict.Add(CurrBVG1.bvgGrid.Name, CurrBVG1.bvgGrid.GetColumnWidths());
+            }
+        }
+
+
+        public void GetColumnsWidth2()
+        {
+
+            if (SavedColumnWitdths_Dict.ContainsKey(CurrBVG2.bvgGrid.Name))
+            {
+                SavedColumnWitdths_Dict[CurrBVG2.bvgGrid.Name] = CurrBVG2.bvgGrid.GetColumnWidths();
+            }
+            else
+            {
+                SavedColumnWitdths_Dict.Add(CurrBVG2.bvgGrid.Name, CurrBVG2.bvgGrid.GetColumnWidths());
+            }
         }
 
 
         public void CmdNewList1()
         {
-            FirstOrSecond = false;
+            FirstOrSecond = true;
+
+
+            GetColumnsWidth1();
 
             FillList(200, 300);
 
-            GetColumnsWidth();
-            //_bvgGrid = GenericAdapter1.Convert(list1, "Table1");
+
+            bvgSettings1 = new BvgSettings();
+
+            ConfigureBvgSettings1();
+
+            bvgSettings1.FrozenColumnsListOrdered = new List<string>
+            {
+                nameof(MyItem.N3),
+                nameof(MyItem.Date)
+            };
 
 
             if (SavedColumnWitdths_Dict.ContainsKey(TableName1))
             {
-                CurrBVG1.bvgGrid.SetColumnWidths(SavedColumnWitdths_Dict[TableName1], false);
+                bvgSettings1.ColumnWidthsDictionary = SavedColumnWitdths_Dict[TableName1];
             }
+
+
+            StateHasChanged();
 
 
         }
@@ -93,91 +125,185 @@ namespace BlazorVirtualGrid.Pages
         public void Cmdqwer()
         {
 
-            CurrBVG1.bvgGrid.UpdateHorizontalScroll();
         }
             
 
         public void CmdNewList2()
         {
-            FirstOrSecond = true;
+            FirstOrSecond = false;
+
+            GetColumnsWidth2();
+
             FillList2(200, 300);
 
-            GetColumnsWidth();
-            //_bvgGrid = GenericAdapter2.Convert(list2, "persons");
 
+            bvgSettings1 = new BvgSettings();
 
-            if (SavedColumnWitdths_Dict.ContainsKey(TableName2))
+            ConfigureBvgSettings2();
+
+            bvgSettings2.FrozenColumnsListOrdered = new List<string>
             {
-                CurrBVG2.bvgGrid.SetColumnWidths(SavedColumnWitdths_Dict[TableName2], false);
+                nameof(MyItem2.Gender)
+            };
+
+            bvgSettings2.HiddenColumns = new List<string>
+            {
+                nameof(MyItem2.LastName)
+            };
+
+
+            if (SavedColumnWitdths_Dict.ContainsKey(TableName1))
+            {
+                bvgSettings1.ColumnWidthsDictionary = SavedColumnWitdths_Dict[TableName1];
             }
+
+
+            StateHasChanged();
         }
 
         public void CmdPinColList1()
         {
-            CurrBVG1.bvgGrid.FreezeColumn(nameof(MyItem.N3), true);
+            
         }
 
         public void CmdPinColList2()
         {
-            CurrBVG1.bvgGrid.FreezeColumn(nameof(MyItem2.LastName), true);
+            
         }
 
         public void ConfigureBvgSettings1()
         {
-            bvgSettings1 = new BvgSettings
+
+            bvgSettings1.NonFrozenCellStyle = new BvgStyle
             {
-                CellStyle = new BvgStyle
-                {
-                    BackgroundColor = "silver",
-                    ForeColor = "darkblue",
-                    BorderColor = "black",
-                    BorderWidth = 1,
-                },
-                AlternatedCellStyle = new BvgStyle
-                {
-                    BackgroundColor = "lightgreen",
-                    ForeColor = "darkblue",
-                    BorderColor = "black",
-                    BorderWidth = 1,
-                },
-                SelectedCellStyle = new BvgStyle
-                {
-                    BackgroundColor = "gray",
-                    ForeColor = "darkblue",
-                    BorderColor = "black",
-                    BorderWidth = 1,
-                },
-                ActiveCellStyle = new BvgStyle
-                {
-                    BackgroundColor = "gray",
-                    ForeColor = "darkblue",
-                    BorderColor = "black",
-                    BorderWidth = 1,
-                    OutlineColor = "blue",
-                    OutlineWidth = 3,
-                },
-                HeaderStyle = new BvgStyle
-                {
-                    BackgroundColor = "gray",
-                    ForeColor = "blue",
-                    BorderColor = "brown",
-                    BorderWidth = 2,
-                },
-                ActiveHeaderStyle = new BvgStyle
-                {
-                    BackgroundColor = "gray",
-                    ForeColor = "darkblue",
-                    BorderColor = "black",
-                    BorderWidth = 2,
-                },
-                RowHeight = 40,
-                HeaderHeight = 50,
+                BackgroundColor = "#cccccc",
+                ForeColor = "darkblue",
+                BorderColor = "black",
+                BorderWidth = 1,
             };
+            bvgSettings1.AlternatedNonFrozenCellStyle = new BvgStyle
+            {
+                BackgroundColor = "#a7f1a7",
+                ForeColor = "darkblue",
+                BorderColor = "black",
+                BorderWidth = 1,
+            };
+            bvgSettings1.FrozenCellStyle = new BvgStyle
+            {
+                BackgroundColor = "silver",
+                ForeColor = "darkblue",
+                BorderColor = "black",
+                BorderWidth = 1,
+            };
+            bvgSettings1.AlternatedFrozenCellStyle = new BvgStyle
+            {
+                BackgroundColor = "lightgreen",
+                ForeColor = "darkblue",
+                BorderColor = "black",
+                BorderWidth = 1,
+            };
+            bvgSettings1.SelectedCellStyle = new BvgStyle
+            {
+                BackgroundColor = "#4d88ff",
+                ForeColor = "white",
+                BorderColor = "black",
+                BorderWidth = 1,
+            };
+            bvgSettings1.ActiveCellStyle = new BvgStyle
+            {
+                BackgroundColor = "#4d88ff",
+                ForeColor = "white",
+                BorderColor = "black",
+                BorderWidth = 1,
+                OutlineColor = "blue",
+                OutlineWidth = 3,
+            };
+            bvgSettings1.HeaderStyle = new BvgStyle
+            {
+                BackgroundColor = "#b3b3b3",
+                ForeColor = "blue",
+                BorderColor = "brown",
+                BorderWidth = 2,
+            };
+            bvgSettings1.ActiveHeaderStyle = new BvgStyle
+            {
+                BackgroundColor = "#b3b3b3",
+                ForeColor = "darkblue",
+                BorderColor = "black",
+                BorderWidth = 2,
+            };
+            bvgSettings1.RowHeight = 40;
+            bvgSettings1.HeaderHeight = 50;
+           
+        }
+
+        public void ConfigureBvgSettings2()
+        {
+
+            bvgSettings2.NonFrozenCellStyle = new BvgStyle
+            {
+                BackgroundColor = "#cccccc",
+                ForeColor = "darkblue",
+                BorderColor = "black",
+                BorderWidth = 1,
+            };
+            bvgSettings2.AlternatedNonFrozenCellStyle = new BvgStyle
+            {
+                BackgroundColor = "#a7f1a7",
+                ForeColor = "darkblue",
+                BorderColor = "black",
+                BorderWidth = 1,
+            };
+            bvgSettings2.FrozenCellStyle = new BvgStyle
+            {
+                BackgroundColor = "silver",
+                ForeColor = "darkblue",
+                BorderColor = "black",
+                BorderWidth = 1,
+            };
+            bvgSettings2.AlternatedFrozenCellStyle = new BvgStyle
+            {
+                BackgroundColor = "lightgreen",
+                ForeColor = "darkblue",
+                BorderColor = "black",
+                BorderWidth = 1,
+            };
+            bvgSettings2.SelectedCellStyle = new BvgStyle
+            {
+                BackgroundColor = "#4d88ff",
+                ForeColor = "white",
+                BorderColor = "black",
+                BorderWidth = 1,
+            };
+            bvgSettings2.ActiveCellStyle = new BvgStyle
+            {
+                BackgroundColor = "#4d88ff",
+                ForeColor = "white",
+                BorderColor = "black",
+                BorderWidth = 1,
+                OutlineColor = "blue",
+                OutlineWidth = 3,
+            };
+            bvgSettings2.HeaderStyle = new BvgStyle
+            {
+                BackgroundColor = "#b3b3b3",
+                ForeColor = "blue",
+                BorderColor = "brown",
+                BorderWidth = 2,
+            };
+            bvgSettings2.ActiveHeaderStyle = new BvgStyle
+            {
+                BackgroundColor = "#b3b3b3",
+                ForeColor = "darkblue",
+                BorderColor = "black",
+                BorderWidth = 2,
+            };
+            bvgSettings2.RowHeight = 40;
+            bvgSettings2.HeaderHeight = 50;
+
         }
 
 
-
-    
 
         private void FillList(int Par_Min, int Par_Max)
         {
@@ -198,7 +324,12 @@ namespace BlazorVirtualGrid.Pages
                     N4 = Guid.NewGuid().ToString("d").Substring(1, 4),
                     N5 = Guid.NewGuid().ToString("d").Substring(1, 4),
                     N6 = Guid.NewGuid().ToString("d").Substring(1, 4),
-
+                    N7 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N8 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N9 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N10 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N11 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N12 = Guid.NewGuid().ToString("d").Substring(1, 4),
                 });
             }
         }
@@ -232,6 +363,12 @@ namespace BlazorVirtualGrid.Pages
             public string N4 { get; set; }
             public string N5 { get; set; }
             public string N6 { get; set; }
+            public string N7 { get; set; }
+            public string N8 { get; set; }
+            public string N9 { get; set; }
+            public string N10 { get; set; }
+            public string N11 { get; set; }
+            public string N12 { get; set; }
 
         }
 

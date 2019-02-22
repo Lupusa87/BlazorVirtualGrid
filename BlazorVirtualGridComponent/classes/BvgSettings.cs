@@ -16,132 +16,39 @@ namespace BlazorVirtualGridComponent.classes
 
         public string ConfigurationName { get; set; } = "config 1";
 
-       
+        public BvgStyle NonFrozenCellStyle { get; set; } = new BvgStyle();
+        public BvgStyle AlternatedNonFrozenCellStyle { get; set; } = new BvgStyle();
 
-        private BvgStyle _CellStyle { get; set; } = new BvgStyle();
-        public BvgStyle CellStyle
-        {
-            get
-            {
-                return _CellStyle;
+        public BvgStyle FrozenCellStyle { get; set; } = new BvgStyle();
+        public BvgStyle AlternatedFrozenCellStyle { get; set; } = new BvgStyle();
 
-            }
-            set
-            {
-                _CellStyle = value;
-            }
-        }
+        public BvgStyle SelectedCellStyle { get; set; } = new BvgStyle();
 
-        private BvgStyle _AlternatedCellStyle { get; set; } = new BvgStyle();
-        public BvgStyle AlternatedCellStyle
-        {
-            get
-            {
-                return _AlternatedCellStyle;
+        public BvgStyle ActiveCellStyle { get; set; } = new BvgStyle();
 
-            }
-            set
-            {
-                _AlternatedCellStyle = value;
-            }
-        }
+        public BvgStyle HeaderStyle { get; set; } = new BvgStyle();
 
 
-        private BvgStyle _SelectedCellStyle { get; set; } = new BvgStyle();
-        public BvgStyle SelectedCellStyle
-        {
-            get
-            {
-                return _SelectedCellStyle;
+        public BvgStyle ActiveHeaderStyle { get; set; } = new BvgStyle();
 
-            }
-            set
-            {
-                _SelectedCellStyle = value;
-            }
-        }
+        public double RowHeight { get; set; } = 40;
+        
+        public double HeaderHeight { get; set; } = 50;
 
 
-        private BvgStyle _ActiveCellStyle { get; set; } = new BvgStyle();
-        public BvgStyle ActiveCellStyle
-        {
-            get
-            {
-                return _ActiveCellStyle;
+        public int ColWidthDefault { get; set; } = 120;
+        public int ColWidthMin { get; set; } = 50;
+        public int ColWidthMax { get; set; } = 300;
 
-            }
-            set
-            {
-                _ActiveCellStyle = value;
-            }
-        }
+        public double CheckBoxZoom { get; set; } = 1.5;
 
+        public List<string> NonFrozenColumnsListOrdered { get; set; } = new List<string>();
 
-        private BvgStyle _HeaderStyle { get; set; } = new BvgStyle();
-        public BvgStyle HeaderStyle
-        {
-            get
-            {
-                return _HeaderStyle;
+        public List<string> FrozenColumnsListOrdered { get; set; } = new List<string>();
 
-            }
-            set
-            {
-                _HeaderStyle = value;
-            }
-        }
+        public List<string> HiddenColumns { get; set; } = new List<string>();
 
-
-        private BvgStyle _ActiveHeaderStyle { get; set; } = new BvgStyle();
-        public BvgStyle ActiveHeaderStyle
-        {
-            get
-            {
-                return _ActiveHeaderStyle;
-
-            }
-            set
-            {
-                _ActiveHeaderStyle = value;
-            }
-        }
-
-
-       
-
-
-
-        private double _RowHeight { get; set; } = 40;
-        public double RowHeight
-        {
-            get
-            {
-                return _RowHeight;
-
-            }
-            set
-            {
-                _RowHeight = value;
-            }
-        }
-
-
-        private double _HeaderHeight { get; set; } = 50;
-        public double HeaderHeight
-        {
-            get
-            {
-                return _HeaderHeight;
-
-            }
-            set
-            {
-                _HeaderHeight = value;
-            }
-        }
-
-
-       
+        public Dictionary<string, int> ColumnWidthsDictionary { get; set; } = new Dictionary<string, int>();
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

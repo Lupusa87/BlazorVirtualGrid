@@ -16,41 +16,42 @@ namespace BlazorVirtualGridComponent.businessLayer
     public static class GenericAdapter<T> 
     {
 
-        public static void GetColumns(IQueryable<T> GenericList, BvgGrid result)
-        {
-            result.ColumnsDictionary = new Dictionary<string, BvgColumn>();
-            result.Columns = new List<BvgColumn>();
-            result.Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
+        public static void GetColumns(IEnumerable<ColProp> props, BvgGrid _bvgGrid)
+        {
+            _bvgGrid.ColumnsDictionary = new Dictionary<string, BvgColumn>();
+            _bvgGrid.Columns = new List<BvgColumn>();
+           
             ushort k = 0;
-            foreach (PropertyInfo prop in result.Props)
+            foreach (ColProp p in props)
             {
 
-                var t = (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>) ? Nullable.GetUnderlyingType(prop.PropertyType) : prop.PropertyType);
+                var t = (p.prop.PropertyType.IsGenericType && p.prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>) ? Nullable.GetUnderlyingType(p.prop.PropertyType) : p.prop.PropertyType);
 
                 BvgColumn col = new BvgColumn
                 {
                     ID = k++,
-                    Name = prop.Name,
+                    Name = p.prop.Name,
                     type = t,
                     SequenceNumber = (byte)k,
-                    bvgGrid = result,
+                    bvgGrid = _bvgGrid,
                     CssClass = HeaderStyle.HeaderRegular.ToString(),
+                    IsFrozen = p.IsFrozen,
+                    ColWidth = p.ColWidth,
                 };
-                result.ColumnsDictionary.Add(prop.Name, col);
-                result.Columns.Add(col);
+                _bvgGrid.ColumnsDictionary.Add(p.prop.Name, col);
+                _bvgGrid.Columns.Add(col);
             }
 
 
-
-            foreach (var item in result.Columns)
+            foreach (var item in _bvgGrid.Columns)
             {
                 item.bsSettings = new BsSettings
                 {
                     VerticalOrHorizontal = false,
-                    index = result.Columns.Count,
+                    index = _bvgGrid.Columns.Count,
                     width = 5,
-                    height = result.bvgSettings.HeaderHeight - item.bvgGrid.bvgSettings.HeaderStyle.BorderWidth * 2,
+                    height = _bvgGrid.bvgSettings.HeaderHeight - item.bvgGrid.bvgSettings.HeaderStyle.BorderWidth * 2,
                     //BgColor = item.bvgStyle.BackgroundColor,
                     BgColor = "red",
                 };
@@ -58,51 +59,68 @@ namespace BlazorVirtualGridComponent.businessLayer
 
         }
 
-        public static IEnumerable<T> GetSortedList(IQueryable<T> GenericList, string OrderByClause)
+        public static IEnumerable<T> GetSortedRowsList(IQueryable<T> list, string OrderByClause)
         {
-            return GenericList.OrderBy(OrderByClause);
+            return list.OrderBy(OrderByClause);
         }
 
 
-        public static void GetRows(IEnumerable<T> GenericList, BvgGrid result)
+        public static void GetRows(IEnumerable<T> list, BvgGrid _bvgGrid, bool DotNetOrJsUpdate)
         {
 
-           
             ushort k = 0;
 
-
-            if (result.Rows.Count == 0)
+            if (DotNetOrJsUpdate)
             {
-                foreach (T item in GenericList)
+                if (_bvgGrid.Rows.Count > 0)
+                {
+                    _bvgGrid.Rows = new List<BvgRow>();
+                }
+            }
+
+            if (_bvgGrid.Rows.Count == 0 )
+            {
+
+                foreach (T item in list)
                 {
 
                     BvgRow row = new BvgRow
                     {
                         ID = k++,
-                        bvgGrid = result,
+                        bvgGrid = _bvgGrid,
                     };
 
-                    foreach (PropertyInfo p in result.Props)
+                   
+                    foreach (PropertyInfo p in _bvgGrid.ActiveProps)
                     {
-
-                        result.ColumnsDictionary.TryGetValue(p.Name, out BvgColumn col);
-
+                       
+                        _bvgGrid.ColumnsDictionary.TryGetValue(p.Name, out BvgColumn col);
+                       
                         BvgCell cell = new BvgCell
                         {
                             Value = p.GetValue(item, null).ToString(),
                             bvgRow = row,
                             bvgColumn = col,
-                            bvgGrid = result,
-                            CssClass = CellStyle.CellRegular.ToString(),
-                            ValueType = p.PropertyType,
+                            bvgGrid = _bvgGrid,
+                            ValueType = col.type,
                         };
+                       
+                        if (col.IsFrozen)
+                        {
+                            cell.CssClass = CellStyle.CellFrozen.ToString();
+                        }
+                        else
+                        {
+                            cell.CssClass = CellStyle.CellNonFrozen.ToString();
+                        }
 
                         cell.ID = "C" + col.ID + "R" + row.ID;
 
                         row.Cells.Add(cell);
                     }
 
-                    result.Rows.Add(row);
+                    _bvgGrid.Rows.Add(row);
+                    
                 }
             }
             else
@@ -114,21 +132,21 @@ namespace BlazorVirtualGridComponent.businessLayer
                 ushort j;
                 short i = -1;
 
-                string[] UpdatePkg = new string[result.Rows.Count * result.Rows[0].Cells.Count * 3];
+                string[] UpdatePkg = new string[_bvgGrid.Rows.Count * _bvgGrid.Rows[0].Cells.Count * 3];
 
-                foreach (T item in GenericList)
+                foreach (T item in list)
                 {
                     j = 0;
-                    foreach (PropertyInfo p in result.Props)
+                    foreach (PropertyInfo p in _bvgGrid.ActiveProps)
                     {
 
-                        result.Rows[k].Cells[j].Value = p.GetValue(item, null).ToString();
+                        _bvgGrid.Rows[k].Cells[j].Value = p.GetValue(item, null).ToString();
 
                         
-                        UpdatePkg[++i] = result.Rows[k].Cells[j].ID;
-                        UpdatePkg[++i] = result.Rows[k].Cells[j].Value;
+                        UpdatePkg[++i] = _bvgGrid.Rows[k].Cells[j].ID;
+                        UpdatePkg[++i] = _bvgGrid.Rows[k].Cells[j].Value;
 
-                        if (p.PropertyType.Equals(typeof(bool)))
+                        if (_bvgGrid.Rows[k].Cells[j].bvgColumn.type.Equals(typeof(bool)))
                         {
                             UpdatePkg[++i] = "b";
                         }

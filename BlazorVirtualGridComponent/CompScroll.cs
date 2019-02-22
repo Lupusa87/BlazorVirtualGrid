@@ -61,22 +61,33 @@ namespace BlazorVirtualGridComponent
             if (bvgScroll.bsbSettings.VerticalOrHorizontal)
             {
 
-                if (Math.Abs(ScrollPosition - bvgScroll.bvgGrid.CurrScrollPosition) > bvgScroll.bvgGrid.bvgSettings.RowHeight)
+                if (Math.Abs(ScrollPosition - bvgScroll.bvgGrid.CurrVerticalScrollPosition) > bvgScroll.bvgGrid.bvgSettings.RowHeight)
                 {
                     BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
-                    BlazorWindowHelper.BlazorTimeAnalyzer.Add("onscroll fired", MethodBase.GetCurrentMethod());
+                    BlazorWindowHelper.BlazorTimeAnalyzer.Add("onVerticalScroll fired", MethodBase.GetCurrentMethod());
 
                     bvgScroll.bvgGrid.Cmd_Clear_Selection();
 
-                    bvgScroll.bvgGrid.CurrScrollPosition = ScrollPosition;
-                    bvgScroll.bvgGrid.OnScroll?.Invoke((int)(ScrollPosition / bvgScroll.bvgGrid.bvgSettings.RowHeight));
+                    bvgScroll.bvgGrid.CurrVerticalScrollPosition = ScrollPosition;
+                    bvgScroll.bvgGrid.OnVerticalScroll?.Invoke((int)(ScrollPosition / bvgScroll.bvgGrid.bvgSettings.RowHeight));
 
                 }
             }
             else
             {
- 
-                BvgJsInterop.SetElementScrollLeft(bvgScroll.bvgGrid.GridDivElementID, ScrollPosition);
+
+                if (Math.Abs(ScrollPosition - bvgScroll.bvgGrid.CurrHorizontalScrollPosition) > 10)
+                {
+                    BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
+                    BlazorWindowHelper.BlazorTimeAnalyzer.Add("onHorizontalScroll fired", MethodBase.GetCurrentMethod());
+
+                    bvgScroll.bvgGrid.Cmd_Clear_Selection();
+
+                    bvgScroll.bvgGrid.CurrHorizontalScrollPosition = ScrollPosition;
+                    bvgScroll.bvgGrid.OnHorizontalScroll?.Invoke((int)(ScrollPosition));
+
+                }
+                // BvgJsInterop.SetElementScrollLeft(bvgScroll.bvgGrid.GridDivElementID, ScrollPosition);
             }
 
         }

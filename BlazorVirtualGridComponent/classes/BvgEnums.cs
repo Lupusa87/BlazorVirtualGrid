@@ -17,7 +17,8 @@ namespace BlazorVirtualGridComponent.classes
 
         public enum CellStyle
         {
-            CellRegular,
+            CellNonFrozen,
+            CellFrozen,
             CellSelected,
             CellActive,
         }

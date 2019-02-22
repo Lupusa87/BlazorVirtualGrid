@@ -28,7 +28,16 @@ namespace BlazorVirtualGridComponent.classes
             {
                 item.IsSelected = false;
                 item.IsActive = false;
-                item.CssClass = CellStyle.CellRegular.ToString();
+
+                if (item.bvgColumn.IsFrozen)
+                {
+                    item.CssClass = CellStyle.CellFrozen.ToString();
+                }
+                else
+                {
+                    item.CssClass = CellStyle.CellNonFrozen.ToString();
+                }
+
                 item.InvokePropertyChanged();
 
             }

@@ -39,7 +39,7 @@ namespace BlazorVirtualGridComponent
 
 
 
-            BlazorWindowHelper.BlazorTimeAnalyzer.Log();
+           // BlazorWindowHelper.BlazorTimeAnalyzer.Log();
         }
 
         private void BvgAreaRows_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -57,9 +57,6 @@ namespace BlazorVirtualGridComponent
 
             int k = -1;
 
-            builder.OpenElement(k++, "tbody");
-
-
             foreach (var r in bvgAreaRows.bvgGrid.Rows)
             {
                 builder.OpenComponent<CompRow>(k++);
@@ -67,12 +64,7 @@ namespace BlazorVirtualGridComponent
                 builder.AddAttribute(k++, "bvgRow", r);
                 builder.CloseComponent();
             }
-
-
-            builder.CloseElement(); //tbody
-
-
-            
+ 
         }
 
 

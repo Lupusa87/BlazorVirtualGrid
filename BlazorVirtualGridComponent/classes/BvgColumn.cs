@@ -28,7 +28,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public bool IsFrozen { get; set; }
 
-        public bool HasManualSize { get; set; }
+      
         public byte SequenceNumber { get; set; }
 
 
@@ -41,7 +41,7 @@ namespace BlazorVirtualGridComponent.classes
 
 
 
-        public double _ColWidth { get; set; } = 100;
+        public double _ColWidth { get; set; }
         public double ColWidth { get
             {
                 return _ColWidth;
@@ -54,10 +54,6 @@ namespace BlazorVirtualGridComponent.classes
                 ColWidthSpan = ColWidth - 5;
             }
         } 
-
-        public double ColWidthMin { get; set; } = 50;
-        public double ColWidthMax { get; set; } = 300;
-
 
 
         public double ColWidthDiv { get; set; }

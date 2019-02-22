@@ -88,27 +88,26 @@ namespace BlazorVirtualGridComponent
 
                 builder.OpenElement(k++, "thead");
                 builder.OpenElement(k++, "tr");
-        
 
-                foreach (BvgColumn c in bvgGrid.Columns.Where(x => x.IsFrozen).OrderBy(x => x.SequenceNumber))
-                {
 
-                    builder.OpenComponent<CompColumn>(k++);
-                    builder.AddAttribute(k++, "bvgColumn", c);
-                    builder.CloseComponent();
-
-                }
+                builder.OpenComponent<CompAreaColumns>(k++);
+                builder.AddAttribute(k++, "ForFrozen", true);
+                builder.AddAttribute(k++, "bvgAreaColumns", bvgGrid.bvgAreaColumnsFrozen);
+                builder.CloseComponent();
+                
 
 
                 builder.CloseElement(); //tr
                 builder.CloseElement(); //thead
 
+                builder.OpenElement(k++, "tbody");
 
-                
                 builder.OpenComponent<CompAreaRows>(k++);
                 builder.AddAttribute(k++, "ForFrozen", true);
-                builder.AddAttribute(k++, "bvgAreaRows", bvgGrid.bvgAreaRows);
+                builder.AddAttribute(k++, "bvgAreaRows", bvgGrid.bvgAreaRowsFrozen);
                 builder.CloseComponent();
+
+                builder.CloseElement(); //tbody
 
                 builder.CloseElement(); //table
               
@@ -137,23 +136,23 @@ namespace BlazorVirtualGridComponent
             builder.OpenElement(k++, "tr");
 
 
-            foreach (BvgColumn c in bvgGrid.Columns.Where(x => x.IsFrozen == false).OrderBy(x => x.SequenceNumber))
-            {
-
-                builder.OpenComponent<CompColumn>(k++);
-                builder.AddAttribute(k++, "bvgColumn", c);
-                builder.CloseComponent();
-
-            }
+            builder.OpenComponent<CompAreaColumns>(k++);
+            builder.AddAttribute(k++, "ForFrozen", false);
+            builder.AddAttribute(k++, "bvgAreaColumns", bvgGrid.bvgAreaColumnsNonFrozen);
+            builder.CloseComponent();
 
 
             builder.CloseElement(); //tr
             builder.CloseElement(); //thead
 
+            builder.OpenElement(k++, "tbody");
+
             builder.OpenComponent<CompAreaRows>(k++);
             builder.AddAttribute(k++, "ForFrozen", false);
-            builder.AddAttribute(k++, "bvgAreaRows", bvgGrid.bvgAreaRows);
+            builder.AddAttribute(k++, "bvgAreaRows", bvgGrid.bvgAreaRowsNonFrozen);
             builder.CloseComponent();
+
+            builder.CloseElement(); //tbody
 
             builder.CloseElement(); //table
             builder.CloseElement(); //div

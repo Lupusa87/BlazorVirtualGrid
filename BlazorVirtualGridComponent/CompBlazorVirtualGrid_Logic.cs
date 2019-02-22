@@ -27,7 +27,9 @@ namespace BlazorVirtualGridComponent
         public BvgGrid bvgGrid { get; set; }
 
 
-        protected TItem[] SortedList { get; set; }
+        protected TItem[] SortedRowsList { get; set; }
+
+        
 
 
         public bool ActualRender { get; set; } =false;
@@ -40,7 +42,11 @@ namespace BlazorVirtualGridComponent
 
         private bool FirstLoad = true;
 
-        private int LastSkip = -1;
+        private int LastVerticalSkip = -1;
+
+        private int LastHorizontalSkip = -1;
+
+
 
         protected override void OnParametersSet()
         {
@@ -51,49 +57,218 @@ namespace BlazorVirtualGridComponent
                 Name = TableName,
                 RowsTotalCount = SourceList.Count(),
                 bvgSettings = bvgSettings,
+                AllProps = typeof(TItem).GetProperties(BindingFlags.Public | BindingFlags.Instance),
+                
             };
 
-            GenericAdapter<TItem>.GetColumns(SourceList.AsQueryable(), bvgGrid);
-            SortedList = SourceList.ToArray();
+
+            bvgGrid.ColumnsOrderedList = ColumnsHelper.GetColumnsOrderedList(bvgGrid);
+
+            SortedRowsList = SourceList.ToArray();
           
             base.OnParametersSet();
         }
 
+        protected override void OnAfterRender()
+        {
+            if (FirstLoad)
+            {
+                FirstLoad = false;
 
 
-   
+                if (bvgGrid.OnSort == null)
+                {
+                    bvgGrid.OnSort = SortGrid;
+                }
+
+
+                if (bvgGrid.OnVerticalScroll == null)
+                {
+                    bvgGrid.OnVerticalScroll = OnVerticalScroll;
+                }
+
+                if (bvgGrid.OnHorizontalScroll == null)
+                {
+                    bvgGrid.OnHorizontalScroll = OnHorizontalScroll;
+                }
+
+                timer1 = new Timer(Timer1Callback, null, 1, 1);
+            }
+
+            base.OnAfterRender();
+        }
+
+        public void OnVerticalScroll(int p)
+        {
+            RenderGridRows(p, false);
+        }
+
+        public void OnHorizontalScroll(int p)
+        {
+            RenderGridColumns(p);
+        }
 
         public void SortGrid(string s)
         {
-            
 
-            SortedList = GenericAdapter<TItem>.GetSortedList(SourceList.AsQueryable(), s).ToArray();
+            SortedRowsList = GenericAdapter<TItem>.GetSortedRowsList(SourceList.AsQueryable(), s).ToArray();
 
-            bvgGrid.CurrScrollPosition = 0;
-            LastSkip = -1;
+            bvgGrid.CurrVerticalScrollPosition = 0;
+            LastVerticalSkip = -1;
             bvgGrid.VericalScroll.compBlazorScrollbar.SetScrollPosition(0);
-            RenderGrid(0);
+            
+            RenderGridRows(0, false);
         }
 
-        public void RenderGrid(int skip)
+        public void RenderGridRows(int skip, bool DotNetOrJsUpdate)
         {
 
-            if (skip != LastSkip)
+            if (skip != LastVerticalSkip || DotNetOrJsUpdate)
             {
 
-                LastSkip = skip;
+                LastVerticalSkip = skip;
+
+
                 if (skip > 0)
                 {
 
-                    GenericAdapter<TItem>.GetRows(SortedList.Skip(skip).Take(bvgGrid.DisplayedRowsCount), bvgGrid);
+                    GenericAdapter<TItem>.GetRows(SortedRowsList.Skip(skip).Take(bvgGrid.DisplayedRowsCount),
+                        bvgGrid, DotNetOrJsUpdate);
                 }
                 else
                 {
-                    GenericAdapter<TItem>.GetRows(SortedList.Take(bvgGrid.DisplayedRowsCount), bvgGrid);
+                    GenericAdapter<TItem>.GetRows(SortedRowsList.Take(bvgGrid.DisplayedRowsCount),
+                        bvgGrid, DotNetOrJsUpdate);
                 }
 
-                // bvgGrid.bvgAreaRows.InvokePropertyChanged();
+                if (DotNetOrJsUpdate)
+                {
+                    bvgGrid.bvgAreaRowsFrozen.InvokePropertyChanged();
+                    bvgGrid.bvgAreaRowsNonFrozen.InvokePropertyChanged();
+                }
             }
+        }
+
+        public int MeasureColumnsCount(int skip)
+        {
+            int result = 0;
+
+            ColProp[] cols;
+
+            if (skip > 0)
+            {
+                cols = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen == false).Skip(skip).ToArray();
+            }
+            else
+            {
+                cols = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen == false).ToArray();
+            }
+
+            result = cols.Count();
+
+           
+
+            int tmp_Width = 0;
+
+            
+            double limit = bvgGrid.totalWidth - bvgGrid.FrozenTableWidth;
+
+            
+            for (int i = 0; i < cols.Length; i++)
+            {
+                tmp_Width += cols[i].ColWidth;
+                
+                if (tmp_Width>limit)
+                {
+                    
+                    return i+1;
+                }
+            }
+
+            
+
+
+            return result;
+        }
+
+
+        public int GetSkipedColumns(int scrollPosition)
+        {
+            int result = 0;
+
+            ColProp[] cols = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen == false).ToArray();
+
+
+            int tmp_Width = 0;
+
+
+            for (int i = 0; i < cols.Length; i++)
+            {
+                tmp_Width += cols[i].ColWidth;
+
+                if (scrollPosition<=tmp_Width)
+                {
+                    return i;
+                }
+            }
+
+            return result;
+        }
+
+        public void RenderGridColumns(int Scrollposition)
+        {
+            int skip = Scrollposition==0 ? 0 : GetSkipedColumns(Scrollposition);
+
+            if (skip != LastHorizontalSkip)
+            {
+
+                LastHorizontalSkip = skip;
+
+                bvgGrid.DisplayedColumnsCount = MeasureColumnsCount(skip);
+
+                IEnumerable<ColProp> ActiveRegularProps;
+                if (skip > 0)
+                {
+                    ActiveRegularProps = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen == false).Skip(skip).Take(bvgGrid.DisplayedColumnsCount);
+                }
+                else
+                {
+                    ActiveRegularProps = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen == false).Take(bvgGrid.DisplayedColumnsCount);
+                }
+
+
+
+                IEnumerable<ColProp> FrozenProps = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen);
+
+                bvgGrid.ActiveProps = new PropertyInfo[FrozenProps.Count() + ActiveRegularProps.Count()];
+
+                int j = 0;
+                foreach (var item in FrozenProps)
+                {
+                    bvgGrid.ActiveProps[j] = item.prop;
+                    j++;
+                }
+                foreach (var item in ActiveRegularProps)
+                {
+                    bvgGrid.ActiveProps[j] = item.prop;
+                    j++;
+                }
+
+
+                List<ColProp> ListProps = FrozenProps.ToList();
+                ListProps.AddRange(ActiveRegularProps);
+
+
+                GenericAdapter<TItem>.GetColumns(ListProps.ToArray(), bvgGrid);
+
+           
+                RenderGridRows(LastVerticalSkip, true);
+
+                bvgGrid.bvgAreaColumnsFrozen.InvokePropertyChanged();
+                bvgGrid.bvgAreaColumnsNonFrozen.InvokePropertyChanged();
+            }
+
+
         }
 
         public void Timer1Callback(object o)
@@ -102,31 +277,7 @@ namespace BlazorVirtualGridComponent
             timer1.Dispose();
         }
 
-        protected override void OnAfterRender()
-        {
-            if (FirstLoad)
-            {
-                FirstLoad = false;
-                
-
-                if (bvgGrid.OnSort == null)
-                {
-                    bvgGrid.OnSort = SortGrid;
-                }
-
-
-                if (bvgGrid.OnScroll == null)
-                {
-                    bvgGrid.OnScroll = RenderGrid;
-                }
-
-
-                timer1 = new Timer(Timer1Callback, null, 1, 1);
-            }
-
-            base.OnAfterRender();
-        }
-
+       
 
         public async void GetActualWidthAndHeight()
         {
@@ -142,11 +293,9 @@ namespace BlazorVirtualGridComponent
 
             bvgGrid.AdjustSize();
 
-            bvgGrid.UpdateHorizontalScroll();
-
-
-            RenderGrid(0);
             
+            RenderGridColumns(0);
+           
             ActualRender = true;
             StateHasChanged();
 
@@ -163,5 +312,6 @@ namespace BlazorVirtualGridComponent
 
 
 
+       
     }
 }

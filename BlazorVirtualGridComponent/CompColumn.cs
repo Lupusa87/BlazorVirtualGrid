@@ -99,13 +99,13 @@ namespace BlazorVirtualGridComponent
                 bvgColumn.ColWidth += p;
 
 
-                if (bvgColumn.ColWidth < bvgColumn.ColWidthMin)
+                if (bvgColumn.ColWidth < bvgColumn.bvgGrid.bvgSettings.ColWidthMin)
                 {
-                    bvgColumn.ColWidth = bvgColumn.ColWidthMin;
+                    bvgColumn.ColWidth = bvgColumn.bvgGrid.bvgSettings.ColWidthMin;
                 }
-                if (bvgColumn.ColWidth > bvgColumn.ColWidthMax)
+                if (bvgColumn.ColWidth > bvgColumn.bvgGrid.bvgSettings.ColWidthMax)
                 {
-                    bvgColumn.ColWidth = bvgColumn.ColWidthMax;
+                    bvgColumn.ColWidth = bvgColumn.bvgGrid.bvgSettings.ColWidthMax;
                 }
 
 

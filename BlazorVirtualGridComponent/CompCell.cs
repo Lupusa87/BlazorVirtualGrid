@@ -38,22 +38,43 @@ namespace BlazorVirtualGridComponent
             int k = -1;
             builder.OpenElement(k++, "td");
 
-
-            if (bvgCell.CssClass.Equals(CellStyle.CellRegular.ToString()))
+            if (bvgCell.bvgColumn.IsFrozen)
             {
-                if (bvgCell.bvgRow.ID % 2 ==0)
+                if (bvgCell.CssClass.Equals(CellStyle.CellFrozen.ToString()))
                 {
-                    builder.AddAttribute(k++, "class", "CellAlternated");
+                    if (bvgCell.bvgRow.ID % 2 == 0)
+                    {
+                        builder.AddAttribute(k++, "class", "CellFrozenAlternated");
+                    }
+                    else
+                    {
+                        builder.AddAttribute(k++, "class", bvgCell.CssClass);
+                    }
+
                 }
                 else
                 {
                     builder.AddAttribute(k++, "class", bvgCell.CssClass);
                 }
-                
             }
             else
             {
-                builder.AddAttribute(k++, "class", bvgCell.CssClass);
+                if (bvgCell.CssClass.Equals(CellStyle.CellNonFrozen.ToString()))
+                {
+                    if (bvgCell.bvgRow.ID % 2 == 0)
+                    {
+                        builder.AddAttribute(k++, "class", "CellNonFrozenAlternated");
+                    }
+                    else
+                    {
+                        builder.AddAttribute(k++, "class", bvgCell.CssClass);
+                    }
+
+                }
+                else
+                {
+                    builder.AddAttribute(k++, "class", bvgCell.CssClass);
+                }
             }
 
 
@@ -69,7 +90,7 @@ namespace BlazorVirtualGridComponent
             builder.AddAttribute(k++, "id", bvgCell.ID);
             builder.AddAttribute(k++, "class", "CellDiv");
             builder.AddAttribute(k++, "tabindex",0); // without this div can't get focus and don't fires keyboard events
-            builder.AddAttribute(k++, "style", "width:" + (bvgCell.bvgColumn.ColWidth - bvgCell.bvgGrid.bvgSettings.CellStyle.BorderWidth)+"px");
+            builder.AddAttribute(k++, "style", "width:" + (bvgCell.bvgColumn.ColWidth - bvgCell.bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth)+"px");
             builder.AddAttribute(k++, "onkeydown", OnKeyDown);
 
             if (bvgCell.ValueType.Equals(typeof(bool)))
@@ -83,7 +104,7 @@ namespace BlazorVirtualGridComponent
                     builder.AddAttribute(k++, "checked",string.Empty);
                 }
 
-                builder.AddAttribute(k++, "style", "zoom:1.5");
+                builder.AddAttribute(k++, "style", "zoom:" + bvgCell.bvgGrid.bvgSettings.CheckBoxZoom);
                 builder.AddAttribute(k++, "onclick", CheckboxClicked);
                 builder.CloseElement(); //input
             }

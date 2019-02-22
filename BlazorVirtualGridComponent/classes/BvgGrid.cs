@@ -26,11 +26,16 @@ namespace BlazorVirtualGridComponent.classes
 
         public string Name { get; set; } = "null";
 
-        public PropertyInfo[] Props { get; set; }
+        public PropertyInfo[] AllProps { get; set; }
+        public PropertyInfo[] ActiveProps { get; set; }
+
+        public ColProp[] ColumnsOrderedList { get; set; }
 
         public Action<string> OnSort { get; set; }
 
-        public Action<int> OnScroll { get; set; }
+        public Action<int> OnVerticalScroll { get; set; }
+
+        public Action<int> OnHorizontalScroll { get; set; }
 
         public IList<BvgRow> Rows { get; set; } = new List<BvgRow>();
         public IList<BvgColumn> Columns { get; set; } = new List<BvgColumn>();
@@ -58,13 +63,16 @@ namespace BlazorVirtualGridComponent.classes
 
 
         public int DisplayedRowsCount { get; set; }
+        public int DisplayedColumnsCount { get; set; }
 
+        public double CurrVerticalScrollPosition { get; set; } = 0;
+        public double CurrHorizontalScrollPosition { get; set; } = 0;
 
-        public double CurrScrollPosition { get; set; } = 0;
+        public BvgAreaRows bvgAreaRowsFrozen { get; set; } = new BvgAreaRows();
+        public BvgAreaRows bvgAreaRowsNonFrozen { get; set; } = new BvgAreaRows();
 
-
-        public BvgAreaRows bvgAreaRows { get; set; } = new BvgAreaRows();
-
+        public BvgAreaColumns bvgAreaColumnsFrozen { get; set; } = new BvgAreaColumns();
+        public BvgAreaColumns bvgAreaColumnsNonFrozen { get; set; } = new BvgAreaColumns();
 
         public string GetStyleTable(bool ForFrozen)
         {
@@ -253,143 +261,13 @@ namespace BlazorVirtualGridComponent.classes
 
 
 
-        public void FreezeColumn(string name, bool par_AffectUI)
+        public Dictionary<string, int> GetColumnWidths()
         {
-            if (Columns.Any())
+            Dictionary<string, int> result = new Dictionary<string, int>();
+
+            foreach (var item in ColumnsOrderedList)
             {
-                if (Columns.Any(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                {
-
-                   
-                    Cmd_Clear_Selection();
-                   
-
-                    foreach (var item in Columns.Where(x => x.IsFrozen))
-                    {
-                        item.IsFrozen = false;
-                        item.SequenceNumber = (byte)item.ID;
-                    }
-
-                    BvgColumn c = Columns.Single(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-                    c.IsFrozen = true;
-                    c.SequenceNumber = 0;
-
-                    byte k = 0;
-                    foreach (var item in Columns.OrderBy(x => x.SequenceNumber))
-                    {
-                        item.SequenceNumber = k;
-                        k++;
-                    }
-
-                    if (par_AffectUI)
-                    {
-                        CalculateWidths();
-
-                        InvokePropertyChanged();
-                    }
-                }
-            }
-        }
-
-
-        public void FreezeColumns(List<string> names, bool par_AffectUI)
-        {
-            if (Columns.Any())
-            {
-                Cmd_Clear_Selection();
-
-
-                for (int i = 0; i < names.Count; i++)
-                {
-                    if (Columns.Any(x => x.Name.Equals(names[i], StringComparison.InvariantCultureIgnoreCase)))
-                    {
-
-                        BvgColumn c = Columns.Single(x => x.Name.Equals(names[i], StringComparison.InvariantCultureIgnoreCase));
-                        c.IsFrozen = true;
-                        c.SequenceNumber = (byte)(-names.Count+i+1);
-                    }
-                }
-
-
-                byte k = 0;
-                foreach (var item in Columns.OrderBy(x=>x.SequenceNumber))
-                {
-                    item.SequenceNumber = k;
-                    k++;
-                }
-
-                if (par_AffectUI)
-                {
-                    CalculateWidths();
-
-                    InvokePropertyChanged();
-                }
-
-                
-            }
-        }
-
-        public void UpdateHorizontalScrollbarSettings()
-        {
-            HorizontalScroll.bsbSettings.ScrollTotalSize = Columns.Where(x => x.IsFrozen == false).Sum(x => x.ColWidth);
-            HorizontalScroll.bsbSettings.initialize();
-        }
-
-
-        public void SetWidthToColumn(string name, double Par_Width, bool par_AffectUI)
-        {
-            if (Columns.Any())
-            {
-                if (Columns.Any(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                {
-
-                    BvgColumn c = Columns.Single(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-                    c.ColWidth = Par_Width;
-                    c.HasManualSize = true;
-
-                    if (par_AffectUI)
-                    {
-                        UpdateHorizontalScrollbarSettings();
-
-                        InvokePropertyChanged();
-                    }
-                }
-            }
-        }
-
-
-        public void SetColumnWidths(Dictionary<string, double> dict, bool par_AffectUI)
-        {
-
-            foreach (var item in dict)
-            {
-                if (Columns.Any())
-                {
-                    if (Columns.Any(x => x.Name.Equals(item.Key, StringComparison.InvariantCultureIgnoreCase)))
-                    {
-                        BvgColumn c = Columns.Single(x => x.Name.Equals(item.Key, StringComparison.InvariantCultureIgnoreCase));
-                        c.ColWidth = item.Value;
-                        c.HasManualSize = true;
-                    }
-                }
-            }
-
-            if (par_AffectUI)
-            {
-                UpdateHorizontalScrollbarSettings();
-
-                InvokePropertyChanged();
-            }
-        }
-
-
-        public Dictionary<string, double> GetColumnWidths()
-        {
-            Dictionary<string, double> result = new Dictionary<string, double>();
-
-            foreach (var item in Columns)
-            {
-                result.Add(item.Name, item.ColWidth);
+                result.Add(item.prop.Name, item.ColWidth);
             }
 
 
@@ -425,7 +303,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public void UpdateHorizontalScroll()
         {
-            double b = Columns.Where(x => x.IsFrozen == false).Sum(x => x.ColWidth);
+            double b = ColumnsOrderedList.Where(x => x.IsFrozen == false).Sum(x => x.ColWidth);
 
 
 
@@ -439,7 +317,7 @@ namespace BlazorVirtualGridComponent.classes
 
 
                     HorizontalScroll.bsbSettings.ScrollTotalSize=b;
-
+                    HorizontalScroll.bsbSettings.initialize();
 
                     InvokePropertyChanged();
                 }
@@ -465,28 +343,21 @@ namespace BlazorVirtualGridComponent.classes
         public void CalculateWidths()
         {
 
-            FrozenTableWidth = Columns.Where(x => x.IsFrozen).Sum(x => x.ColWidth);
-            NotFrozenTableWidth = Columns.Where(x => x.IsFrozen == false).Sum(x => x.ColWidth);
+            FrozenTableWidth = ColumnsOrderedList.Where(x => x.IsFrozen).Sum(x => x.ColWidth);
+            NotFrozenTableWidth = totalWidth - FrozenTableWidth;
 
             HorizontalScroll.bsbSettings.ScrollVisibleSize = NotFrozenTableWidth;
-            UpdateHorizontalScrollbarSettings();
 
+            UpdateHorizontalScroll();
         }
 
 
         public void AdjustSize()
         {
-            double t = totalWidth - Columns.Where(x => x.HasManualSize).Sum(x => x.ColWidth);
-            double cw = Math.Round(t / Columns.Count(x => x.HasManualSize==false), 2);
-
-            foreach (var item in Columns.Where(x=>x.HasManualSize==false))
-            {
-                item.ColWidth = cw;
-            }
 
             VericalScroll = new BvgScroll
             {
-                ID = Guid.NewGuid().ToString("d").Substring(1, 4),
+                ID = "VericalScroll"+Guid.NewGuid().ToString("d").Substring(1, 4),
                 bvgGrid = this,
                 bsbSettings = new BsbSettings
                 {
@@ -494,7 +365,7 @@ namespace BlazorVirtualGridComponent.classes
                     width = 16,
                     height = height,
                     ScrollVisibleSize = height- bvgSettings.HeaderHeight - bvgSettings.HeaderStyle.BorderWidth*2,
-                    ScrollTotalSize = RowsTotalCount * (bvgSettings.RowHeight + bvgSettings.CellStyle.BorderWidth*2)+10,
+                    ScrollTotalSize = RowsTotalCount * (bvgSettings.RowHeight + bvgSettings.NonFrozenCellStyle.BorderWidth*2)+10,
                 }
             };
             VericalScroll.bsbSettings.initialize();
@@ -502,7 +373,7 @@ namespace BlazorVirtualGridComponent.classes
             HorizontalScroll = new BvgScroll
             {
 
-                ID = Guid.NewGuid().ToString("d").Substring(1, 4),
+                ID = "HorizontalScroll" + Guid.NewGuid().ToString("d").Substring(1, 4),
                 bvgGrid = this,
                 bsbSettings = new BsbSettings
                 {
@@ -515,18 +386,20 @@ namespace BlazorVirtualGridComponent.classes
 
                 }
             };
-
-            CalculateWidths();
+            
 
             DisplayedRowsCount = (int)((height - bvgSettings.HeaderHeight) / bvgSettings.RowHeight);
             bvgSettings.RowHeight = Math.Round((height - bvgSettings.HeaderHeight) / DisplayedRowsCount);
 
 
 
+            CalculateWidths();
 
-            bvgAreaRows.bvgGrid = this;
+            bvgAreaRowsFrozen.bvgGrid = this;
+            bvgAreaRowsNonFrozen.bvgGrid = this;
 
-           
+            bvgAreaColumnsFrozen.bvgGrid = this;
+            bvgAreaColumnsNonFrozen.bvgGrid = this;
         }
     }
 }
