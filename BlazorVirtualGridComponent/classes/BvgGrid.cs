@@ -261,13 +261,13 @@ namespace BlazorVirtualGridComponent.classes
 
 
 
-        public Dictionary<string, int> GetColumnWidths()
+        public ValuesContainer<Tuple<string, int>> GetColumnWidths()
         {
-            Dictionary<string, int> result = new Dictionary<string, int>();
+            ValuesContainer<Tuple<string, int>> result = new ValuesContainer<Tuple<string, int>>();
 
             foreach (var item in ColumnsOrderedList)
             {
-                result.Add(item.prop.Name, item.ColWidth);
+                result.Add(Tuple.Create(item.prop.Name, item.ColWidth));
             }
 
 
@@ -386,8 +386,8 @@ namespace BlazorVirtualGridComponent.classes
 
                 }
             };
-            
 
+            //DisplayedRowsCount =1+(int)Math.Ceiling((height - bvgSettings.HeaderHeight) / bvgSettings.RowHeight);
             DisplayedRowsCount = (int)((height - bvgSettings.HeaderHeight) / bvgSettings.RowHeight);
             bvgSettings.RowHeight = Math.Round((height - bvgSettings.HeaderHeight) / DisplayedRowsCount);
 
@@ -401,5 +401,9 @@ namespace BlazorVirtualGridComponent.classes
             bvgAreaColumnsFrozen.bvgGrid = this;
             bvgAreaColumnsNonFrozen.bvgGrid = this;
         }
-    }
+
+
+
+       
+  }
 }

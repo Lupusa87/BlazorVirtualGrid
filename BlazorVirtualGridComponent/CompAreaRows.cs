@@ -38,8 +38,10 @@ namespace BlazorVirtualGridComponent
             base.OnAfterRender();
 
 
-
-           // BlazorWindowHelper.BlazorTimeAnalyzer.Log();
+            if (!ForFrozen)
+            {
+                //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
+            }
         }
 
         private void BvgAreaRows_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -50,7 +52,7 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
 
-            BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaRows BuildRenderTree", MethodBase.GetCurrentMethod());
+            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaRows BuildRenderTree ForFrozen=" + ForFrozen, MethodBase.GetCurrentMethod());
 
             base.BuildRenderTree(builder);
 

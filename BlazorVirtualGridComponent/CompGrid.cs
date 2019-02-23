@@ -146,6 +146,7 @@ namespace BlazorVirtualGridComponent
             builder.CloseElement(); //thead
 
             builder.OpenElement(k++, "tbody");
+            builder.AddAttribute(k++, "id", "tbodyNonFrozenRows1");
 
             builder.OpenComponent<CompAreaRows>(k++);
             builder.AddAttribute(k++, "ForFrozen", false);

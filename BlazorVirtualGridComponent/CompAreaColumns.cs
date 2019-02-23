@@ -37,9 +37,6 @@ namespace BlazorVirtualGridComponent
 
             base.OnAfterRender();
 
-
-
-            // BlazorWindowHelper.BlazorTimeAnalyzer.Log();
         }
 
         private void BvgAreaColumns_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -50,7 +47,7 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
 
-            BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaColumns BuildRenderTree", MethodBase.GetCurrentMethod());
+            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaColumns BuildRenderTree ForFrozen="+ ForFrozen, MethodBase.GetCurrentMethod());
 
             base.BuildRenderTree(builder);
 

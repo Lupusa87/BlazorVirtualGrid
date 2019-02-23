@@ -41,7 +41,7 @@ namespace BlazorVirtualGridComponent
             int k = -1;
             builder.OpenComponent<CompBlazorScrollbar>(k++);
             builder.AddAttribute(k++, "bsbSettings", RuntimeHelpers.TypeCheck<BsbSettings>(bvgScroll.bsbSettings));
-            builder.AddAttribute(k++, "OnPositionChange", new Action<double>(onscroll));
+            builder.AddAttribute(k++, "OnPositionChange", new Action<int>(onscroll));
             builder.AddComponentReferenceCapture(k++, (c) =>
             {
 
@@ -54,19 +54,18 @@ namespace BlazorVirtualGridComponent
         }
 
 
-        private void onscroll(double ScrollPosition)
+        private void onscroll(int ScrollPosition)
         {
-            
 
             if (bvgScroll.bsbSettings.VerticalOrHorizontal)
             {
 
                 if (Math.Abs(ScrollPosition - bvgScroll.bvgGrid.CurrVerticalScrollPosition) > bvgScroll.bvgGrid.bvgSettings.RowHeight)
                 {
-                    BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
-                    BlazorWindowHelper.BlazorTimeAnalyzer.Add("onVerticalScroll fired", MethodBase.GetCurrentMethod());
+                    //BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
+                    //BlazorWindowHelper.BlazorTimeAnalyzer.Add("onVerticalScroll fired", MethodBase.GetCurrentMethod());
 
-                    bvgScroll.bvgGrid.Cmd_Clear_Selection();
+                    //bvgScroll.bvgGrid.Cmd_Clear_Selection();
 
                     bvgScroll.bvgGrid.CurrVerticalScrollPosition = ScrollPosition;
                     bvgScroll.bvgGrid.OnVerticalScroll?.Invoke((int)(ScrollPosition / bvgScroll.bvgGrid.bvgSettings.RowHeight));
@@ -75,19 +74,12 @@ namespace BlazorVirtualGridComponent
             }
             else
             {
+                //BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
+                //BlazorWindowHelper.BlazorTimeAnalyzer.Add("onHorizontalScroll fired", MethodBase.GetCurrentMethod());
+                
+                   bvgScroll.bvgGrid.CurrHorizontalScrollPosition = ScrollPosition;
+                   bvgScroll.bvgGrid.OnHorizontalScroll?.Invoke((int)(ScrollPosition));
 
-                if (Math.Abs(ScrollPosition - bvgScroll.bvgGrid.CurrHorizontalScrollPosition) > 10)
-                {
-                    BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
-                    BlazorWindowHelper.BlazorTimeAnalyzer.Add("onHorizontalScroll fired", MethodBase.GetCurrentMethod());
-
-                    bvgScroll.bvgGrid.Cmd_Clear_Selection();
-
-                    bvgScroll.bvgGrid.CurrHorizontalScrollPosition = ScrollPosition;
-                    bvgScroll.bvgGrid.OnHorizontalScroll?.Invoke((int)(ScrollPosition));
-
-                }
-                // BvgJsInterop.SetElementScrollLeft(bvgScroll.bvgGrid.GridDivElementID, ScrollPosition);
             }
 
         }

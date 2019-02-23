@@ -24,6 +24,13 @@ namespace BlazorVirtualGridComponent
             
         }
 
+        protected override void OnAfterRender()
+        {
+            base.OnAfterRender();
+
+            //Console.WriteLine("cell OnAfterRender " + bvgCell.ID);
+        }
+
         private void BvgCell_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             StateHasChanged();
@@ -32,7 +39,8 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
-            //Console.WriteLine("BuildRenderTree cell");
+
+            //Console.WriteLine("cell BuildRenderTree " + bvgCell.ID);
 
 
             int k = -1;
@@ -109,8 +117,11 @@ namespace BlazorVirtualGridComponent
                 builder.CloseElement(); //input
             }
             else
-            { 
-               builder.AddContent(k++, bvgCell.Value);
+            {
+                //#ExperienceBank
+                //if I will do builder.AddContent will get error
+                //because I guess there is changing components type and internall diffs calculation is giving some error
+                builder.AddMarkupContent(k++, bvgCell.Value);
             }
 
             builder.CloseElement(); //div
@@ -296,7 +307,7 @@ namespace BlazorVirtualGridComponent
 
                             bvgCell.bvgGrid.SelectCell(c, true);
                         }
-                    }
+                 }
                     break;
                 default:
                     break;

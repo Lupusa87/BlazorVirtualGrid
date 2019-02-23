@@ -27,6 +27,8 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
 
+            //Console.WriteLine("AreaRow BuildRenderTree ForFrozen=" + ForFrozen);
+
             if (bvgRow.PropertyChanged == null)
             {
                 bvgRow.PropertyChanged += BvgRow_PropertyChanged;

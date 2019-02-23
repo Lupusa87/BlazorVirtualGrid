@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace BlazorVirtualGrid.Pages
         public BvgSettings bvgSettings1 { get; set; } = new BvgSettings();
         public BvgSettings bvgSettings2 { get; set; } = new BvgSettings();
 
-        Dictionary<string, Dictionary<string, int>> SavedColumnWitdths_Dict = new Dictionary<string, Dictionary<string, int>>();
+        Dictionary<string, ValuesContainer<Tuple<string, int>>> SavedColumnWitdths_Dict = new Dictionary<string, ValuesContainer<Tuple<string, int>>>();
 
 
        
@@ -40,23 +41,32 @@ namespace BlazorVirtualGrid.Pages
         {
             
 
-            FillList(50, 70);
+            FillList(200, 300);
 
 
             bvgSettings1 = new BvgSettings();
 
             ConfigureBvgSettings1();
 
-            bvgSettings1.FrozenColumnsListOrdered = new List<string>
-            {
-                nameof(MyItem.N3),
-                nameof(MyItem.Date)
-            };
 
-            bvgSettings1.ColumnWidthsDictionary.Add(nameof(MyItem.N3), 200);
-            bvgSettings1.ColumnWidthsDictionary.Add(nameof(MyItem.Date), 200);
-            bvgSettings1.ColumnWidthsDictionary.Add(nameof(MyItem.N1), 300);
-           
+            bvgSettings1.FrozenColumnsListOrdered
+                .Add(nameof(MyItem.N3))
+                .Add(nameof(MyItem.Date));
+
+            //bvgSettings1.ColumnWidthsDictionary
+            //    .Add(Tuple.Create(nameof(MyItem.N3), 200))
+            //    .Add(Tuple.Create(nameof(MyItem.Date), 200))
+            //    .Add(Tuple.Create(nameof(MyItem.N1), 300));
+
+            PropertyInfo[] props = typeof(MyItem).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var item in props.Where(x=>x.Name!="Date"))
+            {
+                bvgSettings1.ColumnWidthsDictionary
+                .Add(Tuple.Create(item.Name, rnd1.Next(60, 200)));
+            }
+
+            //bvgSettings1.HiddenColumns
+            //    .Add(nameof(MyItem.SomeBool));
 
             base.OnInit();
         }
@@ -104,11 +114,10 @@ namespace BlazorVirtualGrid.Pages
 
             ConfigureBvgSettings1();
 
-            bvgSettings1.FrozenColumnsListOrdered = new List<string>
-            {
-                nameof(MyItem.N3),
-                nameof(MyItem.Date)
-            };
+            bvgSettings1.FrozenColumnsListOrdered
+                .Add(nameof(MyItem.N3))
+                .Add(nameof(MyItem.Date));
+           
 
 
             if (SavedColumnWitdths_Dict.ContainsKey(TableName1))
@@ -141,15 +150,12 @@ namespace BlazorVirtualGrid.Pages
 
             ConfigureBvgSettings2();
 
-            bvgSettings2.FrozenColumnsListOrdered = new List<string>
-            {
-                nameof(MyItem2.Gender)
-            };
+            bvgSettings2.FrozenColumnsListOrdered
+                .Add(nameof(MyItem2.Gender));
 
-            bvgSettings2.HiddenColumns = new List<string>
-            {
-                nameof(MyItem2.LastName)
-            };
+
+            bvgSettings2.HiddenColumns
+                .Add(nameof(MyItem2.LastName));
 
 
             if (SavedColumnWitdths_Dict.ContainsKey(TableName1))
@@ -330,6 +336,14 @@ namespace BlazorVirtualGrid.Pages
                     N10 = Guid.NewGuid().ToString("d").Substring(1, 4),
                     N11 = Guid.NewGuid().ToString("d").Substring(1, 4),
                     N12 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N13 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N14 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N15 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N16 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N17 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N18 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N19 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    N20 = Guid.NewGuid().ToString("d").Substring(1, 4),
                 });
             }
         }
@@ -369,6 +383,15 @@ namespace BlazorVirtualGrid.Pages
             public string N10 { get; set; }
             public string N11 { get; set; }
             public string N12 { get; set; }
+            public string N13 { get; set; }
+            public string N14 { get; set; }
+            public string N15 { get; set; }
+            public string N16 { get; set; }
+            public string N17 { get; set; }
+            public string N18 { get; set; }
+            public string N19 { get; set; }
+            public string N20 { get; set; }
+
 
         }
 

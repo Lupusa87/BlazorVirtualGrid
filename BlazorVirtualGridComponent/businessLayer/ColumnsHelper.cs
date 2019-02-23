@@ -11,7 +11,7 @@ namespace BlazorVirtualGridComponent.businessLayer
     {
         public static ColProp[] GetColumnsOrderedList(BvgGrid bvgGrid)
         {
-            int ColsCount = bvgGrid.AllProps.Count() - bvgGrid.bvgSettings.HiddenColumns.Count;
+            int ColsCount = bvgGrid.AllProps.Count() - bvgGrid.bvgSettings.HiddenColumns.Count();
 
             ColProp[] result = new ColProp[ColsCount];
 
@@ -22,7 +22,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             int j = 0;
             foreach (var item in bvgGrid.AllProps)
             {
-                if (!bvgGrid.bvgSettings.HiddenColumns.Any(x=>x.Equals(item.Name, StringComparison.InvariantCultureIgnoreCase)))
+                if (!bvgGrid.bvgSettings.HiddenColumns.Values.Any(x=>x.Equals(item.Name, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     AllPropsWithoutHidden[j] = item;
                     j++;
@@ -30,8 +30,8 @@ namespace BlazorVirtualGridComponent.businessLayer
             }
           
 
-            bool HasFrozenColumns = bvgGrid.bvgSettings.FrozenColumnsListOrdered.Count > 0;
-            bool HasNonFrozenColumnsOrdered = bvgGrid.bvgSettings.NonFrozenColumnsListOrdered.Count > 0;
+            bool HasFrozenColumns = bvgGrid.bvgSettings.FrozenColumnsListOrdered.Count() > 0;
+            bool HasNonFrozenColumnsOrdered = bvgGrid.bvgSettings.NonFrozenColumnsListOrdered.Count() > 0;
             if (!HasFrozenColumns && !HasNonFrozenColumnsOrdered)
             {
                 foreach (var item in AllPropsWithoutHidden)
@@ -62,7 +62,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                 if (HasFrozenColumns && !HasNonFrozenColumnsOrdered)
                 {
                     int k = 0;
-                    foreach (var item in bvgGrid.bvgSettings.FrozenColumnsListOrdered)
+                    foreach (var item in bvgGrid.bvgSettings.FrozenColumnsListOrdered.Values)
                     {
 
                       if (list1.Any(x=>x.Name.Equals(item, StringComparison.InvariantCultureIgnoreCase)))
@@ -78,7 +78,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                 if (!HasFrozenColumns && HasNonFrozenColumnsOrdered)
                 {
                     int k = 0;
-                    foreach (var item in bvgGrid.bvgSettings.NonFrozenColumnsListOrdered)
+                    foreach (var item in bvgGrid.bvgSettings.NonFrozenColumnsListOrdered.Values)
                     {
 
                         if (list1.Any(x => x.Name.Equals(item, StringComparison.InvariantCultureIgnoreCase)))
@@ -92,7 +92,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                 if (HasFrozenColumns && HasNonFrozenColumnsOrdered)
                 {
                     int k = 0;
-                    foreach (var item in bvgGrid.bvgSettings.NonFrozenColumnsListOrdered)
+                    foreach (var item in bvgGrid.bvgSettings.NonFrozenColumnsListOrdered.Values)
                     {
 
                         if (list1.Any(x => x.Name.Equals(item, StringComparison.InvariantCultureIgnoreCase)))
@@ -102,8 +102,8 @@ namespace BlazorVirtualGridComponent.businessLayer
                         }
                     }
 
-                    k = -bvgGrid.bvgSettings.FrozenColumnsListOrdered.Count;
-                    foreach (var item in bvgGrid.bvgSettings.FrozenColumnsListOrdered)
+                    k = -bvgGrid.bvgSettings.FrozenColumnsListOrdered.Count();
+                    foreach (var item in bvgGrid.bvgSettings.FrozenColumnsListOrdered.Values)
                     {
 
                         if (list1.Any(x => x.Name.Equals(item, StringComparison.InvariantCultureIgnoreCase)))
@@ -123,8 +123,9 @@ namespace BlazorVirtualGridComponent.businessLayer
             #region SetColWidths
             foreach (var item in result)
             {
-                if (bvgGrid.bvgSettings.ColumnWidthsDictionary.TryGetValue(item.prop.Name, out int colwidth))
+                if (bvgGrid.bvgSettings.ColumnWidthsDictionary.Values.Any(x=>x.Item1.Equals(item.prop.Name, StringComparison.InvariantCultureIgnoreCase)))
                 {
+                    int colwidth = bvgGrid.bvgSettings.ColumnWidthsDictionary.Values.Single(x => x.Item1.Equals(item.prop.Name, StringComparison.InvariantCultureIgnoreCase)).Item2;
 
                     if (colwidth < bvgGrid.bvgSettings.ColWidthMin)
                     {

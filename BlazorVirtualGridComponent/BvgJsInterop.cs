@@ -34,7 +34,7 @@ namespace BlazorVirtualGridComponent
         }
         
 
-        public static Task<bool> SetElementScrollLeft(string elementID, double val)
+        public static Task<bool> SetElementScrollLeft(string elementID, int val)
         {
             return JSRuntime.Current.InvokeAsync<bool>(
                 "BvgJsFunctions.SetElementScrollLeft", elementID, val);
@@ -93,6 +93,9 @@ namespace BlazorVirtualGridComponent
             return JSRuntime.Current.InvokeAsync<bool>(
                  "BvgJsFunctions.SetValueToCheckBox", el, val);
         }
+
+
+
 
     }
 }

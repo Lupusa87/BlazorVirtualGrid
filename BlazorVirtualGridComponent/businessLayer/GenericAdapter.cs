@@ -80,7 +80,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
             if (_bvgGrid.Rows.Count == 0 )
             {
-
+              
                 foreach (T item in list)
                 {
 
@@ -122,11 +122,13 @@ namespace BlazorVirtualGridComponent.businessLayer
                     _bvgGrid.Rows.Add(row);
                     
                 }
+                
             }
             else
             {
 
 
+                //BlazorWindowHelper.BlazorTimeAnalyzer.Add("update rows js approach", MethodBase.GetCurrentMethod());
 
                 k = 0;
                 ushort j;
@@ -159,11 +161,12 @@ namespace BlazorVirtualGridComponent.businessLayer
                     k++;
                 }
 
-
+                
                 BvgJsInterop.UpdateElementContentBatchMonoString(UpdatePkg);
 
+                //BlazorWindowHelper.BlazorTimeAnalyzer.Add("update rows js approach after send", MethodBase.GetCurrentMethod());
 
-                BlazorWindowHelper.BlazorTimeAnalyzer.Log();
+                //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
             }
 
 
