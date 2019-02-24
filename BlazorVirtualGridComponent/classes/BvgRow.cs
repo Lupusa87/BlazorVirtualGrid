@@ -14,7 +14,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public ushort ID { get; set; }
 
-        public IList<BvgCell> Cells { get; set; } = new List<BvgCell>();
+        public List<BvgCell> Cells { get; set; } = new List<BvgCell>();
 
         public bool IsSelected { get; set; }
 

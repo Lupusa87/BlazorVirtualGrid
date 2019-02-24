@@ -51,6 +51,9 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+
+            Console.WriteLine("grid BuildRenderTree");
+
             base.BuildRenderTree(builder);
 
             Cmd_RenderTable(builder);
@@ -62,7 +65,7 @@ namespace BlazorVirtualGridComponent
         {
 
 
-            if (bvgGrid.Columns.Count == 0)
+            if (bvgGrid.Columns.Count() == 0)
             {
                 return;
             }

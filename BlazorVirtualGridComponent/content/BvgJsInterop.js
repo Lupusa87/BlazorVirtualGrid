@@ -20,6 +20,9 @@ function addZero(i, j = 1) {
 }
 
 
+
+
+
 window.BvgJsFunctions = {
     GetElementActualWidth: function (el) {
 
@@ -86,7 +89,7 @@ window.BvgJsFunctions = {
         }
     },
     UpdateElementContentBatchMonoString: function (l) {
-
+        console.warn("monostring");
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));
 
         for (var i = 0; i < b.length; i += 3) {
@@ -101,11 +104,18 @@ window.BvgJsFunctions = {
             }
             else {
                 if (document.getElementById(b[i]) !== null) {
-                    document.getElementById(b[i]).innerText = b[i + 1];
+
+                    document.getElementById(b[i]).removeChild(document.getElementById(b[i]).lastChild);
+
+                    var c = document.createTextNode(b[i + 1]);
+                    document.getElementById(b[i]).appendChild(c);
+
+                    //document.getElementById(b[i]).innerText = JSON.stringify(b[i + 1]);
                 }
             }
         }
 
+        
         return true;
     },
     UpdateElementContentBatchMonoByteArray: function (l) {

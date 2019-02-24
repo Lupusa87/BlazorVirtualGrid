@@ -24,13 +24,6 @@ namespace BlazorVirtualGridComponent
             
         }
 
-        protected override void OnAfterRender()
-        {
-            base.OnAfterRender();
-
-            //Console.WriteLine("cell OnAfterRender " + bvgCell.ID);
-        }
-
         private void BvgCell_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             StateHasChanged();
@@ -38,9 +31,11 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            base.BuildRenderTree(builder);
 
             //Console.WriteLine("cell BuildRenderTree " + bvgCell.ID);
+
+            base.BuildRenderTree(builder);
+                     
 
 
             int k = -1;

@@ -16,10 +16,18 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected bool ActualRender { get; set; }
 
+        bool EnabledRender = true;
+
+        protected override bool ShouldRender()
+        {
+            return EnabledRender;
+        }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            base.BuildRenderTree(builder);
 
+            Console.WriteLine("Comptable BuildRenderTree");
             int k = -1;
 
             builder.OpenElement(k++, "table");
@@ -32,13 +40,17 @@ namespace BlazorVirtualGridComponent
                 builder.OpenComponent<CompGrid>(k++);
                 builder.AddAttribute(k++, "bvgGrid", bvgGrid);
                 builder.CloseComponent();
+
+                // without this after wheel was re-rendering and giving error
+                EnabledRender = false;
+                
             }
 
         
             builder.CloseElement(); //table
 
 
-            base.BuildRenderTree(builder);
+            
         }
 
 

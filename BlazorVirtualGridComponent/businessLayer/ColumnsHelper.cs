@@ -51,7 +51,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                 {
                     list1.Add(new OrderItem
                     {
-                        SequenceNumber = list1.Count+ AllPropsWithoutHidden.Count()+1,
+                        SequenceNumber = (ushort)(list1.Count+ AllPropsWithoutHidden.Count()+1),
                         Name = item.Name,
                         prop = item,
                         IsFrozen = false,
@@ -61,7 +61,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
                 if (HasFrozenColumns && !HasNonFrozenColumnsOrdered)
                 {
-                    int k = 0;
+                    ushort k = 0;
                     foreach (var item in bvgGrid.bvgSettings.FrozenColumnsListOrdered.Values)
                     {
 
@@ -77,7 +77,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                 }
                 if (!HasFrozenColumns && HasNonFrozenColumnsOrdered)
                 {
-                    int k = 0;
+                    ushort k = 0;
                     foreach (var item in bvgGrid.bvgSettings.NonFrozenColumnsListOrdered.Values)
                     {
 
@@ -91,7 +91,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                 }
                 if (HasFrozenColumns && HasNonFrozenColumnsOrdered)
                 {
-                    int k = 0;
+                    ushort k = 0;
                     foreach (var item in bvgGrid.bvgSettings.NonFrozenColumnsListOrdered.Values)
                     {
 
@@ -102,7 +102,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                         }
                     }
 
-                    k = -bvgGrid.bvgSettings.FrozenColumnsListOrdered.Count();
+                    k = (ushort)(-bvgGrid.bvgSettings.FrozenColumnsListOrdered.Count());
                     foreach (var item in bvgGrid.bvgSettings.FrozenColumnsListOrdered.Values)
                     {
 
@@ -120,12 +120,14 @@ namespace BlazorVirtualGridComponent.businessLayer
             }
 
 
-            #region SetColWidths
+            #region SetColWidths and seqNumber
+            ushort seqN = 0;
             foreach (var item in result)
             {
+                item.SequenceNumber = seqN++;
                 if (bvgGrid.bvgSettings.ColumnWidthsDictionary.Values.Any(x=>x.Item1.Equals(item.prop.Name, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    int colwidth = bvgGrid.bvgSettings.ColumnWidthsDictionary.Values.Single(x => x.Item1.Equals(item.prop.Name, StringComparison.InvariantCultureIgnoreCase)).Item2;
+                    ushort colwidth = bvgGrid.bvgSettings.ColumnWidthsDictionary.Values.Single(x => x.Item1.Equals(item.prop.Name, StringComparison.InvariantCultureIgnoreCase)).Item2;
 
                     if (colwidth < bvgGrid.bvgSettings.ColWidthMin)
                     {
@@ -153,7 +155,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
     public class OrderItem
     {
-        public int SequenceNumber { get; set; }
+        public ushort SequenceNumber { get; set; }
 
         public PropertyInfo prop { get; set; }
         public string Name { get; set; }
@@ -167,8 +169,13 @@ namespace BlazorVirtualGridComponent.businessLayer
 
         public PropertyInfo prop { get; set; }
 
-        public int ColWidth { get; set; }
+        public ushort ColWidth { get; set; }
         public bool IsFrozen { get; set; }
+
+        public ushort SequenceNumber { get; set; }
     }
+
+
+
 
 }

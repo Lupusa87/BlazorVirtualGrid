@@ -36,9 +36,9 @@ namespace BlazorVirtualGridComponent.classes
         public double HeaderHeight { get; set; } = 50;
 
 
-        public int ColWidthDefault { get; set; } = 150;
-        public int ColWidthMin { get; set; } = 50;
-        public int ColWidthMax { get; set; } = 300;
+        public ushort ColWidthDefault { get; set; } = 150;
+        public ushort ColWidthMin { get; set; } = 50;
+        public ushort ColWidthMax { get; set; } = 300;
 
         public double CheckBoxZoom { get; set; } = 1.5;
 
@@ -48,7 +48,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public ValuesContainer<string> HiddenColumns { get; set; } = new ValuesContainer<string>();
 
-        public ValuesContainer<Tuple<string, int>> ColumnWidthsDictionary { get; set; } = new ValuesContainer<Tuple<string, int>>();
+        public ValuesContainer<Tuple<string, ushort>> ColumnWidthsDictionary { get; set; } = new ValuesContainer<Tuple<string, ushort>>();
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

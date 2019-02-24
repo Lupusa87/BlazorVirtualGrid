@@ -33,7 +33,7 @@ namespace BlazorVirtualGrid.Pages
         public BvgSettings bvgSettings1 { get; set; } = new BvgSettings();
         public BvgSettings bvgSettings2 { get; set; } = new BvgSettings();
 
-        Dictionary<string, ValuesContainer<Tuple<string, int>>> SavedColumnWitdths_Dict = new Dictionary<string, ValuesContainer<Tuple<string, int>>>();
+        Dictionary<string, ValuesContainer<Tuple<string, ushort>>> SavedColumnWitdths_Dict = new Dictionary<string, ValuesContainer<Tuple<string, ushort>>>();
 
 
        
@@ -62,11 +62,11 @@ namespace BlazorVirtualGrid.Pages
             foreach (var item in props.Where(x=>x.Name!="Date"))
             {
                 bvgSettings1.ColumnWidthsDictionary
-                .Add(Tuple.Create(item.Name, rnd1.Next(60, 200)));
+                .Add(Tuple.Create(item.Name, (ushort)rnd1.Next(60, 200)));
             }
 
-            //bvgSettings1.HiddenColumns
-            //    .Add(nameof(MyItem.SomeBool));
+            bvgSettings1.HiddenColumns
+                .Add(nameof(MyItem.SomeBool));
 
             base.OnInit();
         }

@@ -29,7 +29,7 @@ namespace BlazorVirtualGridComponent.classes
         public bool IsFrozen { get; set; }
 
       
-        public byte SequenceNumber { get; set; }
+        public ushort SequenceNumber { get; set; }
 
 
         public BvgGrid bvgGrid { get; set; } = new BvgGrid();

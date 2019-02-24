@@ -17,12 +17,14 @@ namespace BlazorVirtualGridComponent.classes
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+
+
         public bool IsReady { get; set; } = false;
 
         public string GridTableElementID { get; set; } = "GridTable" + Guid.NewGuid().ToString("d").Substring(1, 4);
         public string GridDivElementID { get; set; } = "GridDiv"+ Guid.NewGuid().ToString("d").Substring(1, 4);
 
-        public Dictionary<string, BvgColumn> ColumnsDictionary { get; set; }
+        public Dictionary<string, BvgColumn> ColumnsDictionary { get; set; } = new Dictionary<string, BvgColumn>();
 
         public string Name { get; set; } = "null";
 
@@ -30,7 +32,11 @@ namespace BlazorVirtualGridComponent.classes
         public PropertyInfo[] ActiveProps { get; set; }
 
         public ColProp[] ColumnsOrderedList { get; set; }
+        public ColProp[] ColumnsOrderedListFrozen { get; set; }
+        public ColProp[] ColumnsOrderedListNonFrozen { get; set; }
 
+
+        public int[] NonFrozenColwidthSumsByElement { get; set; }
         public Action<string> OnSort { get; set; }
 
         public Action<int> OnVerticalScroll { get; set; }
@@ -38,7 +44,7 @@ namespace BlazorVirtualGridComponent.classes
         public Action<int> OnHorizontalScroll { get; set; }
 
         public IList<BvgRow> Rows { get; set; } = new List<BvgRow>();
-        public IList<BvgColumn> Columns { get; set; } = new List<BvgColumn>();
+        public List<BvgColumn> Columns { get; set; } = new List<BvgColumn>();
 
         public int RowsTotalCount { get; set; }
 
@@ -261,9 +267,9 @@ namespace BlazorVirtualGridComponent.classes
 
 
 
-        public ValuesContainer<Tuple<string, int>> GetColumnWidths()
+        public ValuesContainer<Tuple<string, ushort>> GetColumnWidths()
         {
-            ValuesContainer<Tuple<string, int>> result = new ValuesContainer<Tuple<string, int>>();
+            ValuesContainer<Tuple<string, ushort>> result = new ValuesContainer<Tuple<string, ushort>>();
 
             foreach (var item in ColumnsOrderedList)
             {

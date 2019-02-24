@@ -52,7 +52,7 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
 
-            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaRows BuildRenderTree ForFrozen=" + ForFrozen, MethodBase.GetCurrentMethod());
+            BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaRows BuildRenderTree ForFrozen=" + ForFrozen, MethodBase.GetCurrentMethod());
 
             base.BuildRenderTree(builder);
 
