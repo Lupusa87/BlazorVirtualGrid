@@ -7,17 +7,12 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgAreaRows : INotifyPropertyChanged
+    public class BvgAreaRows 
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public Action PropertyChanged;
 
 
         public BvgGrid bvgGrid { get; set; }
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
 
 
@@ -31,7 +26,7 @@ namespace BlazorVirtualGridComponent.classes
 
 
 
-            PropertyChanged?.Invoke(this, null);
+            PropertyChanged?.Invoke();
         }
     }
 }

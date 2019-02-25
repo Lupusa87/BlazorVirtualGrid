@@ -15,6 +15,19 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected BvgGrid bvgGrid { get; set; }
 
+        bool EnabledRender = true;
+
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            EnabledRender = true;
+        }
+
+        protected override bool ShouldRender()
+        {
+            return EnabledRender;
+        }
 
         protected override void OnInit()
         {
@@ -38,21 +51,22 @@ namespace BlazorVirtualGridComponent
 
         public void Subscribe()
         {
-            bvgGrid.PropertyChanged += BvgGrid_PropertyChanged;
+            bvgGrid.PropertyChanged = BvgGrid_PropertyChanged;
 
         }
 
 
-        private void BvgGrid_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void BvgGrid_PropertyChanged()
         {
 
+            EnabledRender = true;
             StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-
-            Console.WriteLine("grid BuildRenderTree");
+            EnabledRender = false;
+            //Console.WriteLine("grid BuildRenderTree");
 
             base.BuildRenderTree(builder);
 
@@ -217,7 +231,7 @@ namespace BlazorVirtualGridComponent
 
         public void Dispose()
         {
-            bvgGrid.PropertyChanged -= BvgGrid_PropertyChanged;
+           
         }
     }
 }

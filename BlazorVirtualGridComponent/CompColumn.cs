@@ -17,14 +17,31 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected BvgColumn bvgColumn { get; set; }
 
+        bool EnabledRender = true;
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            EnabledRender = true;
+        }
+
+        protected override bool ShouldRender()
+        {
+          
+            return EnabledRender;
+        }
 
         private void BvgColumn_PropertyChanged()
         {
+            EnabledRender = true;
             StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            EnabledRender = false;
+
+            base.BuildRenderTree(builder);
 
             if (bvgColumn.PropertyChanged == null)
             {
@@ -74,7 +91,7 @@ namespace BlazorVirtualGridComponent
             builder.CloseElement(); //th
 
 
-            base.BuildRenderTree(builder);
+            
         }
 
 

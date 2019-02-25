@@ -63,6 +63,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                 CssClass = HeaderStyle.HeaderRegular.ToString(),
                 IsFrozen = p.IsFrozen,
                 ColWidth = p.ColWidth,
+                ColWidthWithoutBorder = p.ColWidth - _bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth,
                 bsSettings = new BsSettings
                 {
                     VerticalOrHorizontal = false,
@@ -98,6 +99,9 @@ namespace BlazorVirtualGridComponent.businessLayer
                         bvgGrid = _bvgGrid,
                     };
 
+
+                    row.IsEven = row.ID % 2==0;
+
                     foreach (PropertyInfo p in _bvgGrid.ActiveProps)
                     {
                         row.Cells.Add(GetCell(row, p, item, _bvgGrid));
@@ -118,7 +122,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                 ushort j;
                 short i = -1;
 
-                //string[] UpdatePkg = new string[_bvgGrid.Rows.Count * _bvgGrid.Rows[0].Cells.Count * 3];
+                string[] UpdatePkg = new string[_bvgGrid.Rows.Count * _bvgGrid.Rows[0].Cells.Count * 2];
 
                 foreach (T item in list)
                 {
@@ -129,17 +133,20 @@ namespace BlazorVirtualGridComponent.businessLayer
                         _bvgGrid.Rows[k].Cells[j].Value = p.GetValue(item, null).ToString();
 
 
-                        //UpdatePkg[++i] = _bvgGrid.Rows[k].Cells[j].ID;
-                        //UpdatePkg[++i] = _bvgGrid.Rows[k].Cells[j].Value;
+                       
 
-                        //if (_bvgGrid.Rows[k].Cells[j].bvgColumn.type.Equals(typeof(bool)))
-                        //{
-                        //    UpdatePkg[++i] = "b";
-                        //}
-                        //else
-                        //{
-                        //    UpdatePkg[++i] = string.Empty;
-                        //}
+                        if (_bvgGrid.Rows[k].Cells[j].bvgColumn.type.Equals(typeof(bool)))
+                        {
+                            UpdatePkg[++i] ="checkbox" +  _bvgGrid.Rows[k].Cells[j].ID;
+                        }
+                        else
+                        {
+                            UpdatePkg[++i] ="span" + _bvgGrid.Rows[k].Cells[j].ID;
+                        }
+
+                        
+                        UpdatePkg[++i] = _bvgGrid.Rows[k].Cells[j].Value;
+
                         j++;
                     }
                     k++;
@@ -147,7 +154,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
 
 
-                //BvgJsInterop.UpdateElementContentBatchMonoString(UpdatePkg);
+                BvgJsInterop.UpdateElementContentBatchMonoString(UpdatePkg);
 
                 //BlazorWindowHelper.BlazorTimeAnalyzer.Add("update rows js approach after send", MethodBase.GetCurrentMethod());
 
@@ -179,11 +186,14 @@ namespace BlazorVirtualGridComponent.businessLayer
             {
                 cell.CssClass = CellStyle.CellNonFrozen.ToString();
             }
-            
+
             cell.ID = "C" + col.ID + "R" + row.ID;
             
             return cell;
         }
+
+
+        
 
         public static void UpdateRows(T[] list,  List<BvgColumn> RemovedColumns, List<ColProp> AddedProps, BvgGrid _bvgGrid)
         {

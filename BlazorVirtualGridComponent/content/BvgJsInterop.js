@@ -89,17 +89,17 @@ window.BvgJsFunctions = {
         }
     },
     UpdateElementContentBatchMonoString: function (l) {
-        console.warn("monostring");
+        
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));
 
-        for (var i = 0; i < b.length; i += 3) {
-            if (b[i + 2] === "b") {
+        for (var i = 0; i < b.length; i += 2) {
+            if (b[i].includes("checkbox")) {
               
                 if (b[i + 1].toLowerCase() === "true") {
-                    document.getElementById("checkbox" + b[i]).checked = true;
+                    document.getElementById(b[i]).checked = true;
                 }
                 else {
-                    document.getElementById("checkbox" + b[i]).checked = false;
+                    document.getElementById(b[i]).checked = false;
                 }
             }
             else {
@@ -110,7 +110,6 @@ window.BvgJsFunctions = {
                     var c = document.createTextNode(b[i + 1]);
                     document.getElementById(b[i]).appendChild(c);
 
-                    //document.getElementById(b[i]).innerText = JSON.stringify(b[i + 1]);
                 }
             }
         }

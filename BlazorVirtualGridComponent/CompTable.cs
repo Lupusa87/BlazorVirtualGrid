@@ -18,6 +18,12 @@ namespace BlazorVirtualGridComponent
 
         bool EnabledRender = true;
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            EnabledRender = true;
+        }
+
         protected override bool ShouldRender()
         {
             return EnabledRender;
@@ -27,7 +33,7 @@ namespace BlazorVirtualGridComponent
         {
             base.BuildRenderTree(builder);
 
-            Console.WriteLine("Comptable BuildRenderTree");
+            //Console.WriteLine("Comptable BuildRenderTree");
             int k = -1;
 
             builder.OpenElement(k++, "table");

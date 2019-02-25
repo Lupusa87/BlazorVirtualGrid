@@ -9,9 +9,9 @@ using System.Text;
 namespace BlazorVirtualGridComponent.classes
 {
 
-    public class BvgScroll : INotifyPropertyChanged
+    public class BvgScroll 
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public Action PropertyChanged;
 
         public string ID { get; set; }
 
@@ -25,16 +25,11 @@ namespace BlazorVirtualGridComponent.classes
 
         public CompBlazorScrollbar compBlazorScrollbar { get; set; } = new CompBlazorScrollbar();
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
+     
 
         public void InvokePropertyChanged()
         {
-            PropertyChanged?.Invoke(this, null);
+            PropertyChanged?.Invoke();
         }
     }
 }

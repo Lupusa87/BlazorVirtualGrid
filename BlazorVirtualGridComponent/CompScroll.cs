@@ -19,23 +19,38 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected BvgScroll bvgScroll { get; set; }
 
-      
+        bool EnabledRender = true;
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            EnabledRender = true;
+        }
+
+        protected override bool ShouldRender()
+        {
+            return EnabledRender;
+        }
 
         protected override void OnInit()
         {
 
-            bvgScroll.PropertyChanged += BvgScroll_PropertyChanged;
+            bvgScroll.PropertyChanged = BvgScroll_PropertyChanged;
           
         }
 
 
-        private void BvgScroll_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void BvgScroll_PropertyChanged()
         {
+            EnabledRender = true;
             StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            EnabledRender = false;
+
+            base.BuildRenderTree(builder);
             //Console.WriteLine("BuildRenderTree CompScroll");
 
             int k = -1;
@@ -50,7 +65,7 @@ namespace BlazorVirtualGridComponent
 
             builder.CloseComponent();
 
-            base.BuildRenderTree(builder);
+           
         }
 
 
@@ -84,7 +99,7 @@ namespace BlazorVirtualGridComponent
 
         public void Dispose()
         {
-            bvgScroll.PropertyChanged -= BvgScroll_PropertyChanged;
+
         }
     }
 }

@@ -13,9 +13,9 @@ using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgGrid : INotifyPropertyChanged
+    public class BvgGrid 
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public Action PropertyChanged;
 
 
 
@@ -281,11 +281,7 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
+      
 
 
         public void InvokePropertyChanged()
@@ -301,7 +297,7 @@ namespace BlazorVirtualGridComponent.classes
             }
 
 
-            PropertyChanged?.Invoke(this, null);
+            PropertyChanged?.Invoke();
         }
 
 

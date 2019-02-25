@@ -12,13 +12,28 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected BvgColumn bvgColumn { get; set; }
 
+        bool EnabledRender = true;
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            EnabledRender = true;
+        }
+
+        protected override bool ShouldRender()
+        {
+            return EnabledRender;
+        }
+
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            EnabledRender = false;
 
+            base.BuildRenderTree(builder);
 
             //Console.WriteLine("BuildRenderTree sort " + bvgColumn.Name + " " + bvgColumn.IsAscendingOrDescending);
 
-            base.BuildRenderTree(builder);
+
 
             int k = 0;
             builder.OpenElement(k++, "svg");

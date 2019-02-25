@@ -7,19 +7,14 @@ using System.Text;
 namespace BlazorVirtualGridComponent.classes
 {
 
-    public class BvgAreaColumns : INotifyPropertyChanged
+    public class BvgAreaColumns 
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public Action PropertyChanged;
 
 
         public BvgGrid bvgGrid { get; set; }
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
+      
 
         public void InvokePropertyChanged()
         {
@@ -31,7 +26,7 @@ namespace BlazorVirtualGridComponent.classes
 
 
 
-            PropertyChanged?.Invoke(this, null);
+            PropertyChanged?.Invoke();
         }
     }
 }

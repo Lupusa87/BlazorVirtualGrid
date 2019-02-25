@@ -18,14 +18,32 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected bool ForFrozen { get; set; }
 
+        bool EnabledRender = true;
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            EnabledRender = true;
+        }       
+
+        protected override bool ShouldRender()
+        {
+            
+            return EnabledRender;
+        }
 
         private void BvgRow_PropertyChanged()
         {
+            EnabledRender = true;
             StateHasChanged();
+            EnabledRender = false;
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            EnabledRender = false;
+
+            base.BuildRenderTree(builder);
 
             //Console.WriteLine("CompRow BuildRenderTree ForFrozen=" + ForFrozen);
 
@@ -48,13 +66,13 @@ namespace BlazorVirtualGridComponent
             builder.CloseElement(); //tr
 
 
-            base.BuildRenderTree(builder);
+           
         }
 
 
         public void Dispose()
         {
-            bvgRow.PropertyChanged -= BvgRow_PropertyChanged;
+            
         }
     }
 }

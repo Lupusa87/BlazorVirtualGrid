@@ -18,20 +18,38 @@ namespace BlazorVirtualGridComponent
         protected BvgCell bvgCell { get; set; }
 
 
-        protected override void OnInit()
+        bool EnabledRender = true;
+
+
+        protected override void OnParametersSet()
         {
-            bvgCell.PropertyChanged += BvgCell_PropertyChanged;
-            
+            base.OnParametersSet();
+            EnabledRender = true;
         }
 
-        private void BvgCell_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override bool ShouldRender()
         {
+            
+            return EnabledRender;
+        }
+
+
+        protected override void OnInit()
+        {
+            bvgCell.PropertyChanged = BvgCell_PropertyChanged;
+
+        }
+
+
+        private void BvgCell_PropertyChanged()
+        {
+            EnabledRender = true;
             StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-
+            EnabledRender = false;
             //Console.WriteLine("cell BuildRenderTree " + bvgCell.ID);
 
             base.BuildRenderTree(builder);
@@ -40,50 +58,9 @@ namespace BlazorVirtualGridComponent
 
             int k = -1;
             builder.OpenElement(k++, "td");
+            builder.AddAttribute(k++, "class", bvgCell.CssClassTD);
 
-            if (bvgCell.bvgColumn.IsFrozen)
-            {
-                if (bvgCell.CssClass.Equals(CellStyle.CellFrozen.ToString()))
-                {
-                    if (bvgCell.bvgRow.ID % 2 == 0)
-                    {
-                        builder.AddAttribute(k++, "class", "CellFrozenAlternated");
-                    }
-                    else
-                    {
-                        builder.AddAttribute(k++, "class", bvgCell.CssClass);
-                    }
-
-                }
-                else
-                {
-                    builder.AddAttribute(k++, "class", bvgCell.CssClass);
-                }
-            }
-            else
-            {
-                if (bvgCell.CssClass.Equals(CellStyle.CellNonFrozen.ToString()))
-                {
-                    if (bvgCell.bvgRow.ID % 2 == 0)
-                    {
-                        builder.AddAttribute(k++, "class", "CellNonFrozenAlternated");
-                    }
-                    else
-                    {
-                        builder.AddAttribute(k++, "class", bvgCell.CssClass);
-                    }
-
-                }
-                else
-                {
-                    builder.AddAttribute(k++, "class", bvgCell.CssClass);
-                }
-            }
-
-
-
-
-            builder.AddAttribute(k++, "style", "width:" + bvgCell.bvgColumn.ColWidth+"px");
+            builder.AddAttribute(k++, "style",string.Concat("width:",bvgCell.bvgColumn.ColWidth,"px"));
 
 
             builder.AddAttribute(k++, "onclick", Clicked);
@@ -93,30 +70,31 @@ namespace BlazorVirtualGridComponent
             builder.AddAttribute(k++, "id", bvgCell.ID);
             builder.AddAttribute(k++, "class", "CellDiv");
             builder.AddAttribute(k++, "tabindex",0); // without this div can't get focus and don't fires keyboard events
-            builder.AddAttribute(k++, "style", "width:" + (bvgCell.bvgColumn.ColWidth - bvgCell.bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth)+"px");
+            builder.AddAttribute(k++, "style", string.Concat("width:", bvgCell.bvgColumn.ColWidthWithoutBorder,"px"));
             builder.AddAttribute(k++, "onkeydown", OnKeyDown);
 
             if (bvgCell.ValueType.Equals(typeof(bool)))
             {
      
                 builder.OpenElement(k++, "input");
-                builder.AddAttribute(k++, "id", "checkbox" + bvgCell.ID);
+                builder.AddAttribute(k++, "id", string.Concat("checkbox", bvgCell.ID));
                 builder.AddAttribute(k++, "type", "checkbox");
                 if (bvgCell.Value.ToLower() == "true")
                 {
                     builder.AddAttribute(k++, "checked",string.Empty);
                 }
 
-                builder.AddAttribute(k++, "style", "zoom:" + bvgCell.bvgGrid.bvgSettings.CheckBoxZoom);
+                builder.AddAttribute(k++, "style", string.Concat("zoom:", bvgCell.bvgGrid.bvgSettings.CheckBoxZoom));
                 builder.AddAttribute(k++, "onclick", CheckboxClicked);
                 builder.CloseElement(); //input
             }
             else
             {
-                //#ExperienceBank
-                //if I will do builder.AddContent will get error
-                //because I guess there is changing components type and internall diffs calculation is giving some error
-                builder.AddMarkupContent(k++, bvgCell.Value);
+                builder.OpenElement(k++, "span");
+                builder.AddAttribute(k++, "id", string.Concat("span", bvgCell.ID));
+                builder.AddContent(k++, bvgCell.Value);
+                builder.CloseElement(); //span
+
             }
 
             builder.CloseElement(); //div
@@ -133,7 +111,7 @@ namespace BlazorVirtualGridComponent
         
         public void CheckboxClicked(UIMouseEventArgs e)
         {
-            BvgJsInterop.SetValueToCheckBox("checkbox" + bvgCell.ID, bvgCell.Value);
+            BvgJsInterop.SetValueToCheckBox(string.Concat("checkbox", bvgCell.ID), bvgCell.Value);
             bvgCell.bvgGrid.SelectCell(bvgCell, false);
 
         }
@@ -315,7 +293,7 @@ namespace BlazorVirtualGridComponent
 
         public void Dispose()
         {
-            bvgCell.PropertyChanged -= BvgCell_PropertyChanged;
+         
         }
     }
 }

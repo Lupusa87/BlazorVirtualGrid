@@ -14,6 +14,19 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected BvgGrid bvgGrid { get; set; }
 
+        bool EnabledRender = true;
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            EnabledRender = true;
+        }
+
+        protected override bool ShouldRender()
+        {
+            return EnabledRender;
+        }
+
         BCss blazorCSS = new BCss();
 
         private string GenerateCSS()
@@ -198,6 +211,9 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+
+            EnabledRender = false;
+
             base.BuildRenderTree(builder);
 
             int k = 0;

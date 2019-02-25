@@ -18,11 +18,22 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected bool ForFrozen { get; set; }
 
+        bool EnabledRender = true;
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            EnabledRender = true;
+        }
+
+        protected override bool ShouldRender()
+        {
+            return EnabledRender;
+        }
 
         protected override void OnInit()
         {
-            bvgAreaColumns.PropertyChanged += BvgAreaColumns_PropertyChanged;
+            bvgAreaColumns.PropertyChanged = BvgAreaColumns_PropertyChanged;
 
         }
 
@@ -39,14 +50,16 @@ namespace BlazorVirtualGridComponent
 
         }
 
-        private void BvgAreaColumns_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void BvgAreaColumns_PropertyChanged()
         {
+            EnabledRender = true;
             StateHasChanged();
+
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-
+            EnabledRender = false;
             //BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaColumns BuildRenderTree ForFrozen="+ ForFrozen, MethodBase.GetCurrentMethod());
 
             base.BuildRenderTree(builder);
@@ -69,7 +82,7 @@ namespace BlazorVirtualGridComponent
 
         public void Dispose()
         {
-            bvgAreaColumns.PropertyChanged -= BvgAreaColumns_PropertyChanged;
+           
         }
     }
 }

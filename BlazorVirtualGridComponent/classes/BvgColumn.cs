@@ -40,6 +40,7 @@ namespace BlazorVirtualGridComponent.classes
         public CompBlazorSplitter BSplitter { get; set; } = new CompBlazorSplitter();
 
 
+        public double ColWidthWithoutBorder { get; set; }
 
         public double _ColWidth { get; set; }
         public double ColWidth { get

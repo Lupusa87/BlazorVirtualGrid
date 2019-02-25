@@ -18,6 +18,8 @@ namespace BlazorVirtualGridComponent.classes
 
         public bool IsSelected { get; set; }
 
+        public bool IsEven { get; set; }
+
 
         public BvgGrid bvgGrid { get; set; } = new BvgGrid();
 
