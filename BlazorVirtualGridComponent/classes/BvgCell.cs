@@ -9,13 +9,13 @@ using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgCell 
+    public class BvgCell
     {
-       
+
         public Action PropertyChanged;
 
         public string ID { get; set; }
-        
+
 
         public string Value { get; set; }
 
@@ -27,7 +27,7 @@ namespace BlazorVirtualGridComponent.classes
         public bool IsSelected { get; set; }
 
         public bool IsActive { get; set; }
-   
+
 
         private string _CssClass { get; set; }
         public string CssClass {
@@ -41,12 +41,9 @@ namespace BlazorVirtualGridComponent.classes
             }
         }
 
-
-
-
         public string CssClassTD { get; set; }
 
-        public Type ValueType { get; set; }
+       
 
         public void InvokePropertyChanged()
         {
@@ -57,7 +54,7 @@ namespace BlazorVirtualGridComponent.classes
         private void UpdateCssClassTD()
         {
 
-            
+
 
             if (bvgColumn.IsFrozen)
             {
@@ -99,6 +96,11 @@ namespace BlazorVirtualGridComponent.classes
             }
 
 
+        }
+
+        public void UpdateID()
+        {
+            ID =string.Concat("C", bvgColumn.ID, "R" , bvgRow.ID);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
@@ -18,18 +19,21 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected bool ForFrozen { get; set; }
 
-        bool EnabledRender = true;
+        //bool EnabledRender = true;
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            EnabledRender = true;
-        }
 
-        protected override bool ShouldRender()
-        {
-            return EnabledRender;
-        }
+        //protected override Task OnParametersSetAsync()
+        //{
+
+        //    EnabledRender = true;
+
+        //    return base.OnParametersSetAsync();
+        //}
+
+        //protected override bool ShouldRender()
+        //{
+        //    return EnabledRender;
+        //}
 
         protected override void OnInit()
         {
@@ -52,14 +56,14 @@ namespace BlazorVirtualGridComponent
 
         private void BvgAreaColumns_PropertyChanged()
         {
-            EnabledRender = true;
+            //EnabledRender = true;
             StateHasChanged();
 
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            EnabledRender = false;
+            //EnabledRender = false;
             //BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaColumns BuildRenderTree ForFrozen="+ ForFrozen, MethodBase.GetCurrentMethod());
 
             base.BuildRenderTree(builder);

@@ -9,6 +9,7 @@ namespace BlazorVirtualGridComponent
 {
     public class BvgJsInterop
     {
+
         public static Task<double> GetElementActualWidth(string elementID)
         {
             return JSRuntime.Current.InvokeAsync<double>(
@@ -65,6 +66,7 @@ namespace BlazorVirtualGridComponent
                     "BvgJsFunctions.UpdateElementContentBatchMonoString",
                     Json.Serialize(updatepkg));
             }
+
 
             return false;
         }

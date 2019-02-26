@@ -46,11 +46,12 @@ namespace BlazorVirtualGridComponent
 
         bool EnabledRender = true;
 
-        protected override bool ShouldRender()
-        {
-            return EnabledRender;
-        }
-        protected override void OnParametersSet()
+        //protected override bool ShouldRender()
+        //{
+        //    return EnabledRender;
+        //}
+
+        protected override Task OnParametersSetAsync()
         {
             //BlazorWindowHelper.BlazorTimeAnalyzer.LogAllAdd = true;
 
@@ -61,13 +62,13 @@ namespace BlazorVirtualGridComponent
                 RowsTotalCount = SourceList.Count(),
                 bvgSettings = bvgSettings,
                 AllProps = typeof(TItem).GetProperties(BindingFlags.Public | BindingFlags.Instance),
-                
+
             };
 
 
             bvgGrid.ColumnsOrderedList = ColumnsHelper.GetColumnsOrderedList(bvgGrid);
-            bvgGrid.ColumnsOrderedListFrozen = bvgGrid.ColumnsOrderedList.Where(x=>x.IsFrozen).ToArray();
-            bvgGrid.ColumnsOrderedListNonFrozen = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen==false).ToArray();
+            bvgGrid.ColumnsOrderedListFrozen = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen).ToArray();
+            bvgGrid.ColumnsOrderedListNonFrozen = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen == false).ToArray();
 
 
             ColProp[] c = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen == false).ToArray();
@@ -78,16 +79,18 @@ namespace BlazorVirtualGridComponent
             {
                 j += c[i].ColWidth;
                 bvgGrid.NonFrozenColwidthSumsByElement[i] = j;
-               
+
             }
 
             c = null;
 
 
             SortedRowsList = SourceList.ToArray();
-          
-            base.OnParametersSet();
+
+            return base.OnParametersSetAsync();
         }
+
+
 
         protected override void OnAfterRender()
         {
@@ -113,13 +116,11 @@ namespace BlazorVirtualGridComponent
                     bvgGrid.OnHorizontalScroll = OnHorizontalScroll;
                 }
 
+
+                
+
                 timer1 = new Timer(Timer1Callback, null, 1, 1);
             }
-
-
-
-
-            //Console.WriteLine("OnAfterRender main");
 
 
             EnabledRender = false;
@@ -128,7 +129,7 @@ namespace BlazorVirtualGridComponent
         public void OnVerticalScroll(int p)
         {
 
-            RenderGridRows(p);
+            RenderGridRows(p, true);
 
         }
 
@@ -165,10 +166,10 @@ namespace BlazorVirtualGridComponent
             LastVerticalSkip = -1;
             bvgGrid.VericalScroll.compBlazorScrollbar.SetScrollPosition(0);
             
-            RenderGridRows(0);
+            RenderGridRows(0, true);
         }
 
-        public void RenderGridRows(int skip)
+        public void RenderGridRows(int skip, bool UpdateUI)
         {
 
             if (skip != LastVerticalSkip)
@@ -188,6 +189,13 @@ namespace BlazorVirtualGridComponent
                     SortedRowsListActual = SortedRowsList.Take(bvgGrid.DisplayedRowsCount).ToArray();
                     GenericAdapter<TItem>.GetRows(SortedRowsListActual, bvgGrid);
                 }
+
+                //if (UpdateUI)
+                //{
+                //    bvgGrid.bvgAreaRowsFrozen.InvokePropertyChanged();
+                //    bvgGrid.bvgAreaRowsNonFrozen.InvokePropertyChanged();
+                //}
+
             }
 
         }
@@ -299,7 +307,7 @@ namespace BlazorVirtualGridComponent
                     
                     bvgGrid.bvgAreaRowsNonFrozen.InvokePropertyChanged();
 
-                   
+                    GenericAdapter<TItem>.RefreshRows(SortedRowsListActual, bvgGrid);
                 }
 
                 BlazorWindowHelper.BlazorTimeAnalyzer.Log();
@@ -332,7 +340,7 @@ namespace BlazorVirtualGridComponent
 
             
             RenderGridColumns(0, false);
-            RenderGridRows(0);
+            RenderGridRows(0, false);
          
             ActualRender = true;
 

@@ -84,20 +84,32 @@ namespace BlazorVirtualGridComponent.classes
         {
             if (ForFrozen)
             {
-                return "width:" + FrozenTableWidth + "px;";
+                return string.Concat("width:" , FrozenTableWidth , "px;");
             }
             else
             {
-                return "width:" + NotFrozenTableWidth + "px;";
+                return string.Concat("width:" , NotFrozenTableWidth , "px;");
             }
 
         }
 
 
-        public string GetStyleDiv()
+        public string GetStyleDiv(bool ForFrozen)
         {
-            return "width:" + (NotFrozenTableWidth + 5) + "px;height:" + height + "px;";
+
+            if (ForFrozen)
+            {
+                return string.Concat("width:", (FrozenTableWidth + 1.5 ), "px;height:", height, "px;");
+            }
+            else
+            {
+                return string.Concat("width:", (NotFrozenTableWidth + 2.5), "px;height:", height, "px;");
+            }
+
+
+            
         }
+
 
         public void SelectCell(BvgCell parCell, bool doFocus)
         {
@@ -221,11 +233,11 @@ namespace BlazorVirtualGridComponent.classes
 
             if (!parColumn.IsAscendingOrDescending)
             {
-                OnSort?.Invoke(parColumn.Name);
+                OnSort?.Invoke(parColumn.prop.Name);
             }
             else
             {
-                OnSort?.Invoke(parColumn.Name + " desc");
+                OnSort?.Invoke(parColumn.prop.Name + " desc");
             }
 
         }
@@ -365,7 +377,7 @@ namespace BlazorVirtualGridComponent.classes
                 {
                     VerticalOrHorizontal = true,
                     width = 16,
-                    height = height,
+                    height = height-2,
                     ScrollVisibleSize = height- bvgSettings.HeaderHeight - bvgSettings.HeaderStyle.BorderWidth*2,
                     ScrollTotalSize = RowsTotalCount * (bvgSettings.RowHeight + bvgSettings.NonFrozenCellStyle.BorderWidth*2)+10,
                 }
@@ -381,7 +393,7 @@ namespace BlazorVirtualGridComponent.classes
                 {
 
                     VerticalOrHorizontal = false,
-                    width = totalWidth + 5,
+                    width = totalWidth + 21,
                     height = 16,
                     ScrollVisibleSize = 0,
                     ScrollTotalSize = 0,

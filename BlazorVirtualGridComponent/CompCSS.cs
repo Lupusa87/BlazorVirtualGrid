@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
@@ -16,10 +17,13 @@ namespace BlazorVirtualGridComponent
 
         bool EnabledRender = true;
 
-        protected override void OnParametersSet()
+
+        protected override Task OnParametersSetAsync()
         {
-            base.OnParametersSet();
+
             EnabledRender = true;
+
+            return base.OnParametersSetAsync();
         }
 
         protected override bool ShouldRender()
@@ -41,9 +45,7 @@ namespace BlazorVirtualGridComponent
             _TD.Values.Add("text-align", "center");
             _TD.Values.Add("vertical-align", "middle");
             blazorCSS.Children.Add(_TD);
-
-            
-
+                       
             BCssItem _CellDiv = new BCssItem(".CellDiv");
             _CellDiv.Values.Add("overflow", "hidden");
             _CellDiv.Values.Add("white-space", "nowrap");

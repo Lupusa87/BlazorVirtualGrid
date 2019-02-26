@@ -18,18 +18,21 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected bool ForFrozen { get; set; }
 
-        bool EnabledRender = true;
+        //bool EnabledRender = true;
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            EnabledRender = true;
-        }
 
-        protected override bool ShouldRender()
-        {
-            return EnabledRender;
-        }
+        //protected override Task OnParametersSetAsync()
+        //{
+
+        //    EnabledRender = true;
+
+        //    return base.OnParametersSetAsync();
+        //}
+
+        //protected override bool ShouldRender()
+        //{
+        //    return EnabledRender;
+        //}
 
         protected override void OnInit()
         {
@@ -49,21 +52,21 @@ namespace BlazorVirtualGridComponent
             base.OnAfterRender();
 
 
-            if (!ForFrozen)
-            {
-                //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
-            }
+            //if (!ForFrozen)
+            //{
+            //    BlazorWindowHelper.BlazorTimeAnalyzer.Log();
+            //}
         }
 
         private void BvgAreaRows_PropertyChanged()
         {
-            EnabledRender = true;
+            //EnabledRender = true;
             StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            EnabledRender = false;
+            //EnabledRender = false;
 
 
             BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaRows BuildRenderTree ForFrozen=" + ForFrozen, MethodBase.GetCurrentMethod());

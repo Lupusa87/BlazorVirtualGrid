@@ -17,35 +17,38 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected BvgColumn bvgColumn { get; set; }
 
-        bool EnabledRender = true;
+        //bool EnabledRender = true;
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            EnabledRender = true;
-        }
 
-        protected override bool ShouldRender()
-        {
+        //protected override Task OnParametersSetAsync()
+        //{
+
+        //    EnabledRender = true;
+
+        //    return base.OnParametersSetAsync();
+        //}
+
+        //protected override bool ShouldRender()
+        //{
           
-            return EnabledRender;
-        }
+        //    return EnabledRender;
+        //}
 
         private void BvgColumn_PropertyChanged()
         {
-            EnabledRender = true;
+            //EnabledRender = true;
             StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            EnabledRender = false;
+            //EnabledRender = false;
 
             base.BuildRenderTree(builder);
 
             if (bvgColumn.PropertyChanged == null)
             {
-                bvgColumn.PropertyChanged += BvgColumn_PropertyChanged;
+                bvgColumn.PropertyChanged = BvgColumn_PropertyChanged;
             }
 
             int k = -1;
@@ -64,7 +67,7 @@ namespace BlazorVirtualGridComponent
             builder.OpenElement(k++, "span");
             builder.AddAttribute(k++, "class", "ColumnSpan");
             builder.AddAttribute(k++, "style", "width:" + bvgColumn.ColWidthSpan + "px");
-            builder.AddContent(k++, bvgColumn.Name);
+            builder.AddContent(k++, bvgColumn.prop.Name);
             builder.CloseElement(); //span
 
             if (bvgColumn.IsSorted)
@@ -157,7 +160,7 @@ namespace BlazorVirtualGridComponent
 
         public void Dispose()
         {
-            bvgColumn.PropertyChanged = null;
+            
         }
     }
 }

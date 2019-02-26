@@ -18,20 +18,22 @@ namespace BlazorVirtualGridComponent
         protected BvgCell bvgCell { get; set; }
 
 
-        bool EnabledRender = true;
+        //bool EnabledRender = true;
 
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            EnabledRender = true;
-        }
-
-        protected override bool ShouldRender()
-        {
+        //protected override Task OnParametersSetAsync()
+        //{
             
-            return EnabledRender;
-        }
+        //    EnabledRender = true;
+
+        //    return base.OnParametersSetAsync();
+        //}
+
+        //protected override bool ShouldRender()
+        //{
+            
+        //    return EnabledRender;
+        //}
 
 
         protected override void OnInit()
@@ -43,18 +45,13 @@ namespace BlazorVirtualGridComponent
 
         private void BvgCell_PropertyChanged()
         {
-            EnabledRender = true;
+            //EnabledRender = true;
             StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            EnabledRender = false;
-            //Console.WriteLine("cell BuildRenderTree " + bvgCell.ID);
-
-            base.BuildRenderTree(builder);
-                     
-
+            //EnabledRender = false;
 
             int k = -1;
             builder.OpenElement(k++, "td");
@@ -73,25 +70,31 @@ namespace BlazorVirtualGridComponent
             builder.AddAttribute(k++, "style", string.Concat("width:", bvgCell.bvgColumn.ColWidthWithoutBorder,"px"));
             builder.AddAttribute(k++, "onkeydown", OnKeyDown);
 
-            if (bvgCell.ValueType.Equals(typeof(bool)))
+
+            if (bvgCell.bvgColumn.type.Equals(typeof(bool)))
             {
-     
+
                 builder.OpenElement(k++, "input");
-                builder.AddAttribute(k++, "id", string.Concat("checkbox", bvgCell.ID));
+                builder.AddAttribute(k++, "id", string.Concat("ch", bvgCell.ID));
                 builder.AddAttribute(k++, "type", "checkbox");
-                if (bvgCell.Value.ToLower() == "true")
+                if (!string.IsNullOrEmpty(bvgCell.Value))
                 {
-                    builder.AddAttribute(k++, "checked",string.Empty);
+                    if (bvgCell.Value.ToLower() == "true")
+                    {
+                        builder.AddAttribute(k++, "checked", string.Empty);
+                    }
                 }
 
                 builder.AddAttribute(k++, "style", string.Concat("zoom:", bvgCell.bvgGrid.bvgSettings.CheckBoxZoom));
                 builder.AddAttribute(k++, "onclick", CheckboxClicked);
                 builder.CloseElement(); //input
+
+
             }
             else
             {
                 builder.OpenElement(k++, "span");
-                builder.AddAttribute(k++, "id", string.Concat("span", bvgCell.ID));
+                builder.AddAttribute(k++, "id", string.Concat("sp", bvgCell.ID));
                 builder.AddContent(k++, bvgCell.Value);
                 builder.CloseElement(); //span
 
@@ -104,14 +107,14 @@ namespace BlazorVirtualGridComponent
             builder.CloseElement();
 
 
-            
+            base.BuildRenderTree(builder);
         }
 
 
         
         public void CheckboxClicked(UIMouseEventArgs e)
         {
-            BvgJsInterop.SetValueToCheckBox(string.Concat("checkbox", bvgCell.ID), bvgCell.Value);
+            BvgJsInterop.SetValueToCheckBox(string.Concat("ch", bvgCell.ID), bvgCell.Value);
             bvgCell.bvgGrid.SelectCell(bvgCell, false);
 
         }
@@ -133,9 +136,6 @@ namespace BlazorVirtualGridComponent
             {
 
                 a = a.Replace("arrow", null);
-
-                //Console.WriteLine(e.Key.ToString());
-                //Console.WriteLine(bvgCell.Value.ToString() + " " +  bvgCell.bvgColumn.Name);
 
                 switch (a)
                 {

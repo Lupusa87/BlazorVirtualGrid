@@ -18,30 +18,31 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected bool ForFrozen { get; set; }
 
-        bool EnabledRender = true;
+        //bool EnabledRender = true;
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            EnabledRender = true;
-        }       
-
-        protected override bool ShouldRender()
-        {
+        //protected override Task OnParametersSetAsync()
+        //{
             
-            return EnabledRender;
-        }
+        //    EnabledRender = true;
+
+        //    return base.OnParametersSetAsync();
+        //}       
+
+        //protected override bool ShouldRender()
+        //{
+            
+        //    return EnabledRender;
+        //}
 
         private void BvgRow_PropertyChanged()
         {
-            EnabledRender = true;
+            //EnabledRender = true;
             StateHasChanged();
-            EnabledRender = false;
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            EnabledRender = false;
+            //EnabledRender = false;
 
             base.BuildRenderTree(builder);
 

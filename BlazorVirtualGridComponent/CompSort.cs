@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
@@ -12,22 +13,25 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected BvgColumn bvgColumn { get; set; }
 
-        bool EnabledRender = true;
+        //bool EnabledRender = true;
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            EnabledRender = true;
-        }
 
-        protected override bool ShouldRender()
-        {
-            return EnabledRender;
-        }
+        //protected override Task OnParametersSetAsync()
+        //{
+
+        //    EnabledRender = true;
+
+        //    return base.OnParametersSetAsync();
+        //}
+
+        //protected override bool ShouldRender()
+        //{
+        //    return EnabledRender;
+        //}
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            EnabledRender = false;
+            //EnabledRender = false;
 
             base.BuildRenderTree(builder);
 

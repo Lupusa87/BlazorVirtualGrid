@@ -25,7 +25,7 @@ function addZero(i, j = 1) {
 
 window.BvgJsFunctions = {
     GetElementActualWidth: function (el) {
-
+        
         if (document.getElementById(el) !== null) {
             let rect = document.getElementById(el).getBoundingClientRect();
             return rect.width;
@@ -93,13 +93,15 @@ window.BvgJsFunctions = {
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));
 
         for (var i = 0; i < b.length; i += 2) {
-            if (b[i].includes("checkbox")) {
-              
-                if (b[i + 1].toLowerCase() === "true") {
-                    document.getElementById(b[i]).checked = true;
-                }
-                else {
-                    document.getElementById(b[i]).checked = false;
+            if (b[i].includes("ch")) {
+
+                if (document.getElementById(b[i]) !== null) {
+                    if (b[i + 1].toLowerCase() === "true") {
+                        document.getElementById(b[i]).checked = true;
+                    }
+                    else {
+                        document.getElementById(b[i]).checked = false;
+                    }
                 }
             }
             else {

@@ -65,8 +65,8 @@ namespace BlazorVirtualGrid.Pages
                 .Add(Tuple.Create(item.Name, (ushort)rnd1.Next(60, 200)));
             }
 
-            bvgSettings1.HiddenColumns
-                .Add(nameof(MyItem.SomeBool));
+            //bvgSettings1.HiddenColumns
+            //    .Add(nameof(MyItem.SomeBool));
 
             base.OnInit();
         }
@@ -102,6 +102,9 @@ namespace BlazorVirtualGrid.Pages
 
         public void CmdNewList1()
         {
+
+            CurrBVG1.bvgGrid.bvgAreaRowsNonFrozen.InvokePropertyChanged();
+            return;
             FirstOrSecond = true;
 
 

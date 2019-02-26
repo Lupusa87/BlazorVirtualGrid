@@ -15,19 +15,22 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected BvgGrid bvgGrid { get; set; }
 
-        bool EnabledRender = true;
+        //bool EnabledRender = true;
 
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            EnabledRender = true;
-        }
 
-        protected override bool ShouldRender()
-        {
-            return EnabledRender;
-        }
+        //protected override Task OnParametersSetAsync()
+        //{
+
+        //    EnabledRender = true;
+
+        //    return base.OnParametersSetAsync();
+        //}
+
+        //protected override bool ShouldRender()
+        //{
+        //    return EnabledRender;
+        //}
 
         protected override void OnInit()
         {
@@ -59,13 +62,13 @@ namespace BlazorVirtualGridComponent
         private void BvgGrid_PropertyChanged()
         {
 
-            EnabledRender = true;
+            //EnabledRender = true;
             StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            EnabledRender = false;
+            //EnabledRender = false;
             //Console.WriteLine("grid BuildRenderTree");
 
             base.BuildRenderTree(builder);
@@ -96,8 +99,13 @@ namespace BlazorVirtualGridComponent
             if (bvgGrid.Columns.Any(x => x.IsFrozen))
             {
                 builder.OpenElement(k++, "td");
-                builder.AddAttribute(k++, "valign", "top");
+                builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(true));
+                //builder.AddAttribute(k++, "valign", "top");
 
+
+                builder.OpenElement(k++, "div");
+                builder.AddAttribute(k++, "class", "GridDiv");
+                builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(true));
 
                 builder.OpenElement(k++, "table");
                 builder.AddAttribute(k++, "class", "BorderedTable");
@@ -127,7 +135,9 @@ namespace BlazorVirtualGridComponent
                 builder.CloseElement(); //tbody
 
                 builder.CloseElement(); //table
-              
+
+                builder.CloseElement(); //div
+
                 builder.CloseElement(); //td
 
 
@@ -137,13 +147,14 @@ namespace BlazorVirtualGridComponent
 
             #region grid
             builder.OpenElement(k++, "td");
-            builder.AddAttribute(k++, "valign", "top");
+            builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(false));
+            //builder.AddAttribute(k++, "valign", "top");
 
 
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", bvgGrid.GridDivElementID);
             builder.AddAttribute(k++, "class", "GridDiv");
-            builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv());
+            builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(false));
 
             builder.OpenElement(k++, "table"); 
             builder.AddAttribute(k++, "class", "BorderedTable");
@@ -181,6 +192,7 @@ namespace BlazorVirtualGridComponent
 
 
             builder.OpenElement(k++, "td");
+            builder.AddAttribute(k++, "style", "padding-top:4px");
 
             builder.OpenComponent<CompScroll>(k++);
             builder.AddAttribute(k++, "bvgScroll", bvgGrid.VericalScroll);
@@ -199,12 +211,10 @@ namespace BlazorVirtualGridComponent
             #region SecondRow
 
             builder.OpenElement(k++, "tr");
-            builder.AddAttribute(k++, "valign", "top");
-        
-
-
+     
             builder.OpenElement(k++, "td");
-            builder.AddAttribute(k++, "colspan", 2);
+ 
+            builder.AddAttribute(k++, "colspan", 3);
             builder.AddAttribute(k++, "valign", "top");
            
 
