@@ -18,7 +18,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public PropertyInfo prop { get; set; }
 
-        public Type type { get; set; }
+       
         public bool IsSelected { get; set; }
 
         public string CssClass { get; set; }
@@ -41,10 +41,10 @@ namespace BlazorVirtualGridComponent.classes
         public CompBlazorSplitter BSplitter { get; set; } = new CompBlazorSplitter();
 
 
-        public double ColWidthWithoutBorder { get; set; }
+        public ushort ColWidthWithoutBorder { get; set; }
 
-        public double _ColWidth { get; set; }
-        public double ColWidth { get
+        public ushort _ColWidth { get; set; }
+        public ushort ColWidth { get
             {
                 return _ColWidth;
             }
@@ -52,14 +52,14 @@ namespace BlazorVirtualGridComponent.classes
             {
                 _ColWidth = value;
 
-                ColWidthDiv = _ColWidth - bvgGrid.bvgSettings.HeaderStyle.BorderWidth;
-                ColWidthSpan = ColWidth - 5;
+                ColWidthDiv =(ushort)(_ColWidth - bvgGrid.bvgSettings.HeaderStyle.BorderWidth);
+                ColWidthSpan = (ushort)(ColWidth - 5);
             }
         } 
 
 
-        public double ColWidthDiv { get; set; }
-        public double ColWidthSpan { get; set; } 
+        public ushort ColWidthDiv { get; set; }
+        public ushort ColWidthSpan { get; set; } 
 
 
 

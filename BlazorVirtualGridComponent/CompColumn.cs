@@ -60,11 +60,13 @@ namespace BlazorVirtualGridComponent
 
 
             builder.OpenElement(k++, "div");
+            builder.AddAttribute(k++, "id", "divCol" + bvgColumn.ID);
             builder.AddAttribute(k++, "class", "ColumnDiv");
             builder.AddAttribute(k++, "style", "width:" + bvgColumn.ColWidthDiv + "px");
 
 
             builder.OpenElement(k++, "span");
+            builder.AddAttribute(k++, "id", "spCol"+bvgColumn.ID);
             builder.AddAttribute(k++, "class", "ColumnSpan");
             builder.AddAttribute(k++, "style", "width:" + bvgColumn.ColWidthSpan + "px");
             builder.AddContent(k++, bvgColumn.prop.Name);
@@ -114,9 +116,9 @@ namespace BlazorVirtualGridComponent
             {
 
 
-                double old_Value_col = bvgColumn.ColWidth;
+                ushort old_Value_col = bvgColumn.ColWidth;
 
-                bvgColumn.ColWidth += p;
+                bvgColumn.ColWidth = (ushort)(bvgColumn.ColWidth + p);
 
 
                 if (bvgColumn.ColWidth < bvgColumn.bvgGrid.bvgSettings.ColWidthMin)

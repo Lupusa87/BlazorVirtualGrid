@@ -109,7 +109,7 @@ namespace BlazorVirtualGridComponent
 
                 builder.OpenElement(k++, "table");
                 builder.AddAttribute(k++, "class", "BorderedTable");
-                builder.AddAttribute(k++, "style", bvgGrid.GetStyleTable(true));
+                builder.AddAttribute(k++, "style", bvgGrid.GetStyleTable(true) + ";border:1px solid black");
 
                 builder.OpenElement(k++, "thead");
                 builder.OpenElement(k++, "tr");

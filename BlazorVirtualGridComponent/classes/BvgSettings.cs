@@ -33,7 +33,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public double RowHeight { get; set; } = 40;
         
-        public double HeaderHeight { get; set; } = 50;
+        public int HeaderHeight { get; set; } = 50;
 
 
         public ushort ColWidthDefault { get; set; } = 150;

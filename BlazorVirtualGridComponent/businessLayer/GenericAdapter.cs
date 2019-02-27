@@ -15,48 +15,73 @@ namespace BlazorVirtualGridComponent.businessLayer
 {
     public static class GenericAdapter<T>
     {
-        public static void GetColumns(ColProp[] props, BvgGrid _bvgGrid, T[] list)
+        public static void GetColumns(ColProp[] props, BvgGrid _bvgGrid, T[] list, bool UpdateUI)
         {
-            int h = (int)(_bvgGrid.bvgSettings.HeaderHeight - _bvgGrid.bvgSettings.HeaderStyle.BorderWidth * 2);
+            int h = _bvgGrid.bvgSettings.HeaderHeight - _bvgGrid.bvgSettings.HeaderStyle.BorderWidth * 2;
 
-            if (_bvgGrid.ColumnsDictionary.Any())
+            if (!_bvgGrid.Columns.Any())
             {
-
-                List<BvgColumn> RemovedColumns = _bvgGrid.Columns.Where(x => !props.ToList().Exists(y => y.prop.Name.Equals(x.prop.Name))).ToList();
-                _bvgGrid.Columns.RemoveAll(x => !props.ToList().Exists(y => y.prop.Name.Equals(x.prop.Name)));
-
-
-                Queue<ushort> availableIDsQueue = new Queue<ushort>(RemovedColumns.Select(x => x.ID));
-
-
-                List<ColProp> AddedProps = props.ToList().Where(x => !_bvgGrid.Columns.Exists(y => y.prop.Name.Equals(x.prop.Name))).ToList();
-                foreach (var item in AddedProps)
+                _bvgGrid.Columns = new BvgColumn[props.Count()];
+                for (ushort i = 0; i < props.Count(); i++)
                 {
-                    if (availableIDsQueue.Any())
-                    {
-                        _bvgGrid.Columns.Add(getCol(availableIDsQueue.Dequeue(), item, h, _bvgGrid));
-                    }
-                    else
-                    {
-                        _bvgGrid.Columns.Add(getCol((ushort)(_bvgGrid.Columns.Max(x => x.ID) + 1), item, h, _bvgGrid));
-                    }
-
+                    _bvgGrid.Columns[i] =getCol(i, props[i], h, _bvgGrid);
                 }
-
-
-                _bvgGrid.ColumnsDictionary = _bvgGrid.Columns.ToDictionary(x => x.prop.Name, x => x);
-
-                UpdateRows(list, RemovedColumns, AddedProps, _bvgGrid);
-                
             }
             else
             {
+
+
+                _bvgGrid.Columns = new BvgColumn[props.Count()];
+                string[] UpdatePkg = new string[props.Count() * 4];
+                short j = -1;
                 for (ushort i = 0; i < props.Count(); i++)
                 {
-                    _bvgGrid.Columns.Add(getCol(i, props[i], h, _bvgGrid));
+                    _bvgGrid.Columns[i] = getCol(i, props[i], h, _bvgGrid);
+
+                    UpdatePkg[++j] = i.ToString();
+                    UpdatePkg[++j] = props[i].prop.Name;
+                    UpdatePkg[++j] = _bvgGrid.Columns[i].ColWidthWithoutBorder.ToString();
+                    UpdatePkg[++j] = props[i].ColWidth.ToString();
                 }
 
-                _bvgGrid.ColumnsDictionary = _bvgGrid.Columns.ToDictionary(x => x.prop.Name, x => x);
+
+                if (_bvgGrid.SortState.Item1)
+                {
+                    if (_bvgGrid.Columns.Any(x => x.prop.Name.Equals(_bvgGrid.SortState.Item2.prop.Name)))
+                    {
+                        BvgColumn sortedCol2 = _bvgGrid.Columns.Single(x => x.prop.Name.Equals(_bvgGrid.SortState.Item2.prop.Name));
+                        sortedCol2.IsSorted = true;
+                        sortedCol2.IsAscendingOrDescending = _bvgGrid.SortState.Item2.IsAscendingOrDescending;
+                    }
+                }
+
+
+                if (_bvgGrid.Rows.Any())
+                {
+                   
+                    foreach (BvgRow r in _bvgGrid.Rows)
+                    {
+                        foreach (BvgCell c in r.Cells)
+                        {
+                            if (c.bvgColumn.ID < props.Count())
+                            {
+                                c.bvgColumn = _bvgGrid.Columns[c.bvgColumn.ID];
+                                c.HasCol = true;
+                            }
+                            else
+                            {
+                                c.HasCol = false;
+                            }
+                        }
+                    }
+                }
+
+
+                if (UpdateUI)
+                {
+                    BvgJsInterop.UpdateColContentsBatch(UpdatePkg);
+                    RefreshRows(list, _bvgGrid, true);
+                }
             }
 
         }
@@ -69,13 +94,12 @@ namespace BlazorVirtualGridComponent.businessLayer
             {
                 ID = id,
                 prop = p.prop,
-                type = (p.prop.PropertyType.IsGenericType && p.prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>) ? Nullable.GetUnderlyingType(p.prop.PropertyType) : p.prop.PropertyType),
                 SequenceNumber = p.SequenceNumber,
                 bvgGrid = _bvgGrid,
                 CssClass = HeaderStyle.HeaderRegular.ToString(),
                 IsFrozen = p.IsFrozen,
                 ColWidth = p.ColWidth,
-                ColWidthWithoutBorder = p.ColWidth - _bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth,
+                ColWidthWithoutBorder = (ushort)(p.ColWidth - _bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth),
                 bsSettings = new BsSettings
                 {
                     VerticalOrHorizontal = false,
@@ -94,14 +118,16 @@ namespace BlazorVirtualGridComponent.businessLayer
         }
 
 
-
         public static void GetRows(T[] list, BvgGrid _bvgGrid)
         {
 
             ushort k = 0;
-            if (_bvgGrid.Rows.Count == 0)
+            if (!_bvgGrid.Rows.Any())
             {
+                _bvgGrid.Rows = new BvgRow[list.Count()];
 
+                ushort j = 0;
+                ushort g = 0;
                 foreach (T item in list)
                 {
 
@@ -109,24 +135,27 @@ namespace BlazorVirtualGridComponent.businessLayer
                     {
                         ID = k++,
                         bvgGrid = _bvgGrid,
+                        Cells = new BvgCell[_bvgGrid.Columns.Count()],
                     };
 
 
                     row.IsEven = row.ID % 2==0;
 
+                    g = 0;
                     foreach (BvgColumn col in _bvgGrid.Columns)
                     {
-                        row.Cells.Add(GetCell(row, col, item, _bvgGrid,true));
+                        row.Cells[g] = GetCell(row, col, item, _bvgGrid,true);
+                        g++;
                     }
 
-                    _bvgGrid.Rows.Add(row);
-
+                    _bvgGrid.Rows[j]=row;
+                    j++;
                 }
 
             }
             else
             {
-                RefreshRows(list, _bvgGrid);
+                RefreshRows(list, _bvgGrid, false);
               
             }
 
@@ -140,6 +169,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             {
                 bvgRow = row,
                 bvgColumn = col,
+                HasCol = true,
                 bvgGrid = _bvgGrid,
             };
 
@@ -163,81 +193,61 @@ namespace BlazorVirtualGridComponent.businessLayer
             return cell;
         }
 
-
-        
-
-        public static void UpdateRows(T[] list,  List<BvgColumn> RemovedColumns, List<ColProp> AddedProps, BvgGrid _bvgGrid)
+        private static void RefreshRows(T[] list, BvgGrid _bvgGrid, bool updateWidths)
         {
-
-            int k = 0;
-
-            BlazorWindowHelper.BlazorTimeAnalyzer.Add("update rows start", MethodBase.GetCurrentMethod());
-          
-            foreach (T item in list)
-            {
-                
-                BvgRow row = _bvgGrid.Rows[k];
-
-                row.Cells.RemoveAll(x => RemovedColumns.Exists(y => y == x.bvgColumn));
-
-                foreach (ColProp p in AddedProps)
-                {
-                    _bvgGrid.ColumnsDictionary.TryGetValue(p.prop.Name, out BvgColumn col);
-
-                    row.Cells.Add(GetCell(row, col, item, _bvgGrid, false));
-                }
-
-                k++;
-            }
-
-
-           
-
-            BlazorWindowHelper.BlazorTimeAnalyzer.Add("update rows finish", MethodBase.GetCurrentMethod());
-
-        }
-
-
-        public static void RefreshRows(T[] list, BvgGrid _bvgGrid)
-        {
-            //BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
-            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("update rows js approach", MethodBase.GetCurrentMethod());
-
-         
 
             short i = -1;
+            short i2 = -1;
             byte g = 0;
-            string[] UpdatePkg = new string[_bvgGrid.Rows.Count * _bvgGrid.Rows[0].Cells.Count * 2];
+            string[] UpdatePkg = new string[_bvgGrid.Rows.Count() * _bvgGrid.Rows[0].Cells.Count() * 3];
+
+
+            string[] UpdatePkg2 = new string[1];
+            if (updateWidths)
+            {
+                UpdatePkg2 = new string[_bvgGrid.Rows.Count() * _bvgGrid.Rows[0].Cells.Count() * 3];
+            }
 
             foreach (T item in list)
             {
-                foreach (BvgCell c in _bvgGrid.Rows[g].Cells)
+                foreach (BvgCell c in _bvgGrid.Rows[g].Cells.Where(x=>x.HasCol))
                 {
 
                     c.Value = c.bvgColumn.prop.GetValue(item, null).ToString();
+            
 
-                    if (c.bvgColumn.type.Equals(typeof(bool)))
+                    UpdatePkg[++i] = c.ID;
+                    UpdatePkg[++i] = c.Value;
+
+                    if (c.bvgColumn.prop.PropertyType.Equals(typeof(bool)))
                     {
-                        UpdatePkg[++i] = "ch" + c.ID;
+                        UpdatePkg[++i] = "b";
                     }
                     else
                     {
-                        UpdatePkg[++i] = "sp" + c.ID;
+                        UpdatePkg[++i] = "s";
                     }
 
+                    if (updateWidths)
+                    {
+                        UpdatePkg2[++i2] = c.ID;
+                        UpdatePkg2[++i2] = c.bvgColumn.ColWidth.ToString();
+                        UpdatePkg2[++i2] = c.bvgColumn.ColWidthWithoutBorder.ToString();
+                    }
 
-                    UpdatePkg[++i] = c.Value;
                 }
                 g++;
             }
 
 
-      
-            BvgJsInterop.UpdateElementContentBatchMonoString(UpdatePkg);
 
-            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("update rows js approach after send", MethodBase.GetCurrentMethod());
+            BvgJsInterop.UpdateRowContentBatch(UpdatePkg);
 
-            //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
+            if (updateWidths)
+            {
+                BvgJsInterop.UpdateRowWidthsBatch(UpdatePkg2);
+            }
+
         }
     }
 }

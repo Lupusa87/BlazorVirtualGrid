@@ -14,7 +14,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public ushort ID { get; set; }
 
-        public List<BvgCell> Cells { get; set; } = new List<BvgCell>();
+        public BvgCell[] Cells { get; set; } = new BvgCell[0];
 
         public bool IsSelected { get; set; }
 
@@ -24,8 +24,11 @@ namespace BlazorVirtualGridComponent.classes
         public BvgGrid bvgGrid { get; set; } = new BvgGrid();
 
 
-        public void Cmd_Clear_Selection()
+        public List<string> Cmd_Clear_Selection()
         {
+            List<string> l = new List<string>();
+
+
             foreach (var item in Cells.Where(x=>x.IsSelected))
             {
                 item.IsSelected = false;
@@ -40,9 +43,13 @@ namespace BlazorVirtualGridComponent.classes
                     item.CssClass = CellStyle.CellNonFrozen.ToString();
                 }
 
-                item.InvokePropertyChanged();
+                l.Add(item.ID);
+                l.Add(item.CssClassTD);
+                //item.InvokePropertyChanged();
 
             }
+
+            return l;
 
         }
 

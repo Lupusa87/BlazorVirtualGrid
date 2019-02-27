@@ -50,19 +50,19 @@ namespace BlazorVirtualGrid.Pages
 
 
             bvgSettings1.FrozenColumnsListOrdered
-                .Add(nameof(MyItem.N3))
+                .Add(nameof(MyItem.C3))
                 .Add(nameof(MyItem.Date));
 
             //bvgSettings1.ColumnWidthsDictionary
-            //    .Add(Tuple.Create(nameof(MyItem.N3), 200))
+            //    .Add(Tuple.Create(nameof(MyItem.C3), 200))
             //    .Add(Tuple.Create(nameof(MyItem.Date), 200))
-            //    .Add(Tuple.Create(nameof(MyItem.N1), 300));
+            //    .Add(Tuple.Create(nameof(MyItem.C1), 300));
 
             PropertyInfo[] props = typeof(MyItem).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var item in props.Where(x=>x.Name!="Date"))
             {
                 bvgSettings1.ColumnWidthsDictionary
-                .Add(Tuple.Create(item.Name, (ushort)rnd1.Next(60, 200)));
+                .Add(Tuple.Create(item.Name, (ushort)rnd1.Next(bvgSettings1.ColWidthMin, bvgSettings1.ColWidthMax)));
             }
 
             //bvgSettings1.HiddenColumns
@@ -103,8 +103,6 @@ namespace BlazorVirtualGrid.Pages
         public void CmdNewList1()
         {
 
-            CurrBVG1.bvgGrid.bvgAreaRowsNonFrozen.InvokePropertyChanged();
-            return;
             FirstOrSecond = true;
 
 
@@ -118,7 +116,7 @@ namespace BlazorVirtualGrid.Pages
             ConfigureBvgSettings1();
 
             bvgSettings1.FrozenColumnsListOrdered
-                .Add(nameof(MyItem.N3))
+                .Add(nameof(MyItem.C3))
                 .Add(nameof(MyItem.Date));
            
 
@@ -327,26 +325,36 @@ namespace BlazorVirtualGrid.Pages
 
                     SomeBool = rnd1.Next(0, 5) == 0,
                     Date = DateTime.Now.AddDays(-rnd1.Next(1, 5000)).AddHours(-rnd1.Next(1, 5000)).AddSeconds(-rnd1.Next(1, 5000)),
-                    N1 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N2 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N3 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N4 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N5 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N6 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N7 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N8 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N9 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N10 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N11 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N12 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N13 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N14 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N15 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N16 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N17 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N18 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N19 = Guid.NewGuid().ToString("d").Substring(1, 4),
-                    N20 = Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C1 = "C1" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C2 = "C2" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C3 = "C3" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C4 = "C4" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C5 = "C5" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C6 = "C6" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C7 = "C7" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C8 = "C8" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C9 = "C9" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C10 = "C10" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C11 = "C11" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C12 = "C12" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C13 = "C13" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C14 = "C14" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C15 = "C15" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C16 = "C16" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C17 = "C17" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C18 = "C18" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C19 = "C19" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C20 = "C20" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C21 = "C21" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C22 = "C22" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C23 = "C23" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C24 = "C24" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C25 = "C25" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C26 = "C26" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C27 = "C27" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C28 = "C28" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C29 = "C29" + Guid.NewGuid().ToString("d").Substring(1, 4),
+                    C30 = "C30" + Guid.NewGuid().ToString("d").Substring(1, 4),
                 });
             }
         }
@@ -374,27 +382,36 @@ namespace BlazorVirtualGrid.Pages
             public string Name { get; set; }
             public bool SomeBool { get; set; }
             public DateTime Date { get; set; }
-            public string N1 { get; set; }
-            public string N2 { get; set; }
-            public string N3 { get; set; }
-            public string N4 { get; set; }
-            public string N5 { get; set; }
-            public string N6 { get; set; }
-            public string N7 { get; set; }
-            public string N8 { get; set; }
-            public string N9 { get; set; }
-            public string N10 { get; set; }
-            public string N11 { get; set; }
-            public string N12 { get; set; }
-            public string N13 { get; set; }
-            public string N14 { get; set; }
-            public string N15 { get; set; }
-            public string N16 { get; set; }
-            public string N17 { get; set; }
-            public string N18 { get; set; }
-            public string N19 { get; set; }
-            public string N20 { get; set; }
-
+            public string C1 { get; set; }
+            public string C2 { get; set; }
+            public string C3 { get; set; }
+            public string C4 { get; set; }
+            public string C5 { get; set; }
+            public string C6 { get; set; }
+            public string C7 { get; set; }
+            public string C8 { get; set; }
+            public string C9 { get; set; }
+            public string C10 { get; set; }
+            public string C11 { get; set; }
+            public string C12 { get; set; }
+            public string C13 { get; set; }
+            public string C14 { get; set; }
+            public string C15 { get; set; }
+            public string C16 { get; set; }
+            public string C17 { get; set; }
+            public string C18 { get; set; }
+            public string C19 { get; set; }
+            public string C20 { get; set; }
+            public string C21 { get; set; }
+            public string C22 { get; set; }
+            public string C23 { get; set; }
+            public string C24 { get; set; }
+            public string C25 { get; set; }
+            public string C26 { get; set; }
+            public string C27 { get; set; }
+            public string C28 { get; set; }
+            public string C29 { get; set; }
+            public string C30 { get; set; }
 
         }
 

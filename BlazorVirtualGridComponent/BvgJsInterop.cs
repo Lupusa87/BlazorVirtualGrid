@@ -55,7 +55,7 @@ namespace BlazorVirtualGridComponent
         }
 
 
-        public static bool UpdateElementContentBatchMonoString(string[] updatepkg)
+        public static bool UpdateRowContentBatch(string[] updatepkg)
         {
 
 
@@ -63,7 +63,37 @@ namespace BlazorVirtualGridComponent
             {
 
                 return mono.InvokeUnmarshalled<string, bool>(
-                    "BvgJsFunctions.UpdateElementContentBatchMonoString",
+                    "BvgJsFunctions.UpdateRowContentBatch",
+                    Json.Serialize(updatepkg));
+            }
+
+
+            return false;
+        }
+
+
+        public static bool UpdateRowWidthsBatch(string[] updatepkg)
+        {
+            if (JSRuntime.Current is MonoWebAssemblyJSRuntime mono)
+            {
+
+                return mono.InvokeUnmarshalled<string, bool>(
+                    "BvgJsFunctions.UpdateRowWidthsBatch",
+                    Json.Serialize(updatepkg));
+            }
+            return false;
+        }
+
+
+        public static bool UpdateColContentsBatch(string[] updatepkg)
+        {
+
+
+            if (JSRuntime.Current is MonoWebAssemblyJSRuntime mono)
+            {
+
+                return mono.InvokeUnmarshalled<string, bool>(
+                    "BvgJsFunctions.UpdateColContentsBatch",
                     Json.Serialize(updatepkg));
             }
 
@@ -82,6 +112,22 @@ namespace BlazorVirtualGridComponent
                     "BvgJsFunctions.UpdateElementContentBatchMonoByteArray",
                     Encoding.UTF8.GetBytes(Json.Serialize(updatepkg)));
             }
+
+            return false;
+        }
+
+        public static bool SetAttributeBatch(string[] updatepkg, string attr)
+        {
+
+
+            if (JSRuntime.Current is MonoWebAssemblyJSRuntime mono)
+            {
+
+                return mono.InvokeUnmarshalled<string, string, bool>(
+                    "BvgJsFunctions.SetAttributeBatch",
+                    Json.Serialize(updatepkg), attr);
+            }
+
 
             return false;
         }

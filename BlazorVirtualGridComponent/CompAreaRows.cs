@@ -69,7 +69,7 @@ namespace BlazorVirtualGridComponent
             //EnabledRender = false;
 
 
-            BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaRows BuildRenderTree ForFrozen=" + ForFrozen, MethodBase.GetCurrentMethod());
+            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("BvgAreaRows BuildRenderTree ForFrozen=" + ForFrozen, MethodBase.GetCurrentMethod());
 
             base.BuildRenderTree(builder);
 

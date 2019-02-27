@@ -24,8 +24,6 @@ namespace BlazorVirtualGridComponent.classes
         public string GridTableElementID { get; set; } = "GridTable" + Guid.NewGuid().ToString("d").Substring(1, 4);
         public string GridDivElementID { get; set; } = "GridDiv"+ Guid.NewGuid().ToString("d").Substring(1, 4);
 
-        public Dictionary<string, BvgColumn> ColumnsDictionary { get; set; } = new Dictionary<string, BvgColumn>();
-
         public string Name { get; set; } = "null";
 
         public PropertyInfo[] AllProps { get; set; }
@@ -43,8 +41,8 @@ namespace BlazorVirtualGridComponent.classes
 
         public Action<int> OnHorizontalScroll { get; set; }
 
-        public IList<BvgRow> Rows { get; set; } = new List<BvgRow>();
-        public List<BvgColumn> Columns { get; set; } = new List<BvgColumn>();
+        public BvgRow[] Rows { get; set; } = new BvgRow[0];
+        public BvgColumn[] Columns { get; set; } = new BvgColumn[0];
 
         public int RowsTotalCount { get; set; }
 
@@ -54,6 +52,8 @@ namespace BlazorVirtualGridComponent.classes
         public BvgRow ActiveRow;
         public BvgColumn ActiveColumn;
 
+
+        public Tuple<bool, BvgColumn> SortState;
 
         public BvgSettings bvgSettings { get; set; }
 
@@ -99,11 +99,11 @@ namespace BlazorVirtualGridComponent.classes
 
             if (ForFrozen)
             {
-                return string.Concat("width:", (FrozenTableWidth + 1.5 ), "px;height:", height, "px;");
+                return string.Concat("width:", (FrozenTableWidth + 3), "px;height:", height, "px;");
             }
             else
             {
-                return string.Concat("width:", (NotFrozenTableWidth + 2.5), "px;height:", height, "px;");
+                return string.Concat("width:", (NotFrozenTableWidth + 3), "px;height:", height, "px;");
             }
 
 
@@ -136,29 +136,6 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
-
-        public void SelectRow(BvgRow parRow)
-        {
-            ActiveCell = null;
-            ActiveRow = parRow;
-            ActiveColumn = null;
-
-            SelectActiveRow();
-        }
-
-        public void SelectColumn(BvgColumn parColumn)
-        {
-            ActiveCell = null;
-            ActiveRow = null;
-            ActiveColumn = parColumn;
-
-
-            SelectActiveColumn();
-        }
-
-
-
-
         private void SelectActiveRow()
         {
             Cmd_Clear_Selection();
@@ -166,16 +143,25 @@ namespace BlazorVirtualGridComponent.classes
 
             ActiveRow.IsSelected = true;
 
-
+            short j = -1;
+            string[] UpdatePkg = new string[ActiveRow.Cells.Count() * 2];
+            
+ 
             foreach (var c in ActiveRow.Cells)
             {
                 c.IsSelected = true;
                 c.CssClass = CellStyle.CellSelected.ToString();
-                c.InvokePropertyChanged();
+
+                UpdatePkg[++j] = c.ID.ToString();
+                UpdatePkg[++j] = c.CssClassTD.ToString();
+                //c.InvokePropertyChanged();
             }
 
-            ActiveRow.InvokePropertyChanged();
-            InvokePropertyChanged();
+
+            BvgJsInterop.SetAttributeBatch(UpdatePkg, "class");
+
+            //ActiveRow.InvokePropertyChanged();
+            //InvokePropertyChanged();
         }
 
         private void SelectActiveColumn()
@@ -231,6 +217,10 @@ namespace BlazorVirtualGridComponent.classes
 
             parColumn.InvokePropertyChanged();
 
+
+            SortState = Tuple.Create(true, parColumn);
+
+
             if (!parColumn.IsAscendingOrDescending)
             {
                 OnSort?.Invoke(parColumn.prop.Name);
@@ -253,27 +243,33 @@ namespace BlazorVirtualGridComponent.classes
             ActiveCell.IsActive = true;
             ActiveCell.CssClass = CellStyle.CellActive.ToString();
 
-            ActiveCell.InvokePropertyChanged();
+
+            BvgJsInterop.SetAttributeBatch(new string[] { ActiveCell.ID, ActiveCell.CssClassTD }, "class");
+
+
+            //ActiveCell.InvokePropertyChanged();
         }
 
 
         public void Cmd_Clear_Selection()
         {
+            List<string> l = new List<string>();
 
-          
             foreach (var item in Rows.Where(x=>x.Cells.Any(y=>y.IsSelected)))
             {
-                item.Cmd_Clear_Selection();
+               l.AddRange(item.Cmd_Clear_Selection());
             }
 
 
-            foreach (var item in Columns.Where(x => x.IsSelected))
-            {
-                item.IsSelected = false;
-                item.CssClass = HeaderStyle.HeaderRegular.ToString();
-                item.BSplitter.SetColor(bvgSettings.HeaderStyle.BackgroundColor);
-                item.InvokePropertyChanged();
-            }
+            BvgJsInterop.SetAttributeBatch(l.ToArray(), "class");
+
+            //foreach (var item in Columns.Where(x => x.IsSelected))
+            //{
+            //    item.IsSelected = false;
+            //    item.CssClass = HeaderStyle.HeaderRegular.ToString();
+            //    item.BSplitter.SetColor(bvgSettings.HeaderStyle.BackgroundColor);
+            //    item.InvokePropertyChanged();
+            //}
 
         }
 
@@ -359,6 +355,9 @@ namespace BlazorVirtualGridComponent.classes
 
             FrozenTableWidth = ColumnsOrderedList.Where(x => x.IsFrozen).Sum(x => x.ColWidth);
             NotFrozenTableWidth = totalWidth - FrozenTableWidth;
+
+            DisplayedColumnsCount = (int)(NotFrozenTableWidth / bvgSettings.ColWidthMin) + 1;
+
 
             HorizontalScroll.bsbSettings.ScrollVisibleSize = NotFrozenTableWidth;
 

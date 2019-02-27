@@ -78,45 +78,100 @@ window.BvgJsFunctions = {
         }
     },
     SetFocus: function (el) {
-        if (document.getElementById(el) !== null) {
-            console.log("js set focus to " + el);
-            document.getElementById(el).focus();
+        if (document.getElementById("divCell" + el) !== null) {
+            //console.log("js set focus to " + el);
+            document.getElementById("divCell" + el).focus();
             return true;
         }
         else {
-            console.log("js set focus not found " + el);
+            //console.log("js set focus not found " + el);
             return false;
         }
     },
-    UpdateElementContentBatchMonoString: function (l) {
+    UpdateRowContentBatch: function (l) {
         
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));
 
-        for (var i = 0; i < b.length; i += 2) {
-            if (b[i].includes("ch")) {
+        for (var i = 0; i < b.length; i += 3) {
+            if (b[i+2] === "b") {
 
-                if (document.getElementById(b[i]) !== null) {
+                if (document.getElementById("chCell" + b[i]) !== null) {
                     if (b[i + 1].toLowerCase() === "true") {
-                        document.getElementById(b[i]).checked = true;
+                        document.getElementById("chCell" + b[i]).checked = true;
                     }
                     else {
-                        document.getElementById(b[i]).checked = false;
+                        document.getElementById("chCell" + b[i]).checked = false;
+                    }
+
+                    if (document.getElementById("chCell" + b[i]).hidden) {
+                        document.getElementById("chCell" + b[i]).hidden = false;
+                        document.getElementById("spCell" + b[i]).hidden = true;
                     }
                 }
             }
             else {
-                if (document.getElementById(b[i]) !== null) {
-
-                    document.getElementById(b[i]).removeChild(document.getElementById(b[i]).lastChild);
+                if (document.getElementById("spCell" + b[i]) !== null) {
+                    document.getElementById("spCell" + b[i]).removeChild(document.getElementById("spCell" + b[i]).lastChild);
 
                     var c = document.createTextNode(b[i + 1]);
-                    document.getElementById(b[i]).appendChild(c);
 
+                    document.getElementById("spCell" + b[i]).appendChild(c);
+
+                    if (document.getElementById("spCell" + b[i]).hidden) {
+                        document.getElementById("spCell" + b[i]).hidden = false;
+                        document.getElementById("chCell" + b[i]).hidden = true;     
+                    }
                 }
             }
         }
 
         
+        return true;
+    }, 
+    UpdateRowWidthsBatch: function (l) {
+
+        b = JSON.parse(Blazor.platform.toJavaScriptString(l));
+
+        for (var i = 0; i < b.length; i += 3) {
+
+            if (document.getElementById("tdCell" + b[i]) !== null) {
+                document.getElementById("tdCell" + b[i]).setAttribute("style", "width:" + b[i + 1] + "px");
+                document.getElementById("divCell" + b[i]).setAttribute("style", "width:" + (b[i + 2]-5) + "px");
+
+            }
+        }
+        return true;
+    },
+    UpdateColContentsBatch: function (l) {
+       
+        b = JSON.parse(Blazor.platform.toJavaScriptString(l));
+
+        for (var i = 0; i < b.length; i += 4) {
+
+                if (document.getElementById("spCol" + b[i]) !== null) {
+
+                    document.getElementById("spCol" + b[i]).removeChild(document.getElementById("spCol" + b[i]).lastChild);
+
+                    var c = document.createTextNode(b[i + 1]);
+                    document.getElementById("spCol" + b[i]).appendChild(c);
+
+
+                    document.getElementById("spCol" + b[i]).setAttribute("style", "width:" + b[i + 3] + "px");
+                    document.getElementById("divCol" + b[i]).setAttribute("style", "width:" + b[i + 2] + "px");
+                } 
+        }
+        return true;
+    },
+    SetAttributeBatch: function (l, attr) {
+
+        b = JSON.parse(Blazor.platform.toJavaScriptString(l));
+
+        for (var i = 0; i < b.length; i += 2) {
+
+            if (document.getElementById("tdCell" + b[i]) !== null) {
+                document.getElementById("tdCell" + b[i]).setAttribute(Blazor.platform.toJavaScriptString(attr), b[i + 1]);
+            }
+        }
         return true;
     },
     UpdateElementContentBatchMonoByteArray: function (l) {
