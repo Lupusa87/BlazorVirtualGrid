@@ -13,6 +13,10 @@ namespace BlazorVirtualGridComponent
         [Parameter]
         protected BvgColumn bvgColumn { get; set; }
 
+
+        [Parameter]
+        protected bool IsNotHidden { get; set; }
+
         //bool EnabledRender = true;
 
 
@@ -35,20 +39,22 @@ namespace BlazorVirtualGridComponent
 
             base.BuildRenderTree(builder);
 
-            //Console.WriteLine("BuildRenderTree sort " + bvgColumn.Name + " " + bvgColumn.IsAscendingOrDescending);
-
 
 
             int k = 0;
             builder.OpenElement(k++, "svg");
-            builder.AddAttribute(k++, "width", 20);
-            builder.AddAttribute(k++, "height", 40);
+            builder.AddAttribute(k++, "width", bvgColumn.bvgGrid.bvgSettings.bSortStyle.width);
+            builder.AddAttribute(k++, "height", bvgColumn.bvgGrid.bvgSettings.bSortStyle.height);
             builder.AddAttribute(k++, "xmlns", "http://www.w3.org/2000/svg");
-            builder.AddAttribute(k++, "style", "fill:none");
+           
+            if (IsNotHidden)
+            {
+                PaintUp(builder, k);
 
-            PaintUp(builder,k);
+                PaintDown(builder, k);
+            }
 
-            PaintDown(builder, k);
+           
 
             builder.CloseElement();
         }
@@ -57,15 +63,19 @@ namespace BlazorVirtualGridComponent
         {
             builder.OpenElement(k++, "polygon");
 
-            builder.AddAttribute(k++, "points", "4,20 10,4, 16,20");
+            builder.AddAttribute(k++, "points", bvgColumn.bvgGrid.bvgSettings.bSortStyle.UpPoligonPoints);
 
             if (bvgColumn.IsAscendingOrDescending)
             {
-                builder.AddAttribute(k++, "style", "fill:none;stroke:blue");
+                builder.AddAttribute(k++, "style", string.Concat("fill:",
+                    bvgColumn.bvgGrid.bvgSettings.bSortStyle.UnSortedDirectionColor,
+                    ";stroke:", bvgColumn.bvgGrid.bvgSettings.bSortStyle.BorderColor));
             }
             else
             {
-                builder.AddAttribute(k++, "style", "fill:red;stroke:blue");
+                builder.AddAttribute(k++, "style", string.Concat("fill:",
+                    bvgColumn.bvgGrid.bvgSettings.bSortStyle.SortedDirectionColor,
+                    ";stroke:", bvgColumn.bvgGrid.bvgSettings.bSortStyle.BorderColor));
             }
 
             builder.CloseElement();
@@ -75,15 +85,19 @@ namespace BlazorVirtualGridComponent
         {
             builder.OpenElement(k++, "polygon");
 
-            builder.AddAttribute(k++, "points", "4,20 10,36, 16,20");
+            builder.AddAttribute(k++, "points", bvgColumn.bvgGrid.bvgSettings.bSortStyle.DownPoligonPoints);
 
             if (bvgColumn.IsAscendingOrDescending)
             {
-                builder.AddAttribute(k++, "style", "fill:red;stroke:blue");
+                builder.AddAttribute(k++, "style", string.Concat("fill:",
+                    bvgColumn.bvgGrid.bvgSettings.bSortStyle.SortedDirectionColor,
+                    ";stroke:", bvgColumn.bvgGrid.bvgSettings.bSortStyle.BorderColor));
             }
             else
             {
-                builder.AddAttribute(k++, "style", "fill:none;stroke:blue");
+                builder.AddAttribute(k++, "style", string.Concat("fill:",
+                    bvgColumn.bvgGrid.bvgSettings.bSortStyle.UnSortedDirectionColor,
+                    ";stroke:", bvgColumn.bvgGrid.bvgSettings.bSortStyle.BorderColor));
             }
             
 

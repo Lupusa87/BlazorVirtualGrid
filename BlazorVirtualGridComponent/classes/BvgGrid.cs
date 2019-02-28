@@ -22,7 +22,6 @@ namespace BlazorVirtualGridComponent.classes
         public bool IsReady { get; set; } = false;
 
         public string GridTableElementID { get; set; } = "GridTable" + Guid.NewGuid().ToString("d").Substring(1, 4);
-        public string GridDivElementID { get; set; } = "GridDiv"+ Guid.NewGuid().ToString("d").Substring(1, 4);
 
         public string Name { get; set; } = "null";
 
@@ -37,6 +36,8 @@ namespace BlazorVirtualGridComponent.classes
         public int[] NonFrozenColwidthSumsByElement { get; set; }
         public Action<string> OnSort { get; set; }
 
+        public Action OnColumnResize { get; set; }
+
         public Action<double> OnVerticalScroll { get; set; }
 
         public Action<double> OnHorizontalScroll { get; set; }
@@ -50,6 +51,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public CompGrid compGrid { get; set; }
 
+        
         public BvgCell ActiveCell;
         public BvgRow ActiveRow;
         public BvgColumn ActiveColumn;

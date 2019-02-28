@@ -9,6 +9,11 @@ namespace BlazorVirtualGridComponent
 {
     public class BvgJsInterop
     {
+        public static Task<bool> Alert(string msg)
+        {
+            return JSRuntime.Current.InvokeAsync<bool>(
+                "BvgJsFunctions.Alert", msg);
+        }
 
         public static Task<double> GetElementActualWidth(string elementID)
         {
@@ -142,7 +147,19 @@ namespace BlazorVirtualGridComponent
                  "BvgJsFunctions.SetValueToCheckBox", el, val);
         }
 
+        public static bool UpdateFrozenNonFrozenWidth(string[] updatepkg)
+        {
+            if (JSRuntime.Current is MonoWebAssemblyJSRuntime mono)
+            {
 
+                return mono.InvokeUnmarshalled<string, bool>(
+                    "BvgJsFunctions.UpdateFrozenNonFrozenWidth",
+                    Json.Serialize(updatepkg));
+            }
+
+            return false;
+           
+        }
 
 
     }

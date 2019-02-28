@@ -24,6 +24,10 @@ function addZero(i, j = 1) {
 
 
 window.BvgJsFunctions = {
+    Alert: function (msg) {
+        alert(msg);
+        return true; 
+    },
     GetElementActualWidth: function (el) {
         
         if (document.getElementById(el) !== null) {
@@ -79,12 +83,12 @@ window.BvgJsFunctions = {
     },
     SetFocus: function (el) {
         if (document.getElementById("divCell" + el) !== null) {
-            //console.log("js set focus to " + el);
+
             document.getElementById("divCell" + el).focus();
             return true;
         }
         else {
-            //console.log("js set focus not found " + el);
+
             return false;
         }
     },
@@ -199,6 +203,36 @@ window.BvgJsFunctions = {
 
 
         return true;
-    }   
+    },
+    UpdateFrozenNonFrozenWidth: function (l) {
+
+        b = JSON.parse(Blazor.platform.toJavaScriptString(l));
+
+       
+
+        if (document.getElementById("FrozenTd1") !== null) {
+            document.getElementById("FrozenTd1").setAttribute("style", b[0]);
+        }
+        if (document.getElementById("FrozenDiv1") !== null) {
+            document.getElementById("FrozenDiv1").setAttribute("style", b[0]);
+        }
+        if (document.getElementById("FrozenTable1") !== null) {
+            document.getElementById("FrozenTable1").setAttribute("style", b[1]);
+        }
+
+        if (document.getElementById("NonFrozenTd1") !== null) {
+            document.getElementById("NonFrozenTd1").setAttribute("style", b[2]);
+        }
+        if (document.getElementById("NonFrozenDiv1") !== null) {
+            document.getElementById("NonFrozenDiv1").setAttribute("style", b[2]);
+        }
+        if (document.getElementById("NonFrozenTable1") !== null) {
+            document.getElementById("NonFrozenTable1").setAttribute("style", b[3]);
+        }
+       
+        return true;
+    }
+
+
     
 };

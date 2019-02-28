@@ -54,7 +54,7 @@ namespace BlazorVirtualGridComponent
             //EnabledRender = false;
 
             base.BuildRenderTree(builder);
-            //Console.WriteLine("BuildRenderTree CompScroll");
+
 
             int k = -1;
             builder.OpenComponent<CompBlazorScrollbar>(k++);
@@ -84,12 +84,9 @@ namespace BlazorVirtualGridComponent
                 if (b != bvgScroll.bvgGrid.CurrVerticalScrollPosition)
                 {
 
-                    
-
                     bvgScroll.bvgGrid.CurrVerticalScrollPosition = b;
 
-                    //Console.WriteLine("ScrollPosition2=" + ScrollPosition / bvgScroll.bvgGrid.RowHeightOriginal);
-
+                   
                     bvgScroll.bvgGrid.OnVerticalScroll?.Invoke(b);
 
                 }

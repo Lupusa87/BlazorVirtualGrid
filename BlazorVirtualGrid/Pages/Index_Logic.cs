@@ -41,7 +41,7 @@ namespace BlazorVirtualGrid.Pages
         {
 
             //FillList(5, 7);
-            FillList(200, 300);
+            FillList(200, 200);
 
 
             bvgSettings1 = new BvgSettings();
@@ -73,7 +73,7 @@ namespace BlazorVirtualGrid.Pages
             //}
 
             //bvgSettings1.HiddenColumns
-            //    .Add(nameof(MyItem.SomeBool));
+            //    .Add(nameof(MyItem.C1));
 
             base.OnInit();
         }

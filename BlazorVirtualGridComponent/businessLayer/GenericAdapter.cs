@@ -1,5 +1,4 @@
 ﻿using BlazorScrollbarComponent.classes;
-using BlazorSplitterComponent;
 using BlazorVirtualGridComponent.classes;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
 using static BlazorVirtualGridComponent.classes.BvgEnums;
+using BlazorSplitterComponent;
 
 namespace BlazorVirtualGridComponent.businessLayer
 {
@@ -40,8 +40,8 @@ namespace BlazorVirtualGridComponent.businessLayer
 
                     UpdatePkg[++j] = i.ToString();
                     UpdatePkg[++j] = props[i].prop.Name;
-                    UpdatePkg[++j] = _bvgGrid.Columns[i].ColWidthWithoutBorder.ToString();
-                    UpdatePkg[++j] = props[i].ColWidth.ToString();
+                    UpdatePkg[++j] = _bvgGrid.Columns[i].ColWidthDiv.ToString();
+                    UpdatePkg[++j] = _bvgGrid.Columns[i].ColWidthSpan.ToString();
                 }
 
 
@@ -100,14 +100,14 @@ namespace BlazorVirtualGridComponent.businessLayer
                 IsFrozen = p.IsFrozen,
                 ColWidth = p.ColWidth,
                 ColWidthWithoutBorder = (ushort)(p.ColWidth - _bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth),
-                bsSettings = new BsSettings
+                bsSettings = new BsSettings(string.Concat("Splitter" +p.prop.Name))
                 {
                     VerticalOrHorizontal = false,
                     index = id,
                     width = 5,
                     height = h,
-                    //BgColor = item.bvgStyle.BackgroundColor,
-                    BgColor = "red",
+                    BgColor = _bvgGrid.bvgSettings.HeaderStyle.BackgroundColor,
+                    //BgColor = "red",
                 }
             };
         }

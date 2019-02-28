@@ -53,7 +53,7 @@ namespace BlazorVirtualGridComponent.classes
                 _ColWidth = value;
 
                 ColWidthDiv =(ushort)(_ColWidth - bvgGrid.bvgSettings.HeaderStyle.BorderWidth);
-                ColWidthSpan = (ushort)(ColWidth - 5);
+                ColWidthSpan = (ushort)(ColWidth - 2 * (5 + bvgGrid.bvgSettings.bSortStyle.width));
             }
         } 
 

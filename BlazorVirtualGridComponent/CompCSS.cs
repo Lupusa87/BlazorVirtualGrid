@@ -20,20 +20,18 @@ namespace BlazorVirtualGridComponent
         BCss blazorCSS = new BCss();
 
 
-        //protected override Task OnParametersSetAsync()
-        //{
+        protected override Task OnParametersSetAsync()
+        {
 
-        //    EnabledRender = true;
+            EnabledRender = true;
 
-        //    return base.OnParametersSetAsync();
-        //}
+            return base.OnParametersSetAsync();
+        }
 
-        //protected override bool ShouldRender()
-        //{
-        //    return EnabledRender;
-        //}
-
-        
+        protected override bool ShouldRender()
+        {
+            return EnabledRender;
+        }
 
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)

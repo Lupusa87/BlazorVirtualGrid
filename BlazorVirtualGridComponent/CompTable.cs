@@ -38,9 +38,6 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            Console.WriteLine("Comptable BuildRenderTree IsCssLoaded=" + " ActualRender=" + ActualRender);
-
-
             base.BuildRenderTree(builder);
 
             

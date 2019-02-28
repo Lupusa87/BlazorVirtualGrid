@@ -69,8 +69,7 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             //EnabledRender = false;
-            //Console.WriteLine("grid BuildRenderTree");
-
+  
             base.BuildRenderTree(builder);
 
             Cmd_RenderTable(builder);
@@ -99,17 +98,20 @@ namespace BlazorVirtualGridComponent
             if (bvgGrid.Columns.Any(x => x.IsFrozen))
             {
                 builder.OpenElement(k++, "td");
+                builder.AddAttribute(k++, "id", "FrozenTd1");
                 builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(true));
                 //builder.AddAttribute(k++, "valign", "top");
 
 
                 builder.OpenElement(k++, "div");
+                builder.AddAttribute(k++, "id", "FrozenDiv1");
                 builder.AddAttribute(k++, "class", "GridDiv Border1");
                 builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(true));
 
                 builder.OpenElement(k++, "table");
+                builder.AddAttribute(k++, "id", "FrozenTable1");
                 builder.AddAttribute(k++, "class", "BorderedTable");
-                builder.AddAttribute(k++, "style", bvgGrid.GetStyleTable(true) + ";border:1px solid black");
+                builder.AddAttribute(k++, "style", bvgGrid.GetStyleTable(true));
 
                 builder.OpenElement(k++, "thead");
                 builder.OpenElement(k++, "tr");
@@ -147,16 +149,18 @@ namespace BlazorVirtualGridComponent
 
             #region grid
             builder.OpenElement(k++, "td");
+            builder.AddAttribute(k++, "id", "NonFrozenTd1");
             builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(false));
             builder.AddAttribute(k++, "align", "left");
 
 
             builder.OpenElement(k++, "div");
-            builder.AddAttribute(k++, "id", bvgGrid.GridDivElementID);
+            builder.AddAttribute(k++, "id", "NonFrozenDiv1");
             builder.AddAttribute(k++, "class", "GridDiv Border1");
             builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(false));
 
-            builder.OpenElement(k++, "table"); 
+            builder.OpenElement(k++, "table");
+            builder.AddAttribute(k++, "id", "NonFrozenTable1");
             builder.AddAttribute(k++, "class", "BorderedTable");
             builder.AddAttribute(k++, "style", bvgGrid.GetStyleTable(false));
 
@@ -174,7 +178,6 @@ namespace BlazorVirtualGridComponent
             builder.CloseElement(); //thead
 
             builder.OpenElement(k++, "tbody");
-            builder.AddAttribute(k++, "id", "tbodyNonFrozenRows1");
 
             builder.OpenComponent<CompAreaRows>(k++);
             builder.AddAttribute(k++, "ForFrozen", false);

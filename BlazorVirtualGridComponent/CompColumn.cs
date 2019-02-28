@@ -30,7 +30,7 @@ namespace BlazorVirtualGridComponent
 
         //protected override bool ShouldRender()
         //{
-          
+
         //    return EnabledRender;
         //}
 
@@ -55,29 +55,34 @@ namespace BlazorVirtualGridComponent
 
             builder.OpenElement(k++, "th");
             builder.AddAttribute(k++, "class", bvgColumn.CssClass);
-            builder.AddAttribute(k++, "onclick", Clicked);
+
 
 
 
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", "divCol" + bvgColumn.ID);
             builder.AddAttribute(k++, "class", "ColumnDiv");
-            builder.AddAttribute(k++, "style", "width:" + bvgColumn.ColWidthDiv + "px");
+            builder.AddAttribute(k++, "style", string.Concat("width:", bvgColumn.ColWidthDiv, "px"));
 
+
+            builder.OpenElement(k++, "div"); //to arrange text in center
+            builder.AddAttribute(k++, "style", string.Concat("width:", (bvgColumn.bvgGrid.bvgSettings.bSortStyle.width + 5), "px"));
+            builder.CloseElement(); //div
 
             builder.OpenElement(k++, "span");
-            builder.AddAttribute(k++, "id", "spCol"+bvgColumn.ID);
+            builder.AddAttribute(k++, "id", "spCol" + bvgColumn.ID);
             builder.AddAttribute(k++, "class", "ColumnSpan");
-            builder.AddAttribute(k++, "style", "width:" + bvgColumn.ColWidthSpan + "px");
+            builder.AddAttribute(k++, "style", string.Concat("width:", bvgColumn.ColWidthSpan, "px"));
+            builder.AddAttribute(k++, "onmousedown", Clicked);
             builder.AddContent(k++, bvgColumn.prop.Name);
             builder.CloseElement(); //span
 
-            if (bvgColumn.IsSorted)
-            {
-                builder.OpenComponent<CompSort>(k++);
-                builder.AddAttribute(k++, "bvgColumn", bvgColumn);
-                builder.CloseComponent();
-            }
+
+            builder.OpenComponent<CompSort>(k++);
+            builder.AddAttribute(k++, "bvgColumn", bvgColumn);
+            builder.AddAttribute(k++, "IsNotHidden", bvgColumn.IsSorted);
+            builder.CloseComponent();
+
 
 
             builder.OpenComponent<CompBlazorSplitter>(k++);
@@ -89,14 +94,14 @@ namespace BlazorVirtualGridComponent
             });
             builder.CloseComponent();
 
-            
+
             builder.CloseElement(); //div
 
 
             builder.CloseElement(); //th
 
 
-            
+
         }
 
 
@@ -114,6 +119,18 @@ namespace BlazorVirtualGridComponent
         {
             if (!b)
             {
+
+                if (bvgColumn.ColWidth == bvgColumn.bvgGrid.bvgSettings.ColWidthMin && p <= 0)
+                {
+                    return;
+                }
+
+
+                if (bvgColumn.ColWidth == bvgColumn.bvgGrid.bvgSettings.ColWidthMax && p >= 0)
+                {
+                    return;
+                }
+
 
 
                 ushort old_Value_col = bvgColumn.ColWidth;
@@ -133,27 +150,44 @@ namespace BlazorVirtualGridComponent
 
                 if (bvgColumn.ColWidth != old_Value_col)
                 {
-                    StateHasChanged();
 
-                    foreach (var item in bvgColumn.bvgGrid.Rows)
-                    {
-                        BvgCell c = item.Cells.Single(x => x.bvgColumn.ID == bvgColumn.ID);
-                        c.InvokePropertyChanged();
-                    }
-
-
+                    bvgColumn.bvgGrid.ColumnsOrderedList.Single(x => x.prop.Name.Equals(bvgColumn.prop.Name)).ColWidth = bvgColumn.ColWidth;
 
                     if (bvgColumn.IsFrozen)
                     {
-                        bvgColumn.bvgGrid.FrozenTableWidth += p;
-                        bvgColumn.bvgGrid.NonFrozenTableWidth -= p;
-                        bvgColumn.bvgGrid.InvokePropertyChanged();
+                        bvgColumn.bvgGrid.ColumnsOrderedListFrozen.Single(x => x.prop.Name.Equals(bvgColumn.prop.Name)).ColWidth = bvgColumn.ColWidth;
+
                     }
                     else
                     {
-                        bvgColumn.bvgGrid.UpdateHorizontalScroll();
+                        bvgColumn.bvgGrid.ColumnsOrderedListNonFrozen.Single(x => x.prop.Name.Equals(bvgColumn.prop.Name)).ColWidth = bvgColumn.ColWidth;
+                    }
+
+
+                    double currScrollPosition = bvgColumn.bvgGrid.HorizontalScroll.compBlazorScrollbar.CurrentPosition;
+
+                    bvgColumn.bvgGrid.CalculateWidths();
+
+                    bvgColumn.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(currScrollPosition);
+
+
+
+
+                    bvgColumn.bvgGrid.OnColumnResize?.Invoke();
+
+                    if (bvgColumn.IsFrozen)
+                    {
+                        string[] updatePkg = new string[4];
+                        updatePkg[0] = bvgColumn.bvgGrid.GetStyleDiv(true);
+                        updatePkg[1] = bvgColumn.bvgGrid.GetStyleTable(true);
+                        updatePkg[2] = bvgColumn.bvgGrid.GetStyleDiv(false);
+                        updatePkg[3] = bvgColumn.bvgGrid.GetStyleTable(false);
+
+
+                        BvgJsInterop.UpdateFrozenNonFrozenWidth(updatePkg);
                     }
                 }
+
 
             }
 
@@ -162,7 +196,8 @@ namespace BlazorVirtualGridComponent
 
         public void Dispose()
         {
-            
+
         }
     }
+
 }

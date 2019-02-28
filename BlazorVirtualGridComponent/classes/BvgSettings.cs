@@ -38,13 +38,15 @@ namespace BlazorVirtualGridComponent.classes
 
 
         public ushort ColWidthDefault { get; set; } = 150;
-        public ushort ColWidthMin { get; set; } = 50;
+        public ushort ColWidthMin { get; set; } = 100;
         public ushort ColWidthMax { get; set; } = 300;
 
         public double CheckBoxZoom { get; set; } = 1.5;
 
         public BvgStyleScroll VerticalScrollStyle { get; set; } = new BvgStyleScroll();
         public BvgStyleScroll HorizontalScrollStyle { get; set; } = new BvgStyleScroll();
+
+        public BSortStyle bSortStyle { get; set; } = new BSortStyle();
 
         public ValuesContainer<string> NonFrozenColumnsListOrdered { get; set; } = new ValuesContainer<string>();
 

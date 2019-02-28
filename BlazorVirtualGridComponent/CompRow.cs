@@ -46,8 +46,7 @@ namespace BlazorVirtualGridComponent
 
             base.BuildRenderTree(builder);
 
-            //Console.WriteLine("CompRow BuildRenderTree ForFrozen=" + ForFrozen);
-
+         
             if (bvgRow.PropertyChanged == null)
             {
                 bvgRow.PropertyChanged += BvgRow_PropertyChanged;

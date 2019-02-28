@@ -44,6 +44,8 @@ namespace BlazorVirtualGridComponent
 
         private int LastHorizontalSkip = -1;
 
+        private double LastHorizontalScrollPosition = 0;
+
         //bool EnabledRender = true;
 
         //protected override bool ShouldRender()
@@ -105,6 +107,11 @@ namespace BlazorVirtualGridComponent
                     bvgGrid.OnSort = SortGrid;
                 }
 
+                if (bvgGrid.OnColumnResize == null)
+                {
+                    bvgGrid.OnColumnResize = OnColumnResize;
+                }
+
 
                 if (bvgGrid.OnVerticalScroll == null)
                 {
@@ -125,12 +132,14 @@ namespace BlazorVirtualGridComponent
             //EnabledRender = false;
         }
 
-
+        public void OnColumnResize()
+        {
+            RenderGridColumns(LastHorizontalScrollPosition, true, true);
+        }
 
 
         public void OnVerticalScroll(double p)
         {
-            Console.WriteLine("OnVerticalScroll" + p);
             RenderGridRows((int)p, true);
 
         }
@@ -145,7 +154,7 @@ namespace BlazorVirtualGridComponent
                 p2 -= bvgGrid.ColumnsOrderedListNonFrozen.Take(LastHorizontalSkip).Sum(x => x.ColWidth);
             }
         
-            BvgJsInterop.SetElementScrollLeft(bvgGrid.GridDivElementID, p2);
+            BvgJsInterop.SetElementScrollLeft("NonFrozenDiv1", p2);
         }
 
         public void OnHorizontalScroll(double p)
@@ -213,14 +222,15 @@ namespace BlazorVirtualGridComponent
             return 0;
         }
 
-        public void RenderGridColumns(double Scrollposition, bool UpdateUI)
+        public void RenderGridColumns(double Scrollposition, bool UpdateUI, bool RequestedFromResize=false)
         {
+            LastHorizontalScrollPosition = Scrollposition;
 
-          
+
             int skip = Scrollposition==0 ? 0 : GetSkipedColumns(Scrollposition);
 
 
-            if (skip != LastHorizontalSkip)
+            if (skip != LastHorizontalSkip || RequestedFromResize)
             {
 
                 //BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
@@ -315,7 +325,6 @@ namespace BlazorVirtualGridComponent
 
             //EnabledRender = true;
 
-            Console.WriteLine("www");
 
             StateHasChanged();
             //EnabledRender = false;
