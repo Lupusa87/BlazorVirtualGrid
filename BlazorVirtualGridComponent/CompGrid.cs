@@ -104,7 +104,7 @@ namespace BlazorVirtualGridComponent
 
 
                 builder.OpenElement(k++, "div");
-                builder.AddAttribute(k++, "class", "GridDiv");
+                builder.AddAttribute(k++, "class", "GridDiv Border1");
                 builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(true));
 
                 builder.OpenElement(k++, "table");
@@ -148,12 +148,12 @@ namespace BlazorVirtualGridComponent
             #region grid
             builder.OpenElement(k++, "td");
             builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(false));
-            //builder.AddAttribute(k++, "valign", "top");
+            builder.AddAttribute(k++, "align", "left");
 
 
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", bvgGrid.GridDivElementID);
-            builder.AddAttribute(k++, "class", "GridDiv");
+            builder.AddAttribute(k++, "class", "GridDiv Border1");
             builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(false));
 
             builder.OpenElement(k++, "table"); 
@@ -214,17 +214,15 @@ namespace BlazorVirtualGridComponent
      
             builder.OpenElement(k++, "td");
  
-            builder.AddAttribute(k++, "colspan", 3);
+            builder.AddAttribute(k++, "colspan", 2);
             builder.AddAttribute(k++, "valign", "top");
            
 
-            if (bvgGrid.HorizontalScroll.IsVisible)
-            {
-              
-                builder.OpenComponent<CompScroll>(k++);
-                builder.AddAttribute(k++, "bvgScroll", bvgGrid.HorizontalScroll);
-                builder.CloseComponent();
-            }
+             
+            builder.OpenComponent<CompScroll>(k++);
+            builder.AddAttribute(k++, "bvgScroll", bvgGrid.HorizontalScroll);
+            builder.CloseComponent();
+            
 
 
             builder.CloseElement(); //td

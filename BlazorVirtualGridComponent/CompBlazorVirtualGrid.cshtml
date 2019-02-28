@@ -5,10 +5,9 @@
 
 
 
-@if (ActualRender)
-{
+
 <CompCSS bvgGrid="@bvgGrid"></CompCSS>
-}
+
 
 
 @if (bvgGrid.IsReady)
@@ -17,7 +16,7 @@
     <h3>@bvgGrid.Name Count @bvgGrid.RowsTotalCount</h3>
 
 
-    <CompTable bvgGrid="@bvgGrid" ActualRender="@ActualRender"></CompTable>
+    <CompTable bvgGrid="@bvgGrid" ActualRender="@ActualRender" ></CompTable>
 }
 else
 {

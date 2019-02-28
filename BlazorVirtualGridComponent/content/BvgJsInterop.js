@@ -58,7 +58,7 @@ window.BvgJsFunctions = {
         return window.innerHeight
             || document.documentElement.clientHeight
             || document.body.clientHeight;
-       
+      
     },
     SetElementScrollLeft: function (el, val) {
         if (document.getElementById(el) !== null) {
@@ -199,7 +199,6 @@ window.BvgJsFunctions = {
 
 
         return true;
-    },
-    
+    }   
     
 };

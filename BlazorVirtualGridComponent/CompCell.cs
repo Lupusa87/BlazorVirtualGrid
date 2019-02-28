@@ -193,10 +193,10 @@ namespace BlazorVirtualGridComponent
 
                         bvgCell.bvgGrid.SelectCell(c, true);
 
-                        if (bvgCell.bvgGrid.HorizontalScroll.IsVisible)
+                        if (bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsVisible)
                         {
-                            double s = bvgCell.bvgGrid.Columns.Where(x => x.IsFrozen == false).Where(x => x.SequenceNumber <= bvgCell.bvgColumn.SequenceNumber).Sum(x => x.ColWidth);
-                            //double s = await BvgJsInterop.GetElementScrollLeft(bvgCell.bvgGrid.GridDivElementID);
+                            int s = bvgCell.bvgGrid.Columns.Where(x => x.IsFrozen == false).Where(x => x.SequenceNumber <= bvgCell.bvgColumn.SequenceNumber).Sum(x => x.ColWidth);
+                            //int s = await BvgJsInterop.GetElementScrollLeft(bvgCell.bvgGrid.GridDivElementID);
 
                             bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(s);
                         }
@@ -219,9 +219,9 @@ namespace BlazorVirtualGridComponent
 
                         bvgCell.bvgGrid.SelectCell(c, true);
 
-                        if (bvgCell.bvgGrid.HorizontalScroll.IsVisible)
+                        if (bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsVisible)
                         {
-                            double s = bvgCell.bvgGrid.Columns.Where(x => x.IsFrozen == false).Where(x => x.SequenceNumber < bvgCell.bvgColumn.SequenceNumber).Sum(x => x.ColWidth);
+                            int s = bvgCell.bvgGrid.Columns.Where(x => x.IsFrozen == false).Where(x => x.SequenceNumber < bvgCell.bvgColumn.SequenceNumber).Sum(x => x.ColWidth);
 
                             //double s = await BvgJsInterop.GetElementScrollLeft(bvgCell.bvgGrid.GridDivElementID);
                             bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(s);
@@ -260,23 +260,14 @@ namespace BlazorVirtualGridComponent
                         {
                             if (!bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.IsOnMinPosition())
                             {
-                                bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.bsbScrollbar.CmdWhell(false);
-
-                                if (bvgCell.bvgRow.ID == 0)
-                                {
-                                    sn = bvgCell.bvgGrid.Rows.Max(x => x.ID);
-                                }
-
-                                BvgCell c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
-
-                                bvgCell.bvgGrid.SelectCell(c, true);
+                                bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar
+                                    .ThumbMove(-bvgCell.bvgGrid.RowHeightOriginal);
                             }
                         }
                     }
 
                     break;
                 case MoveDirection.down:
-
                     if (HasCtrl)
                     {
                         if (!bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.IsOnMaxPosition())
@@ -305,17 +296,9 @@ namespace BlazorVirtualGridComponent
                         {
                             if (!bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.IsOnMaxPosition())
                             {
-                                bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.bsbScrollbar.CmdWhell(true);
+                                bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar
+                                    .ThumbMove(bvgCell.bvgGrid.RowHeightOriginal);
 
-
-                                if (bvgCell.bvgRow.ID == bvgCell.bvgGrid.Rows.Max(x => x.ID))
-                                {
-                                    sn = 0;
-                                }
-
-                                BvgCell c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
-
-                                bvgCell.bvgGrid.SelectCell(c, true);
                             }
                         }
                     }

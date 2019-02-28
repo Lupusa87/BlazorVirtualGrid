@@ -17,21 +17,50 @@ namespace BlazorVirtualGridComponent
 
         bool EnabledRender = true;
 
-
-        protected override Task OnParametersSetAsync()
-        {
-
-            EnabledRender = true;
-
-            return base.OnParametersSetAsync();
-        }
-
-        protected override bool ShouldRender()
-        {
-            return EnabledRender;
-        }
-
         BCss blazorCSS = new BCss();
+
+
+        //protected override Task OnParametersSetAsync()
+        //{
+
+        //    EnabledRender = true;
+
+        //    return base.OnParametersSetAsync();
+        //}
+
+        //protected override bool ShouldRender()
+        //{
+        //    return EnabledRender;
+        //}
+
+        
+
+
+        protected override void BuildRenderTree(RenderTreeBuilder builder)
+        {
+
+            EnabledRender = false;
+
+            base.BuildRenderTree(builder);
+
+            int k = 0;
+
+            // builder.AddMarkupContent(k++,"<style>.my {color:red}");
+
+            builder.OpenElement(k++, "style");
+            builder.AddContent(k++, GenerateCSS());
+            builder.CloseElement();
+
+
+            //builder.OpenElement(k++, "link");
+            //builder.AddAttribute(k++, "rel", "stylesheet");
+            //builder.AddAttribute(k++, "href", "data:text/css;base64," + GenerateCSS());
+            //builder.AddAttribute(k++, "type", "text/css");
+            //builder.CloseElement();
+
+
+        }
+
 
         private string GenerateCSS()
         {
@@ -90,10 +119,11 @@ namespace BlazorVirtualGridComponent
 
 
             BCssItem _Table = new BCssItem(".BorderedTable");
-            _Table.Values.Add("border", "1px solid black");
+            //_Table.Values.Add("border", "1px solid black");
             _Table.Values.Add("margin", "0px");
             _Table.Values.Add("padding", "0px");
             blazorCSS.Children.Add(_Table);
+
 
 
             BCssItem _GridDiv = new BCssItem(".GridDiv");
@@ -103,11 +133,16 @@ namespace BlazorVirtualGridComponent
             _GridDiv.Values.Add("padding", "0px");
             blazorCSS.Children.Add(_GridDiv);
 
+            BCssItem _Border1 = new BCssItem(".Border1");
+            _Border1.Values.Add("border", "1px solid black");
+            blazorCSS.Children.Add(_Border1);
+
             GenerateCellCSS();
 
             GenerateHeaderCSS();
 
-            return blazorCSS.ToBase64String();
+            //return blazorCSS.ToBase64String();
+            return blazorCSS.ToString();
 
         }
 
@@ -211,31 +246,7 @@ namespace BlazorVirtualGridComponent
         }
 
 
-        protected override void BuildRenderTree(RenderTreeBuilder builder)
-        {
-
-            EnabledRender = false;
-
-            base.BuildRenderTree(builder);
-
-            int k = 0;
-
-            // builder.AddMarkupContent(k++,"<style>.my {color:red}");
-
-            //builder.OpenElement(k++, "style");
-            //builder.AddContent(k++, GenerateCSS());
-            //builder.CloseElement();
-
-
-            builder.OpenElement(k++, "link");
-            builder.AddAttribute(k++, "rel", "stylesheet");
-            builder.AddAttribute(k++, "href", "data:text/css;base64," + GenerateCSS());
-            builder.AddAttribute(k++, "type", "text/css");
-            builder.CloseElement();
-
-
-        }
-
+       
 
 
 

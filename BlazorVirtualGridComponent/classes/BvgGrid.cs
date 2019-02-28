@@ -37,9 +37,11 @@ namespace BlazorVirtualGridComponent.classes
         public int[] NonFrozenColwidthSumsByElement { get; set; }
         public Action<string> OnSort { get; set; }
 
-        public Action<int> OnVerticalScroll { get; set; }
+        public Action<double> OnVerticalScroll { get; set; }
 
-        public Action<int> OnHorizontalScroll { get; set; }
+        public Action<double> OnHorizontalScroll { get; set; }
+
+     
 
         public BvgRow[] Rows { get; set; } = new BvgRow[0];
         public BvgColumn[] Columns { get; set; } = new BvgColumn[0];
@@ -65,7 +67,7 @@ namespace BlazorVirtualGridComponent.classes
         public double height { get; set; } = 300;
 
         public double FrozenTableWidth { get; set; } = 0;
-        public double NotFrozenTableWidth { get; set; } = 0;
+        public double NonFrozenTableWidth { get; set; } = 0;
 
 
         public int DisplayedRowsCount { get; set; }
@@ -80,6 +82,9 @@ namespace BlazorVirtualGridComponent.classes
         public BvgAreaColumns bvgAreaColumnsFrozen { get; set; } = new BvgAreaColumns();
         public BvgAreaColumns bvgAreaColumnsNonFrozen { get; set; } = new BvgAreaColumns();
 
+
+        public double RowHeightOriginal { get; set; }
+
         public string GetStyleTable(bool ForFrozen)
         {
             if (ForFrozen)
@@ -88,7 +93,7 @@ namespace BlazorVirtualGridComponent.classes
             }
             else
             {
-                return string.Concat("width:" , NotFrozenTableWidth , "px;");
+                return string.Concat("width:" , NonFrozenTableWidth , "px;");
             }
 
         }
@@ -99,11 +104,11 @@ namespace BlazorVirtualGridComponent.classes
 
             if (ForFrozen)
             {
-                return string.Concat("width:", (FrozenTableWidth + 3), "px;height:", height, "px;");
+                return string.Concat("width:", FrozenTableWidth, "px;height:", height, "px;");
             }
             else
             {
-                return string.Concat("width:", (NotFrozenTableWidth + 3), "px;height:", height, "px;");
+                return string.Concat("width:", NonFrozenTableWidth, "px;height:", height, "px;");
             }
 
 
@@ -313,40 +318,21 @@ namespace BlazorVirtualGridComponent.classes
 
         public void UpdateHorizontalScroll()
         {
-            double b = ColumnsOrderedList.Where(x => x.IsFrozen == false).Sum(x => x.ColWidth);
+
+            int b = ColumnsOrderedList.Where(x => x.IsFrozen == false).Sum(x => x.ColWidth);
 
 
-
-            if (b > NotFrozenTableWidth)
+            if (HorizontalScroll.compBlazorScrollbar is null)
             {
-
-                if (!HorizontalScroll.IsVisible)
-                {
-      
-                    HorizontalScroll.IsVisible = true;
-
-
-                    HorizontalScroll.bsbSettings.ScrollTotalSize=b;
-                    HorizontalScroll.bsbSettings.initialize();
-
-                    InvokePropertyChanged();
-                }
-                else
-                {
-                    HorizontalScroll.compBlazorScrollbar.SetScrollTotalWidth(b);
-                }
-
+                HorizontalScroll.bsbSettings.ScrollTotalSize = b;
+                HorizontalScroll.bsbSettings.initialize();
             }
             else
             {
-
-                if (HorizontalScroll.IsVisible)
-                {
-                    HorizontalScroll.IsVisible = false;
-
-                    InvokePropertyChanged();
-                }
+                HorizontalScroll.compBlazorScrollbar.SetScrollTotalWidth(b);
             }
+
+
         }
 
 
@@ -354,12 +340,11 @@ namespace BlazorVirtualGridComponent.classes
         {
 
             FrozenTableWidth = ColumnsOrderedList.Where(x => x.IsFrozen).Sum(x => x.ColWidth);
-            NotFrozenTableWidth = totalWidth - FrozenTableWidth;
+            NonFrozenTableWidth = totalWidth - FrozenTableWidth;
 
-            DisplayedColumnsCount = (int)(NotFrozenTableWidth / bvgSettings.ColWidthMin) + 1;
+            DisplayedColumnsCount = (int)(NonFrozenTableWidth / bvgSettings.ColWidthMin) + 1;
 
-
-            HorizontalScroll.bsbSettings.ScrollVisibleSize = NotFrozenTableWidth;
+            HorizontalScroll.bsbSettings.ScrollVisibleSize = NonFrozenTableWidth;
 
             UpdateHorizontalScroll();
         }
@@ -367,46 +352,57 @@ namespace BlazorVirtualGridComponent.classes
 
         public void AdjustSize()
         {
+            RowHeightOriginal = bvgSettings.RowHeight;
+            //DisplayedRowsCount =1+(int)Math.Ceiling((height - bvgSettings.HeaderHeight) / bvgSettings.RowHeight);
+            DisplayedRowsCount = (int)((height - bvgSettings.HeaderHeight) / bvgSettings.RowHeight);
+            bvgSettings.RowHeight = (height - bvgSettings.HeaderHeight) / DisplayedRowsCount;
+
 
             VericalScroll = new BvgScroll
             {
-                ID = "VericalScroll"+Guid.NewGuid().ToString("d").Substring(1, 4),
                 bvgGrid = this,
-                bsbSettings = new BsbSettings
+                bsbSettings = new BsbSettings("VericalScroll")
                 {
                     VerticalOrHorizontal = true,
                     width = 16,
-                    height = height-2,
-                    ScrollVisibleSize = height- bvgSettings.HeaderHeight - bvgSettings.HeaderStyle.BorderWidth*2,
-                    ScrollTotalSize = RowsTotalCount * (bvgSettings.RowHeight + bvgSettings.NonFrozenCellStyle.BorderWidth*2)+10,
+                    height = height - bvgSettings.HeaderStyle.BorderWidth * 2,
+                    ScrollVisibleSize = height - bvgSettings.HeaderHeight - bvgSettings.HeaderStyle.BorderWidth * 2,
+                    ScrollTotalSize = RowsTotalCount * RowHeightOriginal,
+                    bsbStyle = new BsbStyle
+                    {
+                        ButtonColor = bvgSettings.VerticalScrollStyle.ButtonColor,
+                        ThumbColor = bvgSettings.VerticalScrollStyle.ThumbColor,
+                        ThumbWayColor = bvgSettings.VerticalScrollStyle.ThumbWayColor,
+                    }
                 }
             };
+            VericalScroll.ID = VericalScroll.bsbSettings.ID;
             VericalScroll.bsbSettings.initialize();
 
             HorizontalScroll = new BvgScroll
             {
-
-                ID = "HorizontalScroll" + Guid.NewGuid().ToString("d").Substring(1, 4),
                 bvgGrid = this,
-                bsbSettings = new BsbSettings
+                bsbSettings = new BsbSettings("HorizontalScroll")
                 {
 
                     VerticalOrHorizontal = false,
-                    width = totalWidth + 21,
+                    width = totalWidth,
                     height = 16,
                     ScrollVisibleSize = 0,
                     ScrollTotalSize = 0,
-
+                    bsbStyle = new BsbStyle
+                    {
+                        ButtonColor = bvgSettings.HorizontalScrollStyle.ButtonColor,
+                        ThumbColor = bvgSettings.HorizontalScrollStyle.ThumbColor,
+                        ThumbWayColor = bvgSettings.HorizontalScrollStyle.ThumbWayColor,
+                    }
                 }
             };
-
-            //DisplayedRowsCount =1+(int)Math.Ceiling((height - bvgSettings.HeaderHeight) / bvgSettings.RowHeight);
-            DisplayedRowsCount = (int)((height - bvgSettings.HeaderHeight) / bvgSettings.RowHeight);
-            bvgSettings.RowHeight = Math.Round((height - bvgSettings.HeaderHeight) / DisplayedRowsCount);
-
+            HorizontalScroll.ID = HorizontalScroll.bsbSettings.ID;
 
 
             CalculateWidths();
+
 
             bvgAreaRowsFrozen.bvgGrid = this;
             bvgAreaRowsNonFrozen.bvgGrid = this;

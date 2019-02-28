@@ -146,7 +146,7 @@ namespace BlazorVirtualGridComponent
                     if (bvgColumn.IsFrozen)
                     {
                         bvgColumn.bvgGrid.FrozenTableWidth += p;
-                        bvgColumn.bvgGrid.NotFrozenTableWidth -= p;
+                        bvgColumn.bvgGrid.NonFrozenTableWidth -= p;
                         bvgColumn.bvgGrid.InvokePropertyChanged();
                     }
                     else

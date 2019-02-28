@@ -59,7 +59,7 @@ namespace BlazorVirtualGridComponent
             int k = -1;
             builder.OpenComponent<CompBlazorScrollbar>(k++);
             builder.AddAttribute(k++, "bsbSettings", RuntimeHelpers.TypeCheck<BsbSettings>(bvgScroll.bsbSettings));
-            builder.AddAttribute(k++, "OnPositionChange", new Action<int>(onscroll));
+            builder.AddAttribute(k++, "OnPositionChange", new Action<double>(onscroll));
             builder.AddComponentReferenceCapture(k++, (c) =>
             {
 
@@ -72,19 +72,25 @@ namespace BlazorVirtualGridComponent
         }
 
 
-        private void onscroll(int ScrollPosition)
+        private void onscroll(double ScrollPosition)
         {
 
             if (bvgScroll.bsbSettings.VerticalOrHorizontal)
             {
 
-                if (Math.Abs(ScrollPosition - bvgScroll.bvgGrid.CurrVerticalScrollPosition) > bvgScroll.bvgGrid.bvgSettings.RowHeight)
+                double b = (ScrollPosition + bvgScroll.bvgGrid.VericalScroll.bsbSettings.ScrollVisibleSize)
+                        / bvgScroll.bvgGrid.RowHeightOriginal - bvgScroll.bvgGrid.DisplayedRowsCount;
+
+                if (b != bvgScroll.bvgGrid.CurrVerticalScrollPosition)
                 {
 
-                    //bvgScroll.bvgGrid.Cmd_Clear_Selection();
+                    
 
-                    bvgScroll.bvgGrid.CurrVerticalScrollPosition = ScrollPosition;
-                    bvgScroll.bvgGrid.OnVerticalScroll?.Invoke((int)(ScrollPosition / bvgScroll.bvgGrid.bvgSettings.RowHeight));
+                    bvgScroll.bvgGrid.CurrVerticalScrollPosition = b;
+
+                    //Console.WriteLine("ScrollPosition2=" + ScrollPosition / bvgScroll.bvgGrid.RowHeightOriginal);
+
+                    bvgScroll.bvgGrid.OnVerticalScroll?.Invoke(b);
 
                 }
             }
@@ -92,7 +98,7 @@ namespace BlazorVirtualGridComponent
             {
 
                    bvgScroll.bvgGrid.CurrHorizontalScrollPosition = ScrollPosition;
-                   bvgScroll.bvgGrid.OnHorizontalScroll?.Invoke((int)(ScrollPosition));
+                   bvgScroll.bvgGrid.OnHorizontalScroll?.Invoke(ScrollPosition);
 
             }
 

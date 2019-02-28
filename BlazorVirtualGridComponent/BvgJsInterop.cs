@@ -35,7 +35,7 @@ namespace BlazorVirtualGridComponent
         }
         
 
-        public static Task<bool> SetElementScrollLeft(string elementID, int val)
+        public static Task<bool> SetElementScrollLeft(string elementID, double val)
         {
             return JSRuntime.Current.InvokeAsync<bool>(
                 "BvgJsFunctions.SetElementScrollLeft", elementID, val);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlazorScrollbarComponent.classes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -41,6 +42,9 @@ namespace BlazorVirtualGridComponent.classes
         public ushort ColWidthMax { get; set; } = 300;
 
         public double CheckBoxZoom { get; set; } = 1.5;
+
+        public BvgStyleScroll VerticalScrollStyle { get; set; } = new BvgStyleScroll();
+        public BvgStyleScroll HorizontalScrollStyle { get; set; } = new BvgStyleScroll();
 
         public ValuesContainer<string> NonFrozenColumnsListOrdered { get; set; } = new ValuesContainer<string>();
 

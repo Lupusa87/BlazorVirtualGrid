@@ -39,8 +39,8 @@ namespace BlazorVirtualGrid.Pages
        
         protected override void OnInit()
         {
-            
 
+            //FillList(5, 7);
             FillList(200, 300);
 
 
@@ -53,17 +53,24 @@ namespace BlazorVirtualGrid.Pages
                 .Add(nameof(MyItem.C3))
                 .Add(nameof(MyItem.Date));
 
-            //bvgSettings1.ColumnWidthsDictionary
-            //    .Add(Tuple.Create(nameof(MyItem.C3), 200))
-            //    .Add(Tuple.Create(nameof(MyItem.Date), 200))
-            //    .Add(Tuple.Create(nameof(MyItem.C1), 300));
+            bvgSettings1.ColumnWidthsDictionary
+                .Add(Tuple.Create(nameof(MyItem.C3), (ushort)200))
+                .Add(Tuple.Create(nameof(MyItem.Date), (ushort)200));
+
 
             PropertyInfo[] props = typeof(MyItem).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var item in props.Where(x=>x.Name!="Date"))
+            foreach (var item in props.Where(x=>x.Name!="Date" && x.Name!="C3"))
             {
                 bvgSettings1.ColumnWidthsDictionary
                 .Add(Tuple.Create(item.Name, (ushort)rnd1.Next(bvgSettings1.ColWidthMin, bvgSettings1.ColWidthMax)));
             }
+
+            
+            //foreach (var item in props.Where(x => x.Name.Contains("C")))
+            //{
+            //    bvgSettings1.HiddenColumns
+            //    .Add(item.Name);
+            //}
 
             //bvgSettings1.HiddenColumns
             //    .Add(nameof(MyItem.SomeBool));
@@ -229,19 +236,34 @@ namespace BlazorVirtualGrid.Pages
             {
                 BackgroundColor = "#b3b3b3",
                 ForeColor = "blue",
-                BorderColor = "brown",
-                BorderWidth = 2,
+                BorderColor = "black",
+                BorderWidth = 1,
             };
             bvgSettings1.ActiveHeaderStyle = new BvgStyle
             {
                 BackgroundColor = "#b3b3b3",
                 ForeColor = "darkblue",
                 BorderColor = "black",
-                BorderWidth = 2,
+                BorderWidth = 1,
             };
             bvgSettings1.RowHeight = 40;
             bvgSettings1.HeaderHeight = 50;
-           
+
+
+            //bvgSettings1.VerticalScrollStyle = new BvgStyleScroll
+            //{
+            //    ButtonColor = "green",
+            //    ThumbColor = "red",
+            //    ThumbWayColor = "lightgreen",
+            //};
+
+            //bvgSettings1.HorizontalScrollStyle = new BvgStyleScroll
+            //{
+            //    ButtonColor = "green",
+            //    ThumbColor = "red",
+            //    ThumbWayColor = "lightgreen",
+            //};
+
         }
 
         public void ConfigureBvgSettings2()

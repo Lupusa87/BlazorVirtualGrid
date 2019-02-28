@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompBlazorVirtualGrid_Logic<TItem>: ComponentBase
+    public class CompBlazorVirtualGrid_Logic<TItem> : ComponentBase
     {
 
         [Parameter]
@@ -29,11 +29,12 @@ namespace BlazorVirtualGridComponent
         public BvgGrid bvgGrid { get; set; }
 
 
-        public bool ActualRender { get; set; } =false;
+        public bool ActualRender { get; set; } = false;
 
 
         Timer timer1;
 
+       
         public bool ForceStateHasChaned { get; set; } = false;
 
 
@@ -43,8 +44,7 @@ namespace BlazorVirtualGridComponent
 
         private int LastHorizontalSkip = -1;
 
-
-        bool EnabledRender = true;
+        //bool EnabledRender = true;
 
         //protected override bool ShouldRender()
         //{
@@ -117,27 +117,29 @@ namespace BlazorVirtualGridComponent
                 }
 
 
-                
-
                 timer1 = new Timer(Timer1Callback, null, 1, 1);
+                
             }
 
 
-            EnabledRender = false;
-        }
-
-        public void OnVerticalScroll(int p)
-        {
-
-            RenderGridRows(p, true);
-
+            //EnabledRender = false;
         }
 
 
-        public void SetScrollLeftToNonFrozenColumnsDiv(int p)
+
+
+        public void OnVerticalScroll(double p)
+        {
+            Console.WriteLine("OnVerticalScroll" + p);
+            RenderGridRows((int)p, true);
+
+        }
+
+
+        public void SetScrollLeftToNonFrozenColumnsDiv(double p)
         {
 
-            int p2 = p;
+            double p2 = p;
             if (LastHorizontalSkip > 0)
             {
                 p2 -= bvgGrid.ColumnsOrderedListNonFrozen.Take(LastHorizontalSkip).Sum(x => x.ColWidth);
@@ -146,7 +148,7 @@ namespace BlazorVirtualGridComponent
             BvgJsInterop.SetElementScrollLeft(bvgGrid.GridDivElementID, p2);
         }
 
-        public void OnHorizontalScroll(int p)
+        public void OnHorizontalScroll(double p)
         {
             RenderGridColumns(p, true);
 
@@ -200,7 +202,7 @@ namespace BlazorVirtualGridComponent
 
 
 
-        public int GetSkipedColumns(int scrollPosition)
+        public int GetSkipedColumns(double scrollPosition)
         {
 
             if (bvgGrid.NonFrozenColwidthSumsByElement.Any(x => x <= scrollPosition))
@@ -211,7 +213,7 @@ namespace BlazorVirtualGridComponent
             return 0;
         }
 
-        public void RenderGridColumns(int Scrollposition, bool UpdateUI)
+        public void RenderGridColumns(double Scrollposition, bool UpdateUI)
         {
 
           
@@ -266,10 +268,10 @@ namespace BlazorVirtualGridComponent
 
                 if (bvgGrid.SortState.Item1)
                 {
-                    Console.WriteLine("A1");
+                  
                     if (bvgGrid.SortState.Item2.IsFrozen==false)
                     {
-                        Console.WriteLine("A2");
+                       
                         bvgGrid.bvgAreaColumnsNonFrozen.InvokePropertyChanged();
                     }
                 }
@@ -283,7 +285,7 @@ namespace BlazorVirtualGridComponent
             timer1.Dispose();
         }
 
-       
+
 
         public async void GetActualWidthAndHeight()
         {
@@ -297,6 +299,12 @@ namespace BlazorVirtualGridComponent
             bvgGrid.height = windowHeight - top - 40;
 
 
+            if (bvgGrid.height>bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight)
+            {
+                bvgGrid.height = bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight;
+            }
+
+
             bvgGrid.AdjustSize();
 
             
@@ -305,9 +313,12 @@ namespace BlazorVirtualGridComponent
          
             ActualRender = true;
 
-            EnabledRender = true;
+            //EnabledRender = true;
+
+            Console.WriteLine("www");
+
             StateHasChanged();
-            EnabledRender = false;
+            //EnabledRender = false;
         }
 
 

@@ -18,14 +18,10 @@ namespace BlazorVirtualGridComponent.classes
 
         public BvgGrid bvgGrid { get; set; } = new BvgGrid();
 
-        public bool IsVisible { get; set; } = false;
-        
 
         public BsbSettings bsbSettings { get; set; } = new BsbSettings();
 
-        public CompBlazorScrollbar compBlazorScrollbar { get; set; } = new CompBlazorScrollbar();
-
-     
+        public CompBlazorScrollbar compBlazorScrollbar { get; set; } 
 
         public void InvokePropertyChanged()
         {
