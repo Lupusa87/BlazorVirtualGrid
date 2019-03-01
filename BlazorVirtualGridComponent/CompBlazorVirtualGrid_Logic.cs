@@ -73,18 +73,7 @@ namespace BlazorVirtualGridComponent
             bvgGrid.ColumnsOrderedListNonFrozen = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen == false).ToArray();
 
 
-            ColProp[] c = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen == false).ToArray();
-
-            bvgGrid.NonFrozenColwidthSumsByElement = new int[c.Count()];
-            int j = 0;
-            for (int i = 0; i < c.Count(); i++)
-            {
-                j += c[i].ColWidth;
-                bvgGrid.NonFrozenColwidthSumsByElement[i] = j;
-
-            }
-
-            c = null;
+            bvgGrid.UpdateNonFrozenColwidthSumsByElement();
 
 
             SortedRowsList = SourceList.ToArray();
@@ -123,7 +112,7 @@ namespace BlazorVirtualGridComponent
                     bvgGrid.OnHorizontalScroll = OnHorizontalScroll;
                 }
 
-
+        
                 timer1 = new Timer(Timer1Callback, null, 1, 1);
                 
             }
@@ -159,9 +148,27 @@ namespace BlazorVirtualGridComponent
 
         public void OnHorizontalScroll(double p)
         {
+            Console.WriteLine("ScrollPosition="+p);
+
             RenderGridColumns(p, true);
 
-            SetScrollLeftToNonFrozenColumnsDiv(p);
+           
+            //if (bvgGrid.ShouldSelectCell == null)
+            //{
+               
+                SetScrollLeftToNonFrozenColumnsDiv(p);
+
+            //}
+            //else
+            //{
+            //    BvgJsInterop.SetElementScrollLeft("NonFrozenDiv1", 10000);
+
+            //    Console.WriteLine(bvgGrid.ShouldSelectCell.Item1 + " " + bvgGrid.ShouldSelectCell.Item2);
+            //    bvgGrid.SelectCell(bvgGrid.Rows.Single(x=>x.ID == bvgGrid.ShouldSelectCell.Item1).Cells.Single(x=>x.bvgColumn.prop.Name.Equals(bvgGrid.ShouldSelectCell.Item2)), true);
+            //    bvgGrid.ShouldSelectCell = null;
+
+               
+            //}
 
             //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
 
@@ -291,6 +298,7 @@ namespace BlazorVirtualGridComponent
 
         public void Timer1Callback(object o)
         {
+            Console.WriteLine("A2");
             GetActualWidthAndHeight();
             timer1.Dispose();
         }
@@ -304,17 +312,17 @@ namespace BlazorVirtualGridComponent
 
 
             double top = await BvgJsInterop.GetElementActualTop(bvgGrid.GridTableElementID);
+
             double windowHeight = await BvgJsInterop.GetWindowHeight();
 
             bvgGrid.height = windowHeight - top - 40;
-
 
             if (bvgGrid.height>bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight)
             {
                 bvgGrid.height = bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight;
             }
 
-
+           
             bvgGrid.AdjustSize();
 
             
@@ -324,9 +332,11 @@ namespace BlazorVirtualGridComponent
             ActualRender = true;
 
             //EnabledRender = true;
-
+     
 
             StateHasChanged();
+
+           
             //EnabledRender = false;
         }
 

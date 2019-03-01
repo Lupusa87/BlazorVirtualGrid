@@ -87,6 +87,10 @@ namespace BlazorVirtualGridComponent.classes
 
         public double RowHeightOriginal { get; set; }
 
+
+        public Tuple<ushort, string> ShouldSelectCell { get; set; } = null;
+
+
         public string GetStyleTable(bool ForFrozen)
         {
             if (ForFrozen)
@@ -413,8 +417,21 @@ namespace BlazorVirtualGridComponent.classes
             bvgAreaColumnsNonFrozen.bvgGrid = this;
         }
 
+        public void UpdateNonFrozenColwidthSumsByElement()
+        {
+            ColProp[] c = ColumnsOrderedList.Where(x => x.IsFrozen == false).ToArray();
 
+            NonFrozenColwidthSumsByElement = new int[c.Count()];
+            int j = 0;
+            for (int i = 0; i < c.Count(); i++)
+            {
+                j += c[i].ColWidth;
+                NonFrozenColwidthSumsByElement[i] = j;
 
+            }
+
+            c = null;
+        }
        
   }
 }

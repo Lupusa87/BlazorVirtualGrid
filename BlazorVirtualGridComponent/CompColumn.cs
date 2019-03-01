@@ -161,7 +161,12 @@ namespace BlazorVirtualGridComponent
                     else
                     {
                         bvgColumn.bvgGrid.ColumnsOrderedListNonFrozen.Single(x => x.prop.Name.Equals(bvgColumn.prop.Name)).ColWidth = bvgColumn.ColWidth;
+                        bvgColumn.bvgGrid.UpdateNonFrozenColwidthSumsByElement();
                     }
+
+
+
+                   
 
 
                     double currScrollPosition = bvgColumn.bvgGrid.HorizontalScroll.compBlazorScrollbar.CurrentPosition;

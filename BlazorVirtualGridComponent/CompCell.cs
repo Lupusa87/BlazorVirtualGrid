@@ -1,4 +1,5 @@
-﻿using BlazorVirtualGridComponent.classes;
+﻿using BlazorVirtualGridComponent.businessLayer;
+using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 using System;
@@ -179,87 +180,118 @@ namespace BlazorVirtualGridComponent
             switch (d)
             {
                 case MoveDirection.right:
-                    if (HasCtrl)
-                    {
-                        if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMaxPosition())
-                        {
-                            bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(bvgCell.bvgGrid.NonFrozenTableWidth);
-                        }
+                    //if (HasCtrl)
+                    //{
+                    //    if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMaxPosition())
+                    //    {
+                    //        //bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(
+                    //        //    NavigationHelper.GetScrollPositionForColumn(
+                    //        //        bvgCell.bvgGrid.ColumnsOrderedList.Last().prop.Name,
+                    //        //        false,
+                    //        //        bvgCell.bvgGrid));
 
-                        if (bvgCell.bvgColumn.ID < bvgCell.bvgGrid.Columns.Max(x => x.ID))
-                        {
-                            BvgCell c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgGrid.Columns.Max(x2 => x2.ID));
+                    //        bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(
+                    //            NavigationHelper.GetScrollPositionForColumn(
+                    //                "C15",
+                    //                true,
+                    //                bvgCell.bvgGrid));
+                    //    }
 
-                            bvgCell.bvgGrid.SelectCell(c, true);
-                        }
-                    }
-                    else
-                    {
-                        if (bvgCell.bvgColumn.ID < bvgCell.bvgGrid.Columns.Max(x2 => x2.ID))
-                        {
-                            sn = bvgCell.bvgColumn.ID + 1;
+                    //    //if (bvgCell.bvgColumn.ID < bvgCell.bvgGrid.Columns.Max(x => x.ID))
+                    //    //{
 
-                       
-                            if (bvgCell.bvgRow.Cells.Where(x => x.HasCol).Any(x => x.bvgColumn.ID == sn))
-                            {
-                                BvgCell c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.ID == sn);
+                    //    //    BvgCell c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgGrid.Columns.Max(x2 => x2.ID));
 
-                                bvgCell.bvgGrid.SelectCell(c, true);
-                            }
-                            else
-                            {
-                                if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMaxPosition())
-                                {
-                                    bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar
-                                        .ThumbMove(bvgCell.bvgGrid.Columns.Single(x => x.ID == sn).ColWidth);
+                    //    //    bvgCell.bvgGrid.SelectCell(c, true);
 
-                                    BvgCell c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.ID == sn);
-                                    bvgCell.bvgGrid.SelectCell(c, true);
-                                }
-                            }
-                        }
-                    }
+                    //    //}
+                    //}
+                    //else
+                    //{
+                        
+                    //    sn = bvgCell.bvgColumn.ID + 1;
+
+
+                    //    if (bvgCell.bvgRow.Cells.Where(x => x.HasCol).Any(x => x.bvgColumn.ID == sn))
+                    //    {
+                    //        BvgCell c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.ID == sn);
+                    //        bvgCell.bvgGrid.SelectCell(c, true);
+
+                    //        bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.ThumbMove(c.bvgColumn.ColWidth);
+
+                            
+                    //        Console.WriteLine("A1");
+                    //        BvgJsInterop.SetElementScrollLeft("NonFrozenDiv1", 0);
+                    //    }
+                    //    else
+                    //    {
+                    //        if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMaxPosition())
+                    //        {
+
+                    //            ColProp a = bvgCell.bvgGrid.ColumnsOrderedList.Single(x => x.prop.Name.Equals(bvgCell.bvgColumn.prop.Name));
+                              
+                    //            int index = bvgCell.bvgGrid.ColumnsOrderedList.ToList().IndexOf(a);
+                              
+                    //            if (bvgCell.bvgGrid.ColumnsOrderedList.Count() > index + 1)
+                    //            {
+                    //                ColProp b = bvgCell.bvgGrid.ColumnsOrderedList[index + 1];
+
+                                   
+                    //                bvgCell.bvgGrid.ShouldSelectCell = Tuple.Create(bvgCell.bvgRow.ID, b.prop.Name);
+
+                                   
+                    //                bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.ThumbMove(b.ColWidth+20);
+
+                    //            }
+
+                    //        }
+                    //    }
+                        
+                    //}
                     break;
                 case MoveDirection.left:
-                    if (HasCtrl)
-                    {
-                        if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMinPosition())
-                        {
-                            bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(0);
-                        }
+                    //if (HasCtrl)
+                    //{
+                    //    if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMinPosition())
+                    //    {
+                    //        bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(0);
+                    //    }
 
-                        if (bvgCell.bvgColumn.ID >0)
-                        {
-                            BvgCell c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.ID == 0);
+                    //    if (bvgCell.bvgColumn.ID >0)
+                    //    {
+                    //        BvgCell c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.ID == 0);
 
-                            bvgCell.bvgGrid.SelectCell(c, true);
-                        }
-                    }
-                    else
-                    {
-                        if (bvgCell.bvgColumn.ID > 0)
-                        {
-                            sn = bvgCell.bvgColumn.ID - 1;
+                    //        bvgCell.bvgGrid.SelectCell(c, true);
+                    //    }
+                    //}
+                    //else
+                    //{
+                        
+                    //        sn = bvgCell.bvgColumn.ID - 1;
 
-                            if (bvgCell.bvgRow.Cells.Where(x => x.HasCol).Any(x => x.bvgColumn.ID == sn))
-                            {
-                                BvgCell c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.ID == sn);
+                    //        if (bvgCell.bvgRow.Cells.Where(x => x.HasCol).Any(x => x.bvgColumn.ID == sn))
+                    //        {
+                    //            BvgCell c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.ID == sn);
 
-                                bvgCell.bvgGrid.SelectCell(c, true);
-                            }
-                            else
-                            {
-                                if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMinPosition())
-                                {
-                                    bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar
-                                        .ThumbMove(-bvgCell.bvgGrid.Columns.Single(x => x.ID == sn).ColWidth);
+                    //            bvgCell.bvgGrid.SelectCell(c, true);
+                    //        }
+                    //        else
+                    //        {
+                    //            if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMinPosition())
+                    //            {
 
-                                    BvgCell c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.ID == sn);
-                                    bvgCell.bvgGrid.SelectCell(c, true);
-                                }
-                            }
-                        }
-                    }
+                    //               // bvgCell.bvgGrid.ShouldSelectCell = Tuple.Create(bvgCell.bvgRow.ID, (ushort)sn);
+
+                    //            bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(0);
+                    //            //bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar
+                    //            //    .ThumbMove(-bvgCell.bvgGrid.bvgSettings.ColWidthMax);
+
+                    //            //BvgCell c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.ID == sn);
+                    //            //bvgCell.bvgGrid.SelectCell(c, true);
+                    //        }
+                    //        }
+                        
+                    //}
                     break;
                 case MoveDirection.up:
                     if (HasCtrl)

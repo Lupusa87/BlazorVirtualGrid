@@ -29,7 +29,7 @@ window.BvgJsFunctions = {
         return true; 
     },
     GetElementActualWidth: function (el) {
-       
+        
         if (document.getElementById(el) !== null) {
             let rect = document.getElementById(el).getBoundingClientRect();
             return rect.width;
@@ -49,9 +49,10 @@ window.BvgJsFunctions = {
         }
     },
     GetElementActualTop: function (el) {
+
         if (document.getElementById(el) !== null) {
             let rect = document.getElementById(el).getBoundingClientRect();
-            return rect.top;
+            return rect.y;
         }
         else {
             return 0;
@@ -64,8 +65,6 @@ window.BvgJsFunctions = {
       
     },
     SetElementScrollLeft: function (el, val) {
-        console.log(el);
-        console.log(val);
         if (document.getElementById(el) !== null) {
             document.getElementById(el).scrollLeft=val;
             return true;
