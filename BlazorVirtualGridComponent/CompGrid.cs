@@ -80,12 +80,13 @@ namespace BlazorVirtualGridComponent
         protected void Cmd_RenderTable(RenderTreeBuilder builder)
         {
 
-
+            
             if (bvgGrid.Columns.Count() == 0)
             {
+                Console.WriteLine("Columns list is empty! CompGrid.RenderTable");
                 return;
             }
-
+          
 
 
             int k = -1;
@@ -234,7 +235,7 @@ namespace BlazorVirtualGridComponent
 
             #endregion
 
-
+           
         }
 
 

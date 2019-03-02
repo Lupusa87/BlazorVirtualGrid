@@ -17,6 +17,13 @@ namespace BlazorVirtualGridComponent.classes
 
         public string ConfigurationName { get; set; } = "config 1";
 
+
+        public bool LayoutFixedOrAuto { get; set; }
+
+        public double CompWidth { get; set; } = 0;
+
+        public double CompHeight { get; set; } = 0;
+
         public BvgStyle NonFrozenCellStyle { get; set; } = new BvgStyle();
         public BvgStyle AlternatedNonFrozenCellStyle { get; set; } = new BvgStyle();
 
@@ -55,6 +62,9 @@ namespace BlazorVirtualGridComponent.classes
         public ValuesContainer<string> HiddenColumns { get; set; } = new ValuesContainer<string>();
 
         public ValuesContainer<Tuple<string, ushort>> ColumnWidthsDictionary { get; set; } = new ValuesContainer<Tuple<string, ushort>>();
+
+
+        public Tuple<bool, string, bool> SortedColumn = Tuple.Create(false,string.Empty, false);
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

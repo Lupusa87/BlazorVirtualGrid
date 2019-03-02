@@ -23,12 +23,12 @@ namespace BlazorVirtualGridComponent
 
 
 
-        protected override Task OnParametersSetAsync()
+        protected override void OnParametersSet()
         {
-
+            Console.WriteLine("A2");
             EnabledRender = true;
 
-            return base.OnParametersSetAsync();
+            base.OnParametersSet();
         }
 
         protected override bool ShouldRender()
@@ -40,15 +40,24 @@ namespace BlazorVirtualGridComponent
         {
             base.BuildRenderTree(builder);
 
-            
-
+          
             int k = -1;
 
           
 
                 builder.OpenElement(k++, "table");
                 builder.AddAttribute(k++, "id", bvgGrid.GridTableElementID);
+
+            if (bvgGrid.bvgSettings.LayoutFixedOrAuto)
+            {
+                builder.AddAttribute(k++, "style", "table-layout:fixed;width:" + bvgGrid.bvgSettings.CompWidth + "px;");
+            }
+            else
+            {
                 builder.AddAttribute(k++, "style", "table-layout:auto;width:100%;");
+            }
+            
+
                 builder.AddAttribute(k++, "onwheel", OnWheel);
 
                 if (ActualRender)

@@ -345,7 +345,7 @@ namespace BlazorVirtualGrid.Pages
                     ID = (ushort)i,
                     Name = "Item " + i,
 
-                    SomeBool = rnd1.Next(0, 5) == 0,
+                    SomeBool = rnd1.Next(0, 5) > 1,
                     Date = DateTime.Now.AddDays(-rnd1.Next(1, 5000)).AddHours(-rnd1.Next(1, 5000)).AddSeconds(-rnd1.Next(1, 5000)),
                     C1 = "C1" + Guid.NewGuid().ToString("d").Substring(1, 4),
                     C2 = "C2" + Guid.NewGuid().ToString("d").Substring(1, 4),

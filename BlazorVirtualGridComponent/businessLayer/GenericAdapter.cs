@@ -44,18 +44,6 @@ namespace BlazorVirtualGridComponent.businessLayer
                     UpdatePkg[++j] = _bvgGrid.Columns[i].ColWidthSpan.ToString();
                 }
 
-
-                if (_bvgGrid.SortState.Item1)
-                {
-                    if (_bvgGrid.Columns.Any(x => x.prop.Name.Equals(_bvgGrid.SortState.Item2.prop.Name)))
-                    {
-                        BvgColumn sortedCol2 = _bvgGrid.Columns.Single(x => x.prop.Name.Equals(_bvgGrid.SortState.Item2.prop.Name));
-                        sortedCol2.IsSorted = true;
-                        sortedCol2.IsAscendingOrDescending = _bvgGrid.SortState.Item2.IsAscendingOrDescending;
-                    }
-                }
-
-
                 if (_bvgGrid.Rows.Any())
                 {
                    
@@ -84,6 +72,18 @@ namespace BlazorVirtualGridComponent.businessLayer
                 }
             }
 
+
+          
+            if (_bvgGrid.SortState.Item1)
+            {
+                if (_bvgGrid.Columns.Any(x => x.prop.Name.Equals(_bvgGrid.SortState.Item2)))
+                {
+                    BvgColumn sortedCol2 = _bvgGrid.Columns.Single(x => x.prop.Name.Equals(_bvgGrid.SortState.Item2));
+                   
+                    sortedCol2.IsSorted = true;
+                    sortedCol2.IsAscendingOrDescending = _bvgGrid.SortState.Item3;
+                }
+            }
         }
 
 

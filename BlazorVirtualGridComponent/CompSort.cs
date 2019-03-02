@@ -68,13 +68,13 @@ namespace BlazorVirtualGridComponent
             if (bvgColumn.IsAscendingOrDescending)
             {
                 builder.AddAttribute(k++, "style", string.Concat("fill:",
-                    bvgColumn.bvgGrid.bvgSettings.bSortStyle.UnSortedDirectionColor,
+                    bvgColumn.bvgGrid.bvgSettings.bSortStyle.SortedDirectionColor,
                     ";stroke:", bvgColumn.bvgGrid.bvgSettings.bSortStyle.BorderColor));
             }
             else
             {
                 builder.AddAttribute(k++, "style", string.Concat("fill:",
-                    bvgColumn.bvgGrid.bvgSettings.bSortStyle.SortedDirectionColor,
+                    bvgColumn.bvgGrid.bvgSettings.bSortStyle.UnSortedDirectionColor,
                     ";stroke:", bvgColumn.bvgGrid.bvgSettings.bSortStyle.BorderColor));
             }
 
@@ -90,13 +90,13 @@ namespace BlazorVirtualGridComponent
             if (bvgColumn.IsAscendingOrDescending)
             {
                 builder.AddAttribute(k++, "style", string.Concat("fill:",
-                    bvgColumn.bvgGrid.bvgSettings.bSortStyle.SortedDirectionColor,
+                    bvgColumn.bvgGrid.bvgSettings.bSortStyle.UnSortedDirectionColor,
                     ";stroke:", bvgColumn.bvgGrid.bvgSettings.bSortStyle.BorderColor));
             }
             else
             {
                 builder.AddAttribute(k++, "style", string.Concat("fill:",
-                    bvgColumn.bvgGrid.bvgSettings.bSortStyle.UnSortedDirectionColor,
+                    bvgColumn.bvgGrid.bvgSettings.bSortStyle.SortedDirectionColor,
                     ";stroke:", bvgColumn.bvgGrid.bvgSettings.bSortStyle.BorderColor));
             }
             

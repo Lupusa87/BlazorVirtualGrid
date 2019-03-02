@@ -57,7 +57,7 @@ namespace BlazorVirtualGridComponent.classes
         public BvgColumn ActiveColumn;
 
 
-        public Tuple<bool, BvgColumn> SortState;
+        public Tuple<bool, string, bool> SortState;
 
         public BvgSettings bvgSettings { get; set; }
 
@@ -223,16 +223,16 @@ namespace BlazorVirtualGridComponent.classes
                 }
 
                 parColumn.IsSorted = true;
-                parColumn.IsAscendingOrDescending = false;
+                parColumn.IsAscendingOrDescending = true;
             }
 
             parColumn.InvokePropertyChanged();
 
 
-            SortState = Tuple.Create(true, parColumn);
+            SortState = Tuple.Create(true, parColumn.prop.Name, parColumn.IsAscendingOrDescending);
 
 
-            if (!parColumn.IsAscendingOrDescending)
+            if (parColumn.IsAscendingOrDescending)
             {
                 OnSort?.Invoke(parColumn.prop.Name);
             }

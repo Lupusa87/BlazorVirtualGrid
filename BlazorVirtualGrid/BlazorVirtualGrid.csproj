@@ -30,10 +30,40 @@
   <ItemGroup> <Watch Include="\**\*.cshtml" /> </ItemGroup>
 
   
+  <ItemGroup>
+    <Content Remove="Pages\ColumnsManager.cshtml" />
+    <Content Remove="Pages\Index1.cshtml" />
+    <Content Remove="Pages\StyleDesigner.cshtml" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <Watch Remove="Pages\ColumnsManager.cshtml" />
+    <Watch Remove="Pages\Index1.cshtml" />
+    <Watch Remove="Pages\StyleDesigner.cshtml" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <None Include="Pages\ColumnsManager.cshtml" />
+    <None Include="Pages\Index1.cshtml" />
+    <None Include="Pages\StyleDesigner.cshtml" />
+  </ItemGroup>
+
+  
  
   
   <ItemGroup>
     <ProjectReference Include="..\BlazorVirtualGridComponent\BlazorVirtualGridComponent.csproj" />
+  </ItemGroup>
+
+  
+ 
+  
+  <ItemGroup>
+    <Reference Include="BlazorScrollbarComponent">
+      <HintPath>..\..\BlazorScrollbar\BlazorScrollbarComponent\bin\Debug\netstandard2.0\BlazorScrollbarComponent.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 

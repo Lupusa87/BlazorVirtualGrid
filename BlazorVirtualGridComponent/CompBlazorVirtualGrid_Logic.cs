@@ -34,9 +34,6 @@ namespace BlazorVirtualGridComponent
 
         Timer timer1;
 
-       
-        public bool ForceStateHasChaned { get; set; } = false;
-
 
         private bool FirstLoad = true;
 
@@ -53,19 +50,28 @@ namespace BlazorVirtualGridComponent
         //    return EnabledRender;
         //}
 
-        protected override Task OnParametersSetAsync()
+        protected override void OnParametersSet()
         {
             //BlazorWindowHelper.BlazorTimeAnalyzer.LogAllAdd = true;
+            FirstLoad = true;
+            ActualRender = false;
 
-            bvgGrid = new BvgGrid
+      LastVerticalSkip = -1;
+
+        LastHorizontalSkip = -1;
+
+        LastHorizontalScrollPosition = 0;
+
+        bvgGrid = new BvgGrid
             {
                 IsReady = true,
                 Name = TableName,
                 RowsTotalCount = SourceList.Count(),
                 bvgSettings = bvgSettings,
                 AllProps = typeof(TItem).GetProperties(BindingFlags.Public | BindingFlags.Instance),
-                SortState = Tuple.Create(false, new BvgColumn()),
-            };
+               
+           };
+
 
 
             bvgGrid.ColumnsOrderedList = ColumnsHelper.GetColumnsOrderedList(bvgGrid);
@@ -75,10 +81,28 @@ namespace BlazorVirtualGridComponent
 
             bvgGrid.UpdateNonFrozenColwidthSumsByElement();
 
+            if (bvgSettings.SortedColumn.Item1)
+            {
+                bvgGrid.SortState = Tuple.Create(bvgSettings.SortedColumn.Item1, bvgSettings.SortedColumn.Item2, bvgSettings.SortedColumn.Item3);
 
-            SortedRowsList = SourceList.ToArray();
 
-            return base.OnParametersSetAsync();
+                if (bvgSettings.SortedColumn.Item3)
+                {
+                    SortedRowsList = GenericAdapter<TItem>.GetSortedRowsList(SourceList.AsQueryable(), bvgSettings.SortedColumn.Item2).ToArray();
+                }
+                else
+                {
+                    SortedRowsList = GenericAdapter<TItem>.GetSortedRowsList(SourceList.AsQueryable(), bvgSettings.SortedColumn.Item2 + " desc").ToArray();
+                }
+            }
+            else
+            {
+                bvgGrid.SortState = Tuple.Create(false, string.Empty, false);
+
+                SortedRowsList = SourceList.ToArray();
+            }
+
+            base.OnParametersSetAsync();
         }
 
 
@@ -148,7 +172,6 @@ namespace BlazorVirtualGridComponent
 
         public void OnHorizontalScroll(double p)
         {
-            Console.WriteLine("ScrollPosition="+p);
 
             RenderGridColumns(p, true);
 
@@ -277,19 +300,25 @@ namespace BlazorVirtualGridComponent
                     j++;
                 }
 
+
                 //BlazorWindowHelper.BlazorTimeAnalyzer.Add("get columns", MethodBase.GetCurrentMethod());
                 GenericAdapter<TItem>.GetColumns(ListProps, bvgGrid, SortedRowsListActual, UpdateUI);
 
                 //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
 
 
+
+
+
                 if (bvgGrid.SortState.Item1)
                 {
-                  
-                    if (bvgGrid.SortState.Item2.IsFrozen==false)
+                    if (bvgGrid.Columns.Any(x => x.prop.Name.Equals(bvgGrid.SortState.Item2, StringComparison.InvariantCultureIgnoreCase)))
                     {
-                       
-                        bvgGrid.bvgAreaColumnsNonFrozen.InvokePropertyChanged();
+                        if (bvgGrid.Columns.Single(x => x.prop.Name.Equals(bvgGrid.SortState.Item2, StringComparison.InvariantCultureIgnoreCase)).IsFrozen == false)
+                        {
+
+                            bvgGrid.bvgAreaColumnsNonFrozen.InvokePropertyChanged();
+                        }
                     }
                 }
             }
@@ -298,7 +327,9 @@ namespace BlazorVirtualGridComponent
 
         public void Timer1Callback(object o)
         {
-            Console.WriteLine("A2");
+
+            Console.WriteLine("A1");
+
             GetActualWidthAndHeight();
             timer1.Dispose();
         }
@@ -308,14 +339,25 @@ namespace BlazorVirtualGridComponent
         public async void GetActualWidthAndHeight()
         {
 
-            bvgGrid.totalWidth = await BvgJsInterop.GetElementActualWidth(bvgGrid.GridTableElementID)-20;
+            if (bvgGrid.bvgSettings.LayoutFixedOrAuto)
+            {
+                bvgGrid.totalWidth = bvgGrid.bvgSettings.CompWidth;
+                bvgGrid.height = bvgGrid.bvgSettings.CompHeight;
+            }
+            else
+            {
+                bvgGrid.totalWidth = await BvgJsInterop.GetElementActualWidth(bvgGrid.GridTableElementID) - 20;
 
 
-            double top = await BvgJsInterop.GetElementActualTop(bvgGrid.GridTableElementID);
+                double top = await BvgJsInterop.GetElementActualTop(bvgGrid.GridTableElementID);
 
-            double windowHeight = await BvgJsInterop.GetWindowHeight();
+                double windowHeight = await BvgJsInterop.GetWindowHeight();
 
-            bvgGrid.height = windowHeight - top - 40;
+                bvgGrid.height = windowHeight - top - 40;
+            }
+
+
+
 
             if (bvgGrid.height>bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight)
             {

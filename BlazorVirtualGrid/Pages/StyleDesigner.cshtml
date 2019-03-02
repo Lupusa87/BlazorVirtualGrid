@@ -1,0 +1,93 @@
+﻿@*@page "/"*@
+@page "/StyleDesigner"
+
+@inherits StyleDesignerBase
+
+@addTagHelper *, BlazorScrollbarComponent
+@using BlazorScrollbarComponent;
+
+@addTagHelper *, BlazorVirtualGridComponent
+@using BlazorVirtualGridComponent;
+
+<h3 style="color:darkred">This is Style Designer</h3>
+
+<br />
+
+<style> @cssHelper.GetString()</style>
+
+
+<table style="@getStyleMainTable()">
+    <tr>
+        <td style="@getStyleMainTd()">
+            <table class="BorderedTable">
+                <thead>
+                    <tr>
+                        <th class="@getStyleTh()" style="width:100px">
+                            <div class="ColumnDiv">
+                                <span class="ColumnSpan" style="width:100px">
+                                    Frozen Col
+                                </span>
+                            </div>
+                        </th>
+                        <th class="@getStyleTh()" style="width:100px">
+                            <div class="ColumnDiv">
+                                <span class="ColumnSpan" style="width:80px">
+                                    NonFrozen Col
+                                </span>
+                                <CompSort>
+
+                                </CompSort>
+                            </div>
+                        </th>
+                        <th class="@getStyleTh()">
+                            <div class="ColumnDiv" style="width:80px">
+                                <span class="ColumnSpan" style="width:100px">
+                                    Bool Col
+                                </span>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int g = 0; g < 5; g++)
+                    {
+                        <tr>
+                            <td>
+                                <div>
+                                    <span>
+                                        frozen item @g
+                                    </span>
+
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <span>
+                                        nonfrozen item @g
+                                    </span>
+
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <span>
+                                        bool item @g
+                                    </span>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </td>
+        <td>
+            <CompBlazorScrollbar bsbSettings="bsbSettingsVertical"></CompBlazorScrollbar>
+        </td>
+    </tr>
+    <tr>
+        <CompBlazorScrollbar bsbSettings="bsbSettingsHorizontal"></CompBlazorScrollbar>
+    </tr>
+</table>
+
