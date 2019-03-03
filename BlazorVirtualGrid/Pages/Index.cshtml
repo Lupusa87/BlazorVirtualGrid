@@ -1,5 +1,7 @@
-﻿@page "/index"
-@inherits Index_Logic
+﻿@page "/"
+
+@*@page "/index"*@
+@inherits IndexBase
 
 @addTagHelper *, BlazorVirtualGridComponent
 @using BlazorVirtualGridComponent;
@@ -11,25 +13,25 @@
 @*<button class="btn btn-primary" style="margin:5px" onclick="@CmdNewList1">new list 1</button>
 
 
-<button class="btn btn-primary" style="margin:5px" onclick="@CmdPinColList1" disabled="@FirstOrSecond">Pin col list 1</button>
+    <button class="btn btn-primary" style="margin:5px" onclick="@CmdPinColList1" disabled="@FirstOrSecond">Pin col list 1</button>
 
 
-<button class="btn btn-primary" style="margin:5px;margin-left:50px" onclick="@CmdNewList2">new list 2</button>
+    <button class="btn btn-primary" style="margin:5px;margin-left:50px" onclick="@CmdNewList2">new list 2</button>
 
 
-<button class="btn btn-primary" style="margin:5px" onclick="@CmdPinColList2" disabled="@(!FirstOrSecond)">Pin col list 2</button>
+    <button class="btn btn-primary" style="margin:5px" onclick="@CmdPinColList2" disabled="@(!FirstOrSecond)">Pin col list 2</button>
 
 
-<button class="btn btn-primary" style="margin:5px" onclick="@Cmdqwer">qwer</button>*@
+    <button class="btn btn-primary" style="margin:5px" onclick="@Cmdqwer">qwer</button>*@
 <br />
 
 
 
 @*@if (FirstOrSecond)
-{*@
-    <CompBlazorVirtualGrid ref="CurrBVG1" SourceList="@list1" TableName="@TableName1" bvgSettings="@bvgSettings1"></CompBlazorVirtualGrid>
+    {*@
+<CompBlazorVirtualGrid ref="CurrBVG1" SourceList="@list1" TableName="@TableName1" bvgSettings="@gridSettingsService.bvgSettings1"></CompBlazorVirtualGrid>
 @*}
-else
-{
-    <CompBlazorVirtualGrid ref="CurrBVG2" SourceList="@list2" TableName="@TableName2" bvgSettings="@bvgSettings2"></CompBlazorVirtualGrid>
-}*@
+    else
+    {
+        <CompBlazorVirtualGrid ref="CurrBVG2" SourceList="@list2" TableName="@TableName2" bvgSettings="@bvgSettings2"></CompBlazorVirtualGrid>
+    }*@

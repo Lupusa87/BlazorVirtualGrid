@@ -50,8 +50,8 @@ namespace BlazorVirtualGridComponent.classes
 
         public double CheckBoxZoom { get; set; } = 1.5;
 
-        public BvgStyleScroll VerticalScrollStyle { get; set; } = new BvgStyleScroll();
-        public BvgStyleScroll HorizontalScrollStyle { get; set; } = new BvgStyleScroll();
+        public BvgScrollStyle VerticalScrollStyle { get; set; } = new BvgScrollStyle();
+        public BvgScrollStyle HorizontalScrollStyle { get; set; } = new BvgScrollStyle();
 
         public BSortStyle bSortStyle { get; set; } = new BSortStyle();
 

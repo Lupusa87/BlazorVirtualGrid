@@ -54,7 +54,7 @@ namespace BlazorVirtualGridComponent
         {
             //BlazorWindowHelper.BlazorTimeAnalyzer.LogAllAdd = true;
             FirstLoad = true;
-            ActualRender = false;
+            ActualRender = true;
 
       LastVerticalSkip = -1;
 
@@ -327,9 +327,6 @@ namespace BlazorVirtualGridComponent
 
         public void Timer1Callback(object o)
         {
-
-            Console.WriteLine("A1");
-
             GetActualWidthAndHeight();
             timer1.Dispose();
         }

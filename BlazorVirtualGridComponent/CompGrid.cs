@@ -83,7 +83,7 @@ namespace BlazorVirtualGridComponent
             
             if (bvgGrid.Columns.Count() == 0)
             {
-                Console.WriteLine("Columns list is empty! CompGrid.RenderTable");
+                //Console.WriteLine("Columns list is empty! CompGrid.RenderTable");
                 return;
             }
           

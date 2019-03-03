@@ -15,7 +15,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public int PaddingVertical { get; set; } 
 
-        public string SortedDirectionColor { get; set; } = "red";
+        public string SortedDirectionColor { get; set; } = "#FF0000";
 
         public string UnSortedDirectionColor { get; set; } = "none";
 

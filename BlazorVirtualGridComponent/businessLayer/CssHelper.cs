@@ -83,7 +83,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
             BCssItem _ColumnSpan = new BCssItem(".ColumnSpan");
             _ColumnSpan.Values.Add("text-align", "center");
-            _ColumnSpan.Values.Add("color", "blue");
+            _ColumnSpan.Values.Add("color", bvgSettings.HeaderStyle.ForeColor);
             _ColumnSpan.Values.Add("height", bvgSettings.HeaderHeight + "px");
             blazorCSS.Children.Add(_ColumnSpan);
 

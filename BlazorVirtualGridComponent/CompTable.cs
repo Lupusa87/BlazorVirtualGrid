@@ -25,7 +25,7 @@ namespace BlazorVirtualGridComponent
 
         protected override void OnParametersSet()
         {
-            Console.WriteLine("A2");
+
             EnabledRender = true;
 
             base.OnParametersSet();

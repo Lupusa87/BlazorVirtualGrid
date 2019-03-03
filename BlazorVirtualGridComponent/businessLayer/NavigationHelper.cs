@@ -13,7 +13,7 @@ namespace BlazorVirtualGridComponent.businessLayer
         {
             double result = 0;
 
-            Console.WriteLine("ColName=" + ColName);
+            //Console.WriteLine("ColName=" + ColName);
 
             int b = 0;
             if (!AlignLeftOrRight)
@@ -28,9 +28,9 @@ namespace BlazorVirtualGridComponent.businessLayer
             int index = _bvgGrid.ColumnsOrderedList.ToList().IndexOf(a)-b+1;
 
 
-            Console.WriteLine("Col width=" + a.ColWidth);
-            Console.WriteLine("index=" + index);
-            Console.WriteLine("ColumnsCount=" + _bvgGrid.DisplayedColumnsCount);
+            //Console.WriteLine("Col width=" + a.ColWidth);
+            //Console.WriteLine("index=" + index);
+            //Console.WriteLine("ColumnsCount=" + _bvgGrid.DisplayedColumnsCount);
             if (AlignLeftOrRight)
             {
                 result = _bvgGrid.NonFrozenColwidthSumsByElement[index] - a.ColWidth;
@@ -39,7 +39,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             {
                 result = _bvgGrid.NonFrozenColwidthSumsByElement[index] - a.ColWidth;
             }
-            Console.WriteLine("result=" + result);
+            //Console.WriteLine("result=" + result);
 
             return result;
         }

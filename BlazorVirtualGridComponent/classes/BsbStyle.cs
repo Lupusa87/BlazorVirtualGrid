@@ -5,12 +5,12 @@ using System.Text;
 namespace BlazorVirtualGridComponent.classes
 {
 
-    public class BvgStyleScroll
+    public class BvgScrollStyle
     {
-        public string ButtonColor { get; set; } = "red";
+        public string ButtonColor { get; set; } = "#FF0000";
 
-        public string ThumbColor { get; set; } = "gray";
+        public string ThumbColor { get; set; } = "#808080";
 
-        public string ThumbWayColor { get; set; } = "silver";
+        public string ThumbWayColor { get; set; } = "#C0C0C0";
     }
 }
