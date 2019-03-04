@@ -15,6 +15,14 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
+        public enum ModalForm
+        {
+            ColumnsManager,
+            StyleDesigner,
+            FilterManager,
+        }
+
+
         public enum CellStyle
         {
             CellNonFrozen,

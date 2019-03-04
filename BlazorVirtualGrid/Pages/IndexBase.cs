@@ -258,6 +258,19 @@ namespace BlazorVirtualGrid.Pages
             }
         }
 
+
+
+        public void CmdShowColumnsManager()
+        {
+            CurrBVG1.ShowColumnsManager();
+        }
+
+
+        public void CmdShowStyleDesigner()
+        {
+            CurrBVG1.ShowStyleDesigner();
+        }
+
         public class MyItem
         {
             public ushort ID { get; set; }

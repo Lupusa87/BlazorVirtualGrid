@@ -33,11 +33,20 @@ namespace BlazorVirtualGridComponent
 
         protected override bool ShouldRender()
         {
+           
+            //if (bvgGrid.bvgModal.IsDisplayed)
+            //{
+            //    return false;
+            //}
+
             return EnabledRender;
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+
+            Console.WriteLine("BuildRenderTree table");
+
             base.BuildRenderTree(builder);
 
           

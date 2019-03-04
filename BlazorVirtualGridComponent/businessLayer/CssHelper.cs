@@ -38,6 +38,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
         public void GenerateCSS()
         {
+            GenerateModalCSS();
 
             BCssItem _TD = new BCssItem("td");
             _TD.Values.Add("margin", "0px");
@@ -213,5 +214,74 @@ namespace BlazorVirtualGridComponent.businessLayer
             blazorCSS.Children.Add(_HeaderActive);
 
         }
-    }
+
+        private void GenerateModalCSS()
+        {
+
+            BCssItem c = new BCssItem(".bm-container");
+            c.Values.Add("display", "none");
+            c.Values.Add("align-items", "center");
+            c.Values.Add("justify-content", "center");
+            c.Values.Add("position", "fixed");
+            c.Values.Add("top", "0");
+            c.Values.Add("left", "0");
+            c.Values.Add("width", "100%");
+            c.Values.Add("height", "100%");
+            c.Values.Add("z-index", "2");
+            blazorCSS.Children.Add(c);
+
+
+            c = new BCssItem(".bm-overlay");
+            c.Values.Add("display", "block");
+            c.Values.Add("position", "fixed");
+            c.Values.Add("width", "100%");
+            c.Values.Add("height", "100%");
+            c.Values.Add("z-index", "3");
+            c.Values.Add("background-color", "rgba(0,0,0,0.5)");
+            blazorCSS.Children.Add(c);
+
+
+            c = new BCssItem(".bm-active");
+            c.Values.Add("display", "flex");
+            blazorCSS.Children.Add(c);
+
+
+            c = new BCssItem(".blazor-modal");
+            c.Values.Add("display", "flex");
+            c.Values.Add("flex-direction", "column");
+            c.Values.Add("width", "70rem");
+            c.Values.Add("background-color", "#fff");
+            c.Values.Add("border-radius", "4px");
+            c.Values.Add("border", "1px solid #fff");
+            c.Values.Add("padding", "1.5rem");
+            c.Values.Add("z-index", "3");
+            blazorCSS.Children.Add(c);
+
+
+            c = new BCssItem(".bm-header");
+            c.Values.Add("display", "flex");
+            c.Values.Add("align-items", "flex-start");
+            c.Values.Add("justify-content", "space-between");
+            c.Values.Add("padding", "0 0 2rem 0");
+            blazorCSS.Children.Add(c);
+
+
+            c = new BCssItem(".bm-title");
+            c.Values.Add("margin-bottom", "0");
+            blazorCSS.Children.Add(c);
+
+
+            c = new BCssItem(".bm-close");
+            c.Values.Add("padding", "1rem");
+            c.Values.Add("margin", "-1rem -1rem -1rem auto");
+            c.Values.Add("background-color", "transparent");
+            c.Values.Add("border", "0");
+            c.Values.Add("-webkit-appearance", "none");
+            c.Values.Add("cursor", "pointer");
+            blazorCSS.Children.Add(c);
+         
+
+        }
+
+        }
 }

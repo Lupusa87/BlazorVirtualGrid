@@ -1,0 +1,36 @@
+﻿@inherits CompModalBase
+
+<div class="bm-container @(bvgModal.IsDisplayed ? "bm-active" : string.Empty)">
+
+    <div class="bm-overlay" onclick="@CloseModal"></div>
+
+    <div class="blazor-modal">
+        <div class="bm-header">
+            <h3 class="bm-title">@Title</h3>
+            <button type="button" class="bm-close" onclick="@CloseModal">
+                <span>&times;</span>
+            </button>
+        </div>
+        <div class="bm-content">
+            <div class="bm-content">
+
+                @switch (bvgModal.modalForm)
+                {
+                    case classes.BvgEnums.ModalForm.ColumnsManager:
+                        <CompColumnsManager bvgGrid="@bvgModal.bvgGrid"></CompColumnsManager>
+                        break;
+                    case classes.BvgEnums.ModalForm.StyleDesigner:
+                        <CompStyleDesigner bvgGrid="@bvgModal.bvgGrid"></CompStyleDesigner>
+                        break;
+                    case classes.BvgEnums.ModalForm.FilterManager:
+                        break;
+                    default:
+                        break;
+                }
+
+
+            </div>
+        </div>
+    </div>
+
+</div>

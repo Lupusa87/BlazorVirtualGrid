@@ -42,7 +42,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public Action<double> OnHorizontalScroll { get; set; }
 
-     
+        public BvgModal bvgModal { get; set; } = new BvgModal();
 
         public BvgRow[] Rows { get; set; } = new BvgRow[0];
         public BvgColumn[] Columns { get; set; } = new BvgColumn[0];
@@ -415,6 +415,8 @@ namespace BlazorVirtualGridComponent.classes
 
             bvgAreaColumnsFrozen.bvgGrid = this;
             bvgAreaColumnsNonFrozen.bvgGrid = this;
+
+           
         }
 
         public void UpdateNonFrozenColwidthSumsByElement()

@@ -1,7 +1,7 @@
 ﻿
 @typeparam TItem
 
-@inherits CompBlazorVirtualGrid_Logic<TItem>
+@inherits CompBlazorVirtualGridBase<TItem>
 
 
 
@@ -9,14 +9,16 @@
 <CompCSS bvgGrid="@bvgGrid"></CompCSS>
 
 
+<CompModal bvgModal="@bvgGrid.bvgModal"></CompModal>
+
 
 @if (bvgGrid.IsReady)
 {
 
-    <h5>@bvgGrid.Name Count @bvgGrid.RowsTotalCount</h5>
+        <h5>@bvgGrid.Name Count @bvgGrid.RowsTotalCount</h5>
 
-
-    <CompTable bvgGrid="@bvgGrid" ActualRender="@ActualRender" ></CompTable>
+        <CompTable bvgGrid="@bvgGrid" ActualRender="@ActualRender"></CompTable>
+  
 }
 else
 {

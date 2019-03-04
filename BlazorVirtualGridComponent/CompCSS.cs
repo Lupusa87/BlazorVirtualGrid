@@ -17,8 +17,7 @@ namespace BlazorVirtualGridComponent
 
         bool EnabledRender = true;
 
-        BCss blazorCSS = new BCss();
-
+       
 
         protected override Task OnParametersSetAsync()
         {
@@ -43,9 +42,10 @@ namespace BlazorVirtualGridComponent
 
             int k = 0;
 
+         
             // builder.AddMarkupContent(k++,"<style>.my {color:red}");
 
-
+         
             CssHelper cssHelper = new CssHelper(bvgGrid.bvgSettings);
 
             builder.OpenElement(k++, "style");
@@ -53,7 +53,7 @@ namespace BlazorVirtualGridComponent
             builder.CloseElement();
 
 
-            cssHelper = null;
+     
 
             //builder.OpenElement(k++, "link");
             //builder.AddAttribute(k++, "rel", "stylesheet");

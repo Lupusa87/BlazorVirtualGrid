@@ -7,10 +7,11 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompBlazorVirtualGrid_Logic<TItem> : ComponentBase
+    public class CompBlazorVirtualGridBase<TItem> : ComponentBase
     {
 
         [Parameter]
@@ -52,26 +53,44 @@ namespace BlazorVirtualGridComponent
 
         protected override void OnParametersSet()
         {
+            Console.WriteLine("OnParametersSet");
+            if (bvgGrid != null)
+            {
+                if (bvgGrid.bvgModal.IsDisplayed)
+                {
+                    return;
+                }
+
+                Console.WriteLine(bvgGrid.bvgSettings.CheckBoxZoom);
+            }
+
+
+           
+
             //BlazorWindowHelper.BlazorTimeAnalyzer.LogAllAdd = true;
             FirstLoad = true;
             ActualRender = true;
 
-      LastVerticalSkip = -1;
+            LastVerticalSkip = -1;
 
-        LastHorizontalSkip = -1;
+            LastHorizontalSkip = -1;
 
-        LastHorizontalScrollPosition = 0;
+            LastHorizontalScrollPosition = 0;
 
-        bvgGrid = new BvgGrid
+
+
+
+            bvgGrid = new BvgGrid
             {
                 IsReady = true,
                 Name = TableName,
                 RowsTotalCount = SourceList.Count(),
                 bvgSettings = bvgSettings,
                 AllProps = typeof(TItem).GetProperties(BindingFlags.Public | BindingFlags.Instance),
-               
-           };
 
+            };
+
+            bvgGrid.bvgModal.bvgGrid = bvgGrid;
 
 
             bvgGrid.ColumnsOrderedList = ColumnsHelper.GetColumnsOrderedList(bvgGrid);
@@ -389,7 +408,15 @@ namespace BlazorVirtualGridComponent
         }
 
 
+        public void ShowColumnsManager()
+        {
+            bvgGrid.bvgModal.Show(ModalForm.ColumnsManager);
+        }
 
-       
+        public void ShowStyleDesigner()
+        {
+            bvgGrid.bvgModal.Show(ModalForm.StyleDesigner);
+        }
+
     }
 }
