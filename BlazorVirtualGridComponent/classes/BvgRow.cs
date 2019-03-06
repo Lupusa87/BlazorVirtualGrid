@@ -8,20 +8,20 @@ using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgRow
+    public class BvgRow<TItem>
     {
         public Action PropertyChanged { get; set; }
 
         public ushort ID { get; set; }
 
-        public BvgCell[] Cells { get; set; } = new BvgCell[0];
+        public BvgCell<TItem>[] Cells { get; set; } = new BvgCell<TItem>[0];
 
         public bool IsSelected { get; set; }
 
         public bool IsEven { get; set; }
 
 
-        public BvgGrid bvgGrid { get; set; } = new BvgGrid();
+        public BvgGrid<TItem> bvgGrid { get; set; } = new BvgGrid<TItem>();
 
 
         public List<string> Cmd_Clear_Selection()

@@ -1,4 +1,5 @@
 ﻿using BlazorScrollbarComponent.classes;
+using BlazorVirtualGridComponent.classes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,13 +8,13 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace BlazorVirtualGridComponent.classes
+namespace BlazorVirtualGridComponent.ExternalSettings
 {
 
-    public class BvgSettings : INotifyPropertyChanged
+    public class BvgSettings<TItem>
     {
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public Action PropertyChanged;
 
         public string ConfigurationName { get; set; } = "config 1";
 
@@ -66,19 +67,19 @@ namespace BlazorVirtualGridComponent.classes
 
         public Tuple<bool, string, bool> SortedColumn = Tuple.Create(false,string.Empty, false);
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        //protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        //{
+        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
 
 
 
-        public void Invoke_PropertyChanged_For_All()
-        {
-            foreach (PropertyInfo item in this.GetType().GetProperties())
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(item.Name));
-            }
-        }
+        //public void Invoke_PropertyChanged_For_All()
+        //{
+        //    foreach (PropertyInfo item in this.GetType().GetProperties())
+        //    {
+        //        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(item.Name));
+        //    }
+        //}
     }
 }

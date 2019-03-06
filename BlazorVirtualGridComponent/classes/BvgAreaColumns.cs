@@ -7,12 +7,12 @@ using System.Text;
 namespace BlazorVirtualGridComponent.classes
 {
 
-    public class BvgAreaColumns 
+    public class BvgAreaColumns<TItem>
     {
         public Action PropertyChanged;
 
 
-        public BvgGrid bvgGrid { get; set; }
+        public BvgGrid<TItem> bvgGrid { get; set; }
 
       
 

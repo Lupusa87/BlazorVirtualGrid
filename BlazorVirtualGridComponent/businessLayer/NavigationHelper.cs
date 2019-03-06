@@ -6,15 +6,14 @@ using System.Text;
 
 namespace BlazorVirtualGridComponent.businessLayer
 {
-    public static class NavigationHelper
+    public static class NavigationHelper<TItem>
     {
 
-        public static double GetScrollPositionForColumn(string ColName, bool AlignLeftOrRight, BvgGrid _bvgGrid)
+        public static double GetScrollPositionForColumn(string ColName, bool AlignLeftOrRight, BvgGrid<TItem> _bvgGrid)
         {
             double result = 0;
 
-            //Console.WriteLine("ColName=" + ColName);
-
+      
             int b = 0;
             if (!AlignLeftOrRight)
             {
@@ -28,9 +27,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             int index = _bvgGrid.ColumnsOrderedList.ToList().IndexOf(a)-b+1;
 
 
-            //Console.WriteLine("Col width=" + a.ColWidth);
-            //Console.WriteLine("index=" + index);
-            //Console.WriteLine("ColumnsCount=" + _bvgGrid.DisplayedColumnsCount);
+
             if (AlignLeftOrRight)
             {
                 result = _bvgGrid.NonFrozenColwidthSumsByElement[index] - a.ColWidth;
@@ -39,7 +36,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             {
                 result = _bvgGrid.NonFrozenColwidthSumsByElement[index] - a.ColWidth;
             }
-            //Console.WriteLine("result=" + result);
+          
 
             return result;
         }

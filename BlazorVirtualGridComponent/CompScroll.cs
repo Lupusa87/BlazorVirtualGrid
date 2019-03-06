@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompScroll : ComponentBase, IDisposable
+    public class CompScroll<TItem> : ComponentBase, IDisposable
     {
       
 
         [Parameter]
-        protected BvgScroll bvgScroll { get; set; }
+        protected BvgScroll<TItem> bvgScroll { get; set; }
 
         //bool EnabledRender = true;
 

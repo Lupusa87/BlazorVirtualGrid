@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgAreaRows 
+    public class BvgAreaRows<TItem>
     {
         public Action PropertyChanged;
 
 
-        public BvgGrid bvgGrid { get; set; }
+        public BvgGrid<TItem> bvgGrid { get; set; }
 
 
 

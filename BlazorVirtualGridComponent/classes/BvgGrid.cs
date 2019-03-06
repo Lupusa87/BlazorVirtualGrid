@@ -1,6 +1,7 @@
 ﻿using BlazorScrollbarComponent.classes;
 using BlazorSplitterComponent;
 using BlazorVirtualGridComponent.businessLayer;
+using BlazorVirtualGridComponent.ExternalSettings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +14,7 @@ using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgGrid 
+    public class BvgGrid<TItem> 
     {
         public Action PropertyChanged;
 
@@ -42,27 +43,27 @@ namespace BlazorVirtualGridComponent.classes
 
         public Action<double> OnHorizontalScroll { get; set; }
 
-        public BvgModal bvgModal { get; set; } = new BvgModal();
+        public BvgModal<TItem> bvgModal { get; set; } = new BvgModal<TItem>();
 
-        public BvgRow[] Rows { get; set; } = new BvgRow[0];
-        public BvgColumn[] Columns { get; set; } = new BvgColumn[0];
+        public BvgRow<TItem>[] Rows { get; set; } = new BvgRow<TItem>[0];
+        public BvgColumn<TItem>[] Columns { get; set; } = new BvgColumn<TItem>[0];
 
         public int RowsTotalCount { get; set; }
 
-        public CompGrid compGrid { get; set; }
+        public CompGrid<TItem> compGrid { get; set; }
+        public CompBlazorVirtualGrid<TItem> compBlazorVirtualGrid { get; set; }
 
-        
-        public BvgCell ActiveCell;
-        public BvgRow ActiveRow;
-        public BvgColumn ActiveColumn;
+        public BvgCell<TItem> ActiveCell;
+        public BvgRow<TItem> ActiveRow;
+        public BvgColumn<TItem> ActiveColumn;
 
 
         public Tuple<bool, string, bool> SortState;
 
-        public BvgSettings bvgSettings { get; set; }
+        public BvgSettings<TItem> bvgSettings { get; set; }
 
-        public BvgScroll VericalScroll { get; set; } = null;
-        public BvgScroll HorizontalScroll { get; set; } = null;
+        public BvgScroll<TItem> VericalScroll { get; set; } = null;
+        public BvgScroll<TItem> HorizontalScroll { get; set; } = null;
 
 
         public double totalWidth { get; set; } = 500;
@@ -78,11 +79,11 @@ namespace BlazorVirtualGridComponent.classes
         public double CurrVerticalScrollPosition { get; set; } = 0;
         public double CurrHorizontalScrollPosition { get; set; } = 0;
 
-        public BvgAreaRows bvgAreaRowsFrozen { get; set; } = new BvgAreaRows();
-        public BvgAreaRows bvgAreaRowsNonFrozen { get; set; } = new BvgAreaRows();
+        public BvgAreaRows<TItem> bvgAreaRowsFrozen { get; set; } = new BvgAreaRows<TItem>();
+        public BvgAreaRows<TItem> bvgAreaRowsNonFrozen { get; set; } = new BvgAreaRows<TItem>();
 
-        public BvgAreaColumns bvgAreaColumnsFrozen { get; set; } = new BvgAreaColumns();
-        public BvgAreaColumns bvgAreaColumnsNonFrozen { get; set; } = new BvgAreaColumns();
+        public BvgAreaColumns<TItem> bvgAreaColumnsFrozen { get; set; } = new BvgAreaColumns<TItem>();
+        public BvgAreaColumns<TItem> bvgAreaColumnsNonFrozen { get; set; } = new BvgAreaColumns<TItem>();
 
 
         public double RowHeightOriginal { get; set; }
@@ -122,7 +123,7 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
-        public void SelectCell(BvgCell parCell, bool doFocus)
+        public void SelectCell(BvgCell<TItem> parCell, bool doFocus)
         {
             ActiveCell = parCell;
             ActiveRow = parCell.bvgRow;
@@ -186,7 +187,7 @@ namespace BlazorVirtualGridComponent.classes
             foreach (var item in Rows)
             {
 
-                BvgCell c = item.Cells.Single(x => x.bvgColumn.ID == ActiveColumn.ID);
+                BvgCell<TItem> c = item.Cells.Single(x => x.bvgColumn.ID == ActiveColumn.ID);
 
                 c.IsSelected = true;
                 c.CssClass = CellStyle.CellSelected.ToString();
@@ -204,7 +205,7 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
-        public void SortColumn(BvgColumn parColumn)
+        public void SortColumn(BvgColumn<TItem> parColumn)
         {
 
             
@@ -364,7 +365,7 @@ namespace BlazorVirtualGridComponent.classes
             bvgSettings.RowHeight = (height - bvgSettings.HeaderHeight) / DisplayedRowsCount;
 
 
-            VericalScroll = new BvgScroll
+            VericalScroll = new BvgScroll<TItem>
             {
                 bvgGrid = this,
                 bsbSettings = new BsbSettings("VericalScroll")
@@ -385,7 +386,7 @@ namespace BlazorVirtualGridComponent.classes
             VericalScroll.ID = VericalScroll.bsbSettings.ID;
             VericalScroll.bsbSettings.initialize();
 
-            HorizontalScroll = new BvgScroll
+            HorizontalScroll = new BvgScroll<TItem>
             {
                 bvgGrid = this,
                 bsbSettings = new BsbSettings("HorizontalScroll")

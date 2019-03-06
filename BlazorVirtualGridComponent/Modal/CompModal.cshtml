@@ -1,4 +1,6 @@
-﻿@inherits CompModalBase
+﻿@typeparam TItem
+
+@inherits CompModalBase<TItem>
 
 <div class="bm-container @(bvgModal.IsDisplayed ? "bm-active" : string.Empty)">
 
@@ -17,7 +19,7 @@
                 @switch (bvgModal.modalForm)
                 {
                     case classes.BvgEnums.ModalForm.ColumnsManager:
-                        <CompColumnsManager bvgGrid="@bvgModal.bvgGrid"></CompColumnsManager>
+                        <CompColumnsManager ref="compColumnsManager" bvgGrid="@bvgModal.bvgGrid"></CompColumnsManager>
                         break;
                     case classes.BvgEnums.ModalForm.StyleDesigner:
                         <CompStyleDesigner bvgGrid="@bvgModal.bvgGrid"></CompStyleDesigner>

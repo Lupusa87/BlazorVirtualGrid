@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompRow : ComponentBase, IDisposable
+    public class CompRow<TItem> : ComponentBase, IDisposable
     {
        
         [Parameter]
-        protected BvgRow bvgRow { get; set; }
+        protected BvgRow<TItem> bvgRow { get; set; }
 
 
         [Parameter]
@@ -58,7 +58,7 @@ namespace BlazorVirtualGridComponent
 
             foreach (var cell in bvgRow.Cells.Where(x=>x.bvgColumn.IsFrozen == ForFrozen).OrderBy(x=>x.bvgColumn.SequenceNumber))
             {
-                builder.OpenComponent<CompCell>(k++);
+                builder.OpenComponent<CompCell<TItem>>(k++);
                 builder.AddAttribute(k++, "bvgCell", cell);
                 builder.CloseComponent();
             }

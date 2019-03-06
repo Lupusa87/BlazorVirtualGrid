@@ -5,10 +5,10 @@ using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgModal
+    public class BvgModal<TItem>
     {
 
-        public BvgGrid bvgGrid { get; set; }
+        public BvgGrid<TItem> bvgGrid { get; set; }
 
         public bool IsDisplayed { get; set; } = false;
         public ModalForm modalForm { get; set; } 

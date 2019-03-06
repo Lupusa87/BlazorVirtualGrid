@@ -10,10 +10,10 @@ namespace BlazorVirtualGridComponent
 {
 
 
-    public class CompGrid : ComponentBase, IDisposable
+    public class CompGrid<TItem> : ComponentBase, IDisposable
     {
         [Parameter]
-        protected BvgGrid bvgGrid { get; set; }
+        protected BvgGrid<TItem> bvgGrid { get; set; }
 
         //bool EnabledRender = true;
 
@@ -69,7 +69,11 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             //EnabledRender = false;
-  
+
+
+           
+
+
             base.BuildRenderTree(builder);
 
             Cmd_RenderTable(builder);
@@ -80,10 +84,8 @@ namespace BlazorVirtualGridComponent
         protected void Cmd_RenderTable(RenderTreeBuilder builder)
         {
 
-            
             if (bvgGrid.Columns.Count() == 0)
             {
-                //Console.WriteLine("Columns list is empty! CompGrid.RenderTable");
                 return;
             }
           
@@ -118,7 +120,7 @@ namespace BlazorVirtualGridComponent
                 builder.OpenElement(k++, "tr");
 
 
-                builder.OpenComponent<CompAreaColumns>(k++);
+                builder.OpenComponent<CompAreaColumns<TItem>>(k++);
                 builder.AddAttribute(k++, "ForFrozen", true);
                 builder.AddAttribute(k++, "bvgAreaColumns", bvgGrid.bvgAreaColumnsFrozen);
                 builder.CloseComponent();
@@ -130,7 +132,7 @@ namespace BlazorVirtualGridComponent
 
                 builder.OpenElement(k++, "tbody");
 
-                builder.OpenComponent<CompAreaRows>(k++);
+                builder.OpenComponent<CompAreaRows<TItem>>(k++);
                 builder.AddAttribute(k++, "ForFrozen", true);
                 builder.AddAttribute(k++, "bvgAreaRows", bvgGrid.bvgAreaRowsFrozen);
                 builder.CloseComponent();
@@ -169,7 +171,7 @@ namespace BlazorVirtualGridComponent
             builder.OpenElement(k++, "tr");
 
 
-            builder.OpenComponent<CompAreaColumns>(k++);
+            builder.OpenComponent<CompAreaColumns<TItem>>(k++);
             builder.AddAttribute(k++, "ForFrozen", false);
             builder.AddAttribute(k++, "bvgAreaColumns", bvgGrid.bvgAreaColumnsNonFrozen);
             builder.CloseComponent();
@@ -180,7 +182,7 @@ namespace BlazorVirtualGridComponent
 
             builder.OpenElement(k++, "tbody");
 
-            builder.OpenComponent<CompAreaRows>(k++);
+            builder.OpenComponent<CompAreaRows<TItem>>(k++);
             builder.AddAttribute(k++, "ForFrozen", false);
             builder.AddAttribute(k++, "bvgAreaRows", bvgGrid.bvgAreaRowsNonFrozen);
             builder.CloseComponent();
@@ -198,7 +200,7 @@ namespace BlazorVirtualGridComponent
             builder.OpenElement(k++, "td");
             builder.AddAttribute(k++, "style", "padding-top:4px");
 
-            builder.OpenComponent<CompScroll>(k++);
+            builder.OpenComponent<CompScroll<TItem>>(k++);
             builder.AddAttribute(k++, "bvgScroll", bvgGrid.VericalScroll);
 
 
@@ -223,7 +225,7 @@ namespace BlazorVirtualGridComponent
            
 
              
-            builder.OpenComponent<CompScroll>(k++);
+            builder.OpenComponent<CompScroll<TItem>>(k++);
             builder.AddAttribute(k++, "bvgScroll", bvgGrid.HorizontalScroll);
             builder.CloseComponent();
             

@@ -9,7 +9,7 @@ using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgCell
+    public class BvgCell<TItem>
     {
 
         public Action PropertyChanged;
@@ -19,10 +19,10 @@ namespace BlazorVirtualGridComponent.classes
 
         public string Value { get; set; }
 
-        public BvgColumn bvgColumn { get; set; } = new BvgColumn();
-        public BvgRow bvgRow { get; set; } = new BvgRow();
+        public BvgColumn<TItem> bvgColumn { get; set; } = new BvgColumn<TItem>();
+        public BvgRow<TItem> bvgRow { get; set; } = new BvgRow<TItem>();
 
-        public BvgGrid bvgGrid { get; set; } = new BvgGrid();
+        public BvgGrid<TItem> bvgGrid { get; set; } = new BvgGrid<TItem>();
 
         public bool IsSelected { get; set; }
 

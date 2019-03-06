@@ -7,9 +7,9 @@ using System.Text;
 
 namespace BlazorVirtualGridComponent.businessLayer
 {
-    public static class ColumnsHelper
+    public static class ColumnsHelper<TItem>
     {
-        public static ColProp[] GetColumnsOrderedList(BvgGrid bvgGrid)
+        public static ColProp[] GetColumnsOrderedList(BvgGrid<TItem> bvgGrid)
         {
             int ColsCount = bvgGrid.AllProps.Count() - bvgGrid.bvgSettings.HiddenColumns.Count();
 
@@ -30,10 +30,16 @@ namespace BlazorVirtualGridComponent.businessLayer
             }
           
 
+            
+
             bool HasFrozenColumns = bvgGrid.bvgSettings.FrozenColumnsListOrdered.Count() > 0;
+
+          
             bool HasNonFrozenColumnsOrdered = bvgGrid.bvgSettings.NonFrozenColumnsListOrdered.Count() > 0;
             if (!HasFrozenColumns && !HasNonFrozenColumnsOrdered)
             {
+              
+                j = 0;
                 foreach (var item in AllPropsWithoutHidden)
                 {
                     result[j] = new ColProp()
@@ -41,10 +47,12 @@ namespace BlazorVirtualGridComponent.businessLayer
                         prop = item,
                         IsFrozen = false,
                     };
+                    j++;
                 }
             }
             else
-            { 
+            {
+               
                 List<OrderItem> list1 = new List<OrderItem>();
    
                 foreach (var item in AllPropsWithoutHidden)
@@ -61,6 +69,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
                 if (HasFrozenColumns && !HasNonFrozenColumnsOrdered)
                 {
+                  
                     ushort k = 0;
                     foreach (var item in bvgGrid.bvgSettings.FrozenColumnsListOrdered.Values)
                     {
@@ -77,6 +86,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                 }
                 if (!HasFrozenColumns && HasNonFrozenColumnsOrdered)
                 {
+                
                     ushort k = 0;
                     foreach (var item in bvgGrid.bvgSettings.NonFrozenColumnsListOrdered.Values)
                     {
@@ -91,6 +101,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                 }
                 if (HasFrozenColumns && HasNonFrozenColumnsOrdered)
                 {
+                   
                     ushort k = 0;
                     foreach (var item in bvgGrid.bvgSettings.NonFrozenColumnsListOrdered.Values)
                     {
@@ -118,7 +129,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                     result = list1.OrderBy(x => x.SequenceNumber).Select(x => new ColProp { prop = x.prop, IsFrozen = x.IsFrozen }).ToArray();
                 }
             }
-
+            
 
             #region SetColWidths and seqNumber
             ushort seqN = 0;
@@ -147,6 +158,9 @@ namespace BlazorVirtualGridComponent.businessLayer
                 }
             }
             #endregion
+
+
+          
 
             return result;
         }

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompAreaRows : ComponentBase, IDisposable
+    public class CompAreaRows<TItem> : ComponentBase, IDisposable
     {
 
         [Parameter]
-        protected BvgAreaRows bvgAreaRows { get; set; }
+        protected BvgAreaRows<TItem> bvgAreaRows { get; set; }
 
         [Parameter]
         protected bool ForFrozen { get; set; }
@@ -78,7 +78,7 @@ namespace BlazorVirtualGridComponent
 
             foreach (var r in bvgAreaRows.bvgGrid.Rows)
             {
-                builder.OpenComponent<CompRow>(k++);
+                builder.OpenComponent<CompRow<TItem>>(k++);
                 builder.AddAttribute(k++, "ForFrozen", ForFrozen);
                 builder.AddAttribute(k++, "bvgRow", r);
                 builder.CloseComponent();

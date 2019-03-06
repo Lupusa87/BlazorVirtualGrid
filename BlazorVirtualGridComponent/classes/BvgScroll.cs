@@ -9,14 +9,14 @@ using System.Text;
 namespace BlazorVirtualGridComponent.classes
 {
 
-    public class BvgScroll 
+    public class BvgScroll<TItem>
     {
         public Action PropertyChanged;
 
         public string ID { get; set; }
 
 
-        public BvgGrid bvgGrid { get; set; } = new BvgGrid();
+        public BvgGrid<TItem> bvgGrid { get; set; } = new BvgGrid<TItem>();
 
 
         public BsbSettings bsbSettings { get; set; } = new BsbSettings();

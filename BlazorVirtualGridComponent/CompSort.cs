@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompSort:ComponentBase 
+    public class CompSort<TItem> : ComponentBase 
     {
         [Parameter]
-        protected BvgColumn bvgColumn { get; set; }
+        protected BvgColumn<TItem> bvgColumn { get; set; }
 
 
         [Parameter]

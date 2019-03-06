@@ -1,5 +1,6 @@
 ﻿using BlazorVirtualGridComponent.businessLayer;
 using BlazorVirtualGridComponent.classes;
+using BlazorVirtualGridComponent.ExternalSettings;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -21,13 +22,13 @@ namespace BlazorVirtualGridComponent
         protected string TableName { get; set; }
 
         [Parameter]
-        protected BvgSettings bvgSettings { get; set; } = new BvgSettings();
+        protected BvgSettings<TItem> bvgSettings { get; set; } = new BvgSettings<TItem>();
 
 
         protected TItem[] SortedRowsList { get; set; }
         protected TItem[] SortedRowsListActual { get; set; }
 
-        public BvgGrid bvgGrid { get; set; }
+        public BvgGrid<TItem> bvgGrid { get; set; }
 
 
         public bool ActualRender { get; set; } = false;
@@ -53,21 +54,29 @@ namespace BlazorVirtualGridComponent
 
         protected override void OnParametersSet()
         {
-            Console.WriteLine("OnParametersSet");
+  
             if (bvgGrid != null)
             {
                 if (bvgGrid.bvgModal.IsDisplayed)
                 {
                     return;
                 }
-
-                Console.WriteLine(bvgGrid.bvgSettings.CheckBoxZoom);
             }
 
 
-           
-
             //BlazorWindowHelper.BlazorTimeAnalyzer.LogAllAdd = true;
+
+
+            Reset();
+
+
+
+          
+            base.OnParametersSetAsync();
+        }
+
+        private void Reset()
+        {
             FirstLoad = true;
             ActualRender = true;
 
@@ -78,9 +87,7 @@ namespace BlazorVirtualGridComponent
             LastHorizontalScrollPosition = 0;
 
 
-
-
-            bvgGrid = new BvgGrid
+            bvgGrid = new BvgGrid<TItem>
             {
                 IsReady = true,
                 Name = TableName,
@@ -93,7 +100,7 @@ namespace BlazorVirtualGridComponent
             bvgGrid.bvgModal.bvgGrid = bvgGrid;
 
 
-            bvgGrid.ColumnsOrderedList = ColumnsHelper.GetColumnsOrderedList(bvgGrid);
+            bvgGrid.ColumnsOrderedList = ColumnsHelper<TItem>.GetColumnsOrderedList(bvgGrid);
             bvgGrid.ColumnsOrderedListFrozen = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen).ToArray();
             bvgGrid.ColumnsOrderedListNonFrozen = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen == false).ToArray();
 
@@ -121,18 +128,22 @@ namespace BlazorVirtualGridComponent
                 SortedRowsList = SourceList.ToArray();
             }
 
-            base.OnParametersSetAsync();
+
         }
-
-
 
         protected override void OnAfterRender()
         {
             base.OnAfterRender();
+
             if (FirstLoad)
             {
                 FirstLoad = false;
 
+
+                if (bvgGrid.compBlazorVirtualGrid == null)
+                {
+                    bvgGrid.compBlazorVirtualGrid = this as CompBlazorVirtualGrid<TItem>;
+                }
 
                 if (bvgGrid.OnSort == null)
                 {
@@ -205,7 +216,7 @@ namespace BlazorVirtualGridComponent
             //{
             //    BvgJsInterop.SetElementScrollLeft("NonFrozenDiv1", 10000);
 
-            //    Console.WriteLine(bvgGrid.ShouldSelectCell.Item1 + " " + bvgGrid.ShouldSelectCell.Item2);
+       
             //    bvgGrid.SelectCell(bvgGrid.Rows.Single(x=>x.ID == bvgGrid.ShouldSelectCell.Item1).Cells.Single(x=>x.bvgColumn.prop.Name.Equals(bvgGrid.ShouldSelectCell.Item2)), true);
             //    bvgGrid.ShouldSelectCell = null;
 
@@ -346,6 +357,7 @@ namespace BlazorVirtualGridComponent
 
         public void Timer1Callback(object o)
         {
+          
             GetActualWidthAndHeight();
             timer1.Dispose();
         }
@@ -393,8 +405,8 @@ namespace BlazorVirtualGridComponent
      
 
             StateHasChanged();
+            
 
-           
             //EnabledRender = false;
         }
 
@@ -402,9 +414,11 @@ namespace BlazorVirtualGridComponent
         public void Refresh()
         {
 
-            bvgGrid.InvokePropertyChanged();
-
+            Reset();
             StateHasChanged();
+
+          
+
         }
 
 

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompCSS : ComponentBase
+    public class CompCSS<TItem> : ComponentBase
     {
 
         [Parameter]
-        protected BvgGrid bvgGrid { get; set; }
+        protected BvgGrid<TItem> bvgGrid { get; set; }
 
         bool EnabledRender = true;
 
@@ -46,7 +46,7 @@ namespace BlazorVirtualGridComponent
             // builder.AddMarkupContent(k++,"<style>.my {color:red}");
 
          
-            CssHelper cssHelper = new CssHelper(bvgGrid.bvgSettings);
+            CssHelper<TItem> cssHelper = new CssHelper<TItem>(bvgGrid.bvgSettings);
 
             builder.OpenElement(k++, "style");
             builder.AddContent(k++, cssHelper.GetString());

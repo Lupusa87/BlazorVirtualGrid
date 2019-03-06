@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent.classes
 {
-    public class BvgColumn 
+    public class BvgColumn<TItem>
     {
         public Action PropertyChanged { get; set; }
 
@@ -33,7 +33,7 @@ namespace BlazorVirtualGridComponent.classes
         public ushort SequenceNumber { get; set; }
 
 
-        public BvgGrid bvgGrid { get; set; } = new BvgGrid();
+        public BvgGrid<TItem> bvgGrid { get; set; } = new BvgGrid<TItem>();
 
 
         public BsSettings bsSettings { get; set; } = new BsSettings();

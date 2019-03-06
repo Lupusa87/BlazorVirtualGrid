@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompColumn : ComponentBase, IDisposable
+    public class CompColumn<TItem> : ComponentBase, IDisposable
     {
 
 
 
         [Parameter]
-        protected BvgColumn bvgColumn { get; set; }
+        protected BvgColumn<TItem> bvgColumn { get; set; }
 
         //bool EnabledRender = true;
 
@@ -78,7 +78,7 @@ namespace BlazorVirtualGridComponent
             builder.CloseElement(); //span
 
 
-            builder.OpenComponent<CompSort>(k++);
+            builder.OpenComponent<CompSort<TItem>>(k++);
             builder.AddAttribute(k++, "bvgColumn", bvgColumn);
             builder.AddAttribute(k++, "IsNotHidden", bvgColumn.IsSorted);
             builder.CloseComponent();

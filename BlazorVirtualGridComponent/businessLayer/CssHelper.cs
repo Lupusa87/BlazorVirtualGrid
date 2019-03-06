@@ -1,4 +1,5 @@
 ﻿using BlazorVirtualGridComponent.classes;
+using BlazorVirtualGridComponent.ExternalSettings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,14 +7,14 @@ using System.Text;
 
 namespace BlazorVirtualGridComponent.businessLayer
 {
-    public class CssHelper
+    public class CssHelper<TItem>
     {
         private BCss blazorCSS = new BCss();
 
-        private BvgSettings bvgSettings = new BvgSettings();
+        private BvgSettings<TItem> bvgSettings = new BvgSettings<TItem>();
 
 
-        public CssHelper(BvgSettings _bvgSettings)
+        public CssHelper(BvgSettings<TItem> _bvgSettings)
         {
             bvgSettings = _bvgSettings;
             GenerateCSS();
@@ -249,7 +250,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             c = new BCssItem(".blazor-modal");
             c.Values.Add("display", "flex");
             c.Values.Add("flex-direction", "column");
-            c.Values.Add("width", "70rem");
+            c.Values.Add("width", "auto");
             c.Values.Add("background-color", "#fff");
             c.Values.Add("border-radius", "4px");
             c.Values.Add("border", "1px solid #fff");

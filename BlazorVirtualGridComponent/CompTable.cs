@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompTable : ComponentBase, IDisposable
+    public class CompTable<TItem> : ComponentBase, IDisposable
     {
         [Parameter]
-        protected BvgGrid bvgGrid { get; set; }
+        protected BvgGrid<TItem> bvgGrid { get; set; }
 
         [Parameter]
         protected bool ActualRender { get; set; }
@@ -45,7 +45,7 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
 
-            Console.WriteLine("BuildRenderTree table");
+ 
 
             base.BuildRenderTree(builder);
 
@@ -71,7 +71,7 @@ namespace BlazorVirtualGridComponent
 
                 if (ActualRender)
                 {
-                    builder.OpenComponent<CompGrid>(k++);
+                    builder.OpenComponent<CompGrid<TItem>>(k++);
                     builder.AddAttribute(k++, "bvgGrid", bvgGrid);
                     builder.CloseComponent();
 

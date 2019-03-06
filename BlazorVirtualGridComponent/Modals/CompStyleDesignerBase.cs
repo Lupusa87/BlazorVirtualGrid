@@ -1,4 +1,5 @@
 ﻿using BlazorVirtualGridComponent.classes;
+using BlazorVirtualGridComponent.ExternalSettings;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,14 @@ using System.Text;
 
 namespace BlazorVirtualGridComponent.Modals
 {
-    public class CompStyleDesignerBase : ComponentBase
+    public class CompStyleDesignerBase<TItem> : ComponentBase
     {
         [Parameter]
-        protected BvgGrid bvgGrid { get; set; }
+        protected BvgGrid<TItem> bvgGrid { get; set; }
 
         public Style currStyle { get; set; } = new Style();
 
-        private PropertyInfo[] props = typeof(BvgSettings).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        private PropertyInfo[] props = typeof(BvgSettings<TItem>).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
         public List<string> StylePropsList { get; set; } = new List<string>();
 

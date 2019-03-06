@@ -1,4 +1,5 @@
 ﻿using BlazorVirtualGridComponent.classes;
+using BlazorVirtualGridComponent.Modals;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -7,11 +8,15 @@ using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent.Modal
 {
-    public class CompModalBase:ComponentBase,IDisposable
+    public class CompModalBase<TItem>: ComponentBase,IDisposable
     {
 
         [Parameter]
-        protected BvgModal bvgModal { get; set; }
+        protected BvgModal<TItem> bvgModal { get; set; }
+
+
+
+        protected CompColumnsManager<TItem> compColumnsManager { get; set; }
 
         protected string Title { get; set; }
 
@@ -57,8 +62,27 @@ namespace BlazorVirtualGridComponent.Modal
             Title = string.Empty;
             bvgModal.IsDisplayed = false;
 
+            switch (bvgModal.modalForm)
+            {
+                case ModalForm.ColumnsManager:
+                    compColumnsManager.SaveChanges();
+                    break;
+                case ModalForm.StyleDesigner:
+                    
+                    break;
+                case ModalForm.FilterManager:
+                   
+                    break;
+                default:
+                    break;
+            }
 
             StateHasChanged();
+
+           
+            bvgModal.bvgGrid.compBlazorVirtualGrid.Refresh();
+
+           
         }
 
         public void Dispose()

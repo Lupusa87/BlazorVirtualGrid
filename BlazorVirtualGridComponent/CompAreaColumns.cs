@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompAreaColumns : ComponentBase, IDisposable
+    public class CompAreaColumns<TItem> : ComponentBase, IDisposable
     {
 
         [Parameter]
-        protected BvgAreaColumns bvgAreaColumns { get; set; }
+        protected BvgAreaColumns<TItem> bvgAreaColumns { get; set; }
 
         [Parameter]
         protected bool ForFrozen { get; set; }
@@ -72,10 +72,10 @@ namespace BlazorVirtualGridComponent
             int k = -1;
 
 
-            foreach (BvgColumn c in bvgAreaColumns.bvgGrid.Columns.Where(x => x.IsFrozen == ForFrozen).OrderBy(x => x.SequenceNumber))
+            foreach (BvgColumn<TItem> c in bvgAreaColumns.bvgGrid.Columns.Where(x => x.IsFrozen == ForFrozen).OrderBy(x => x.SequenceNumber))
             {
 
-                builder.OpenComponent<CompColumn>(k++);
+                builder.OpenComponent<CompColumn<TItem>>(k++);
                 builder.AddAttribute(k++, "bvgColumn", c);
                 builder.CloseComponent();
 

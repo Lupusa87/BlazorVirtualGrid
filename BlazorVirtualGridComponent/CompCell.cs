@@ -11,12 +11,12 @@ using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompCell : ComponentBase, IDisposable
+    public class CompCell<TItem> : ComponentBase, IDisposable
     {
 
 
         [Parameter]
-        protected BvgCell bvgCell { get; set; }
+        protected BvgCell<TItem> bvgCell { get; set; }
 
 
         //bool EnabledRender = true;
@@ -174,7 +174,7 @@ namespace BlazorVirtualGridComponent
         public void SelectNeightbourCell(MoveDirection d, bool HasCtrl)
         {
 
-            BvgCell result = new BvgCell();
+            BvgCell<TItem> result = new BvgCell<TItem>();
             int sn = 0;
 
             switch (d)
@@ -220,7 +220,7 @@ namespace BlazorVirtualGridComponent
                     //        bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.ThumbMove(c.bvgColumn.ColWidth);
 
                             
-                    //        Console.WriteLine("A1");
+         
                     //        BvgJsInterop.SetElementScrollLeft("NonFrozenDiv1", 0);
                     //    }
                     //    else
@@ -303,7 +303,7 @@ namespace BlazorVirtualGridComponent
 
                         if (bvgCell.bvgRow.ID > 0)
                         {
-                            BvgCell c = bvgCell.bvgGrid.Rows.Single(x => x.ID == 0).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
+                            BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == 0).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
 
                             bvgCell.bvgGrid.SelectCell(c, true);
                         }
@@ -316,7 +316,7 @@ namespace BlazorVirtualGridComponent
 
                             if (bvgCell.bvgGrid.Rows.Any(x => x.ID == sn))
                             {
-                                BvgCell c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
+                                BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
 
                                 bvgCell.bvgGrid.SelectCell(c, true);
 
@@ -343,7 +343,7 @@ namespace BlazorVirtualGridComponent
 
                         if (bvgCell.bvgRow.ID < bvgCell.bvgGrid.Rows.Max(x => x.ID))
                         {
-                            BvgCell c = bvgCell.bvgGrid.Rows.Single(x => x.ID == bvgCell.bvgGrid.Rows.Max(x2 => x2.ID)).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
+                            BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == bvgCell.bvgGrid.Rows.Max(x2 => x2.ID)).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
 
                             bvgCell.bvgGrid.SelectCell(c, true);
                         }
@@ -357,7 +357,7 @@ namespace BlazorVirtualGridComponent
 
                             if (bvgCell.bvgGrid.Rows.Any(x => x.ID == sn))
                             {
-                                BvgCell c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
+                                BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
 
                                 bvgCell.bvgGrid.SelectCell(c, true);
                             }

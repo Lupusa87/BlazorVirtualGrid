@@ -15,13 +15,13 @@ namespace BlazorVirtualGridComponent.businessLayer
 {
     public static class GenericAdapter<T>
     {
-        public static void GetColumns(ColProp[] props, BvgGrid _bvgGrid, T[] list, bool UpdateUI)
+        public static void GetColumns(ColProp[] props, BvgGrid<T> _bvgGrid, T[] list, bool UpdateUI)
         {
             int h = _bvgGrid.bvgSettings.HeaderHeight - _bvgGrid.bvgSettings.HeaderStyle.BorderWidth * 2;
 
             if (!_bvgGrid.Columns.Any())
             {
-                _bvgGrid.Columns = new BvgColumn[props.Count()];
+                _bvgGrid.Columns = new BvgColumn<T>[props.Count()];
                 for (ushort i = 0; i < props.Count(); i++)
                 {
                     _bvgGrid.Columns[i] =getCol(i, props[i], h, _bvgGrid);
@@ -31,7 +31,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             {
 
 
-                _bvgGrid.Columns = new BvgColumn[props.Count()];
+                _bvgGrid.Columns = new BvgColumn<T>[props.Count()];
                 string[] UpdatePkg = new string[props.Count() * 4];
                 short j = -1;
                 for (ushort i = 0; i < props.Count(); i++)
@@ -47,9 +47,9 @@ namespace BlazorVirtualGridComponent.businessLayer
                 if (_bvgGrid.Rows.Any())
                 {
                    
-                    foreach (BvgRow r in _bvgGrid.Rows)
+                    foreach (BvgRow<T> r in _bvgGrid.Rows)
                     {
-                        foreach (BvgCell c in r.Cells)
+                        foreach (BvgCell<T> c in r.Cells)
                         {
                             if (c.bvgColumn.ID < props.Count())
                             {
@@ -78,7 +78,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             {
                 if (_bvgGrid.Columns.Any(x => x.prop.Name.Equals(_bvgGrid.SortState.Item2)))
                 {
-                    BvgColumn sortedCol2 = _bvgGrid.Columns.Single(x => x.prop.Name.Equals(_bvgGrid.SortState.Item2));
+                    BvgColumn<T> sortedCol2 = _bvgGrid.Columns.Single(x => x.prop.Name.Equals(_bvgGrid.SortState.Item2));
                    
                     sortedCol2.IsSorted = true;
                     sortedCol2.IsAscendingOrDescending = _bvgGrid.SortState.Item3;
@@ -87,10 +87,10 @@ namespace BlazorVirtualGridComponent.businessLayer
         }
 
 
-        private static BvgColumn getCol(ushort id, ColProp p, int h, BvgGrid _bvgGrid)
+        private static BvgColumn<T> getCol(ushort id, ColProp p, int h, BvgGrid<T> _bvgGrid)
         {
 
-            return new BvgColumn
+            return new BvgColumn<T>
             {
                 ID = id,
                 prop = p.prop,
@@ -118,31 +118,31 @@ namespace BlazorVirtualGridComponent.businessLayer
         }
 
 
-        public static void GetRows(T[] list, BvgGrid _bvgGrid)
+        public static void GetRows(T[] list, BvgGrid<T> _bvgGrid)
         {
 
             ushort k = 0;
             if (!_bvgGrid.Rows.Any())
             {
-                _bvgGrid.Rows = new BvgRow[list.Count()];
+                _bvgGrid.Rows = new BvgRow<T>[list.Count()];
 
                 ushort j = 0;
                 ushort g = 0;
                 foreach (T item in list)
                 {
 
-                    BvgRow row = new BvgRow
+                    BvgRow<T> row = new BvgRow<T>
                     {
                         ID = k++,
                         bvgGrid = _bvgGrid,
-                        Cells = new BvgCell[_bvgGrid.Columns.Count()],
+                        Cells = new BvgCell<T>[_bvgGrid.Columns.Count()],
                     };
 
 
                     row.IsEven = row.ID % 2==0;
 
                     g = 0;
-                    foreach (BvgColumn col in _bvgGrid.Columns)
+                    foreach (BvgColumn<T> col in _bvgGrid.Columns)
                     {
                         row.Cells[g] = GetCell(row, col, item, _bvgGrid,true);
                         g++;
@@ -162,10 +162,10 @@ namespace BlazorVirtualGridComponent.businessLayer
            
         }
 
-        private static BvgCell GetCell(BvgRow row, BvgColumn col, T item, BvgGrid _bvgGrid, bool SetValue)
+        private static BvgCell<T> GetCell(BvgRow<T> row, BvgColumn<T> col, T item, BvgGrid<T> _bvgGrid, bool SetValue)
         {
 
-            BvgCell cell = new BvgCell
+            BvgCell<T> cell = new BvgCell<T>
             {
                 bvgRow = row,
                 bvgColumn = col,
@@ -193,7 +193,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             return cell;
         }
 
-        private static void RefreshRows(T[] list, BvgGrid _bvgGrid, bool updateWidths)
+        private static void RefreshRows(T[] list, BvgGrid<T> _bvgGrid, bool updateWidths)
         {
 
             short i = -1;
@@ -210,7 +210,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
             foreach (T item in list)
             {
-                foreach (BvgCell c in _bvgGrid.Rows[g].Cells.Where(x=>x.HasCol))
+                foreach (BvgCell<T> c in _bvgGrid.Rows[g].Cells.Where(x=>x.HasCol))
                 {
 
                     c.Value = c.bvgColumn.prop.GetValue(item, null).ToString();
