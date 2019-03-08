@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Mono.WebAssembly.Interop;
 using System;
@@ -9,53 +10,58 @@ namespace BlazorVirtualGridComponent
 {
     public class BvgJsInterop
     {
+
+        public static IJSRuntime jsRuntime;
+
+
         public static Task<bool> Alert(string msg)
         {
-            return JSRuntime.Current.InvokeAsync<bool>(
+
+            return jsRuntime.InvokeAsync<bool>(
                 "BvgJsFunctions.Alert", msg);
         }
 
         public static Task<double> GetElementActualWidth(string elementID)
         {
-            return JSRuntime.Current.InvokeAsync<double>(
+            return jsRuntime.InvokeAsync<double>(
                 "BvgJsFunctions.GetElementActualWidth", elementID);
         }
 
         public static Task<double> GetElementActualHeight(string elementID)
         {
-            return JSRuntime.Current.InvokeAsync<double>(
+            return jsRuntime.InvokeAsync<double>(
                 "BvgJsFunctions.GetElementActualHeight", elementID);
         }
 
         public static Task<double> GetElementActualTop(string elementID)
         {
-            return JSRuntime.Current.InvokeAsync<double>(
+            return jsRuntime.InvokeAsync<double>(
                 "BvgJsFunctions.GetElementActualTop", elementID);
         }
 
         public static Task<double> GetWindowHeight()
         {
-            return JSRuntime.Current.InvokeAsync<double>(
+            return jsRuntime.InvokeAsync<double>(
                 "BvgJsFunctions.GetWindowHeight");
         }
         
 
         public static Task<bool> SetElementScrollLeft(string elementID, double val)
         {
-            return JSRuntime.Current.InvokeAsync<bool>(
+            return jsRuntime.InvokeAsync<bool>(
                 "BvgJsFunctions.SetElementScrollLeft", elementID, val);
         }
 
         public static Task<double> GetElementScrollLeft(string elementID)
         {
            
-            return JSRuntime.Current.InvokeAsync<double>(
+            return jsRuntime.InvokeAsync<double>(
                 "BvgJsFunctions.GetElementScrollLeft", elementID);
         }
 
         public static Task<bool> SetFocus(string elementID)
         {
-            return JSRuntime.Current.InvokeAsync<bool>(
+            return jsRuntime.InvokeAsync<bool>(
                 "BvgJsFunctions.SetFocus", elementID);
         }
 
@@ -64,7 +70,7 @@ namespace BlazorVirtualGridComponent
         {
 
 
-            if (JSRuntime.Current is MonoWebAssemblyJSRuntime mono)
+            if (jsRuntime is MonoWebAssemblyJSRuntime mono)
             {
 
                 return mono.InvokeUnmarshalled<string, bool>(
@@ -79,7 +85,7 @@ namespace BlazorVirtualGridComponent
 
         public static bool UpdateRowWidthsBatch(string[] updatepkg)
         {
-            if (JSRuntime.Current is MonoWebAssemblyJSRuntime mono)
+            if (jsRuntime is MonoWebAssemblyJSRuntime mono)
             {
 
                 return mono.InvokeUnmarshalled<string, bool>(
@@ -94,7 +100,7 @@ namespace BlazorVirtualGridComponent
         {
 
 
-            if (JSRuntime.Current is MonoWebAssemblyJSRuntime mono)
+            if (jsRuntime is MonoWebAssemblyJSRuntime mono)
             {
 
                 return mono.InvokeUnmarshalled<string, bool>(
@@ -110,7 +116,7 @@ namespace BlazorVirtualGridComponent
         public static bool UpdateElementContentBatchMonoByteArray(string[] updatepkg)
         {
 
-            if (JSRuntime.Current is MonoWebAssemblyJSRuntime mono)
+            if (jsRuntime is MonoWebAssemblyJSRuntime mono)
             {
 
                 return mono.InvokeUnmarshalled<byte[], bool>(
@@ -125,7 +131,7 @@ namespace BlazorVirtualGridComponent
         {
 
 
-            if (JSRuntime.Current is MonoWebAssemblyJSRuntime mono)
+            if (jsRuntime is MonoWebAssemblyJSRuntime mono)
             {
 
                 return mono.InvokeUnmarshalled<string, string, bool>(
@@ -143,13 +149,13 @@ namespace BlazorVirtualGridComponent
 
 
 
-            return JSRuntime.Current.InvokeAsync<bool>(
+            return jsRuntime.InvokeAsync<bool>(
                  "BvgJsFunctions.SetValueToCheckBox", el, val);
         }
 
         public static bool UpdateFrozenNonFrozenWidth(string[] updatepkg)
         {
-            if (JSRuntime.Current is MonoWebAssemblyJSRuntime mono)
+            if (jsRuntime is MonoWebAssemblyJSRuntime mono)
             {
 
                 return mono.InvokeUnmarshalled<string, bool>(
@@ -165,14 +171,14 @@ namespace BlazorVirtualGridComponent
 
         internal static Task<bool> HandleDrag(string elementID, int id, DotNetObjectRef dotnetHelper)
         {
-            return JSRuntime.Current.InvokeAsync<bool>(
+            return jsRuntime.InvokeAsync<bool>(
                 "BvgJsFunctions.handleDragStart", elementID, id, dotnetHelper);
         }
 
 
         internal static Task<bool> HandleDrop(string elementID, int id, DotNetObjectRef dotnetHelper)
         {
-            return JSRuntime.Current.InvokeAsync<bool>(
+            return jsRuntime.InvokeAsync<bool>(
                 "BvgJsFunctions.handleDrop", elementID, id, dotnetHelper);
         }
 

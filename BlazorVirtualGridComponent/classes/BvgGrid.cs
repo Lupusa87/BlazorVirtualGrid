@@ -2,6 +2,7 @@
 using BlazorSplitterComponent;
 using BlazorVirtualGridComponent.businessLayer;
 using BlazorVirtualGridComponent.ExternalSettings;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,8 +18,6 @@ namespace BlazorVirtualGridComponent.classes
     public class BvgGrid<TItem> 
     {
         public Action PropertyChanged;
-
-
 
         public bool IsReady { get; set; } = false;
 

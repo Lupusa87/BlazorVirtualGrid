@@ -2,6 +2,7 @@
 using BlazorVirtualGridComponent.classes;
 using BlazorVirtualGridComponent.ExternalSettings;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,9 @@ namespace BlazorVirtualGridComponent
 {
     public class CompBlazorVirtualGridBase<TItem> : ComponentBase
     {
+
+        [Inject]
+        private IJSRuntime jsRuntimeCurrent { get; set; }
 
         [Parameter]
         protected IList<TItem> SourceList { get; set; }
@@ -52,6 +56,15 @@ namespace BlazorVirtualGridComponent
         //    return EnabledRender;
         //}
 
+
+        protected override void OnInit()
+        {
+
+            BvgJsInterop.jsRuntime = jsRuntimeCurrent;
+
+            base.OnInit();
+        }
+
         protected override void OnParametersSet()
         {
   
@@ -89,6 +102,7 @@ namespace BlazorVirtualGridComponent
 
             bvgGrid = new BvgGrid<TItem>
             {
+               
                 IsReady = true,
                 Name = TableName,
                 RowsTotalCount = SourceList.Count(),
