@@ -41,7 +41,6 @@ namespace BlazorVirtualGridComponent.classes
         public CompBlazorSplitter BSplitter { get; set; } = new CompBlazorSplitter();
 
 
-        public ushort ColWidthWithoutBorder { get; set; }
 
         public ushort _ColWidth { get; set; }
         public ushort ColWidth { get
@@ -52,13 +51,12 @@ namespace BlazorVirtualGridComponent.classes
             {
                 _ColWidth = value;
 
-                ColWidthDiv =(ushort)(_ColWidth - bvgGrid.bvgSettings.HeaderStyle.BorderWidth);
                 ColWidthSpan = (ushort)(ColWidth - 2 * (5 + bvgGrid.bvgSettings.bSortStyle.width));
             }
         } 
 
 
-        public ushort ColWidthDiv { get; set; }
+
         public ushort ColWidthSpan { get; set; } 
 
 

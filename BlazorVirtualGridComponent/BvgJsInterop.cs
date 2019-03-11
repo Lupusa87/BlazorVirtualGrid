@@ -10,7 +10,7 @@ namespace BlazorVirtualGridComponent
 {
     public class BvgJsInterop
     {
-
+        
         public static IJSRuntime jsRuntime;
 
 

@@ -34,6 +34,7 @@ namespace BlazorVirtualGridComponent
 
         public BvgGrid<TItem> bvgGrid { get; set; }
 
+        private BvgGridTransferableState<TItem> bvgGridTransferableState { get; set; }
 
         public bool ActualRender { get; set; } = false;
 
@@ -61,9 +62,17 @@ namespace BlazorVirtualGridComponent
         {
 
             BvgJsInterop.jsRuntime = jsRuntimeCurrent;
-
+            JsEventReceiver.Initialize();
+            JsEventReceiver.OnResize = OnResize;
             base.OnInit();
         }
+
+        private void OnResize()
+        {
+            bvgGrid.HasMeasuredRect = false;
+            Refresh(true);
+        }
+
 
         protected override void OnParametersSet()
         {
@@ -76,14 +85,7 @@ namespace BlazorVirtualGridComponent
                 }
             }
 
-
-            //BlazorWindowHelper.BlazorTimeAnalyzer.LogAllAdd = true;
-
-
             Reset();
-
-
-
           
             base.OnParametersSetAsync();
         }
@@ -100,15 +102,27 @@ namespace BlazorVirtualGridComponent
             LastHorizontalScrollPosition = 0;
 
 
+
+         
+            
+            if (bvgGrid != null)
+            {
+                bvgGridTransferableState = new BvgGridTransferableState<TItem>(bvgGrid);
+            }
+            else
+            {
+                bvgGridTransferableState = new BvgGridTransferableState<TItem>();
+            }
+
             bvgGrid = new BvgGrid<TItem>
             {
-               
                 IsReady = true,
                 Name = TableName,
                 RowsTotalCount = SourceList.Count(),
                 bvgSettings = bvgSettings,
                 AllProps = typeof(TItem).GetProperties(BindingFlags.Public | BindingFlags.Instance),
-
+                HasMeasuredRect = bvgGridTransferableState.HasMeasuredRect,
+                bvgSize = bvgGridTransferableState.bvgSize,
             };
 
             bvgGrid.bvgModal.bvgGrid = bvgGrid;
@@ -147,6 +161,7 @@ namespace BlazorVirtualGridComponent
 
         protected override void OnAfterRender()
         {
+
             base.OnAfterRender();
 
             if (FirstLoad)
@@ -154,39 +169,45 @@ namespace BlazorVirtualGridComponent
                 FirstLoad = false;
 
 
-                if (bvgGrid.compBlazorVirtualGrid == null)
-                {
-                    bvgGrid.compBlazorVirtualGrid = this as CompBlazorVirtualGrid<TItem>;
-                }
+                bvgGridSubscribe();
 
-                if (bvgGrid.OnSort == null)
-                {
-                    bvgGrid.OnSort = SortGrid;
-                }
-
-                if (bvgGrid.OnColumnResize == null)
-                {
-                    bvgGrid.OnColumnResize = OnColumnResize;
-                }
-
-
-                if (bvgGrid.OnVerticalScroll == null)
-                {
-                    bvgGrid.OnVerticalScroll = OnVerticalScroll;
-                }
-
-                if (bvgGrid.OnHorizontalScroll == null)
-                {
-                    bvgGrid.OnHorizontalScroll = OnHorizontalScroll;
-                }
-
-        
                 timer1 = new Timer(Timer1Callback, null, 1, 1);
                 
             }
 
 
             //EnabledRender = false;
+        }
+
+
+        public void bvgGridSubscribe()
+        {
+
+            if (bvgGrid.compBlazorVirtualGrid == null)
+            {
+                bvgGrid.compBlazorVirtualGrid = this as CompBlazorVirtualGrid<TItem>;
+            }
+
+            if (bvgGrid.OnSort == null)
+            {
+                bvgGrid.OnSort = SortGrid;
+            }
+
+            if (bvgGrid.OnColumnResize == null)
+            {
+                bvgGrid.OnColumnResize = OnColumnResize;
+            }
+
+
+            if (bvgGrid.OnVerticalScroll == null)
+            {
+                bvgGrid.OnVerticalScroll = OnVerticalScroll;
+            }
+
+            if (bvgGrid.OnHorizontalScroll == null)
+            {
+                bvgGrid.OnHorizontalScroll = OnHorizontalScroll;
+            }
         }
 
         public void OnColumnResize()
@@ -380,33 +401,43 @@ namespace BlazorVirtualGridComponent
 
         public async void GetActualWidthAndHeight()
         {
-
-            if (bvgGrid.bvgSettings.LayoutFixedOrAuto)
+            if (!bvgGrid.HasMeasuredRect)
             {
-                bvgGrid.totalWidth = bvgGrid.bvgSettings.CompWidth;
-                bvgGrid.height = bvgGrid.bvgSettings.CompHeight;
-            }
-            else
-            {
-                bvgGrid.totalWidth = await BvgJsInterop.GetElementActualWidth(bvgGrid.GridTableElementID) - 20;
+                bvgGrid.bvgSize.w = await BvgJsInterop.GetElementActualWidth(bvgGrid.DivContainerElementID);
 
-
-                double top = await BvgJsInterop.GetElementActualTop(bvgGrid.GridTableElementID);
+                double top = await BvgJsInterop.GetElementActualTop(bvgGrid.DivContainerElementID);
 
                 double windowHeight = await BvgJsInterop.GetWindowHeight();
 
-                bvgGrid.height = windowHeight - top - 40;
+                bvgGrid.bvgSize.h = windowHeight - top - 30;
+                bvgGrid.HasMeasuredRect = true;
+
+
+                if (bvgGrid.bvgSettings.LayoutFixedOrAuto)
+                {
+
+                    if (bvgGrid.bvgSettings.CompWidth < bvgGrid.bvgSize.w)
+                    {
+                        bvgGrid.bvgSize.w = bvgGrid.bvgSettings.CompWidth;
+                    }
+                    if (bvgGrid.bvgSettings.CompHeight < bvgGrid.bvgSize.h)
+                    {
+                        bvgGrid.bvgSize.h = bvgGrid.bvgSettings.CompHeight;
+                    }
+                }
             }
 
+  
 
 
-
-            if (bvgGrid.height>bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight)
+            if (bvgGrid.bvgSize.h > bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight)
             {
-                bvgGrid.height = bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight;
+                bvgGrid.bvgSize.h = bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight;
             }
 
-           
+
+            CheckSizeLimits();
+
             bvgGrid.AdjustSize();
 
             
@@ -419,20 +450,59 @@ namespace BlazorVirtualGridComponent
      
 
             StateHasChanged();
-            
+
 
             //EnabledRender = false;
         }
 
 
-        public void Refresh()
+        public void CheckSizeLimits()
         {
 
+
+            double minHeight = bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight+ bvgGrid.bvgSettings.ScrollSize+10;
+            if (minHeight < 50)
+            {
+                minHeight = 50;
+            }
+            if (bvgGrid.bvgSize.h < minHeight)
+            {
+                bvgGrid.bvgSize.h = minHeight;
+            }
+
+
+            double minWidth = bvgGrid.ColumnsOrderedListFrozen.Sum(x=>x.ColWidth) + bvgGrid.bvgSettings.ScrollSize + 10;
+            if (minWidth<50)
+            {
+                minWidth = 50;
+            }
+            if (bvgGrid.bvgSize.w < minWidth)
+            {
+                bvgGrid.bvgSize.w = minWidth;
+            }
+            
+
+        }
+
+
+
+            public void Refresh(bool FullReload)
+        {
+            // full reload is need when window size changes, full reload recalculates available space
+
+
             Reset();
-            StateHasChanged();
 
-          
-
+            if (FullReload)
+            {
+                StateHasChanged();
+            }
+            else
+            {
+                bvgGridSubscribe();
+                GetActualWidthAndHeight();
+            }
+           
         }
 
 

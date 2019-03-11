@@ -46,7 +46,7 @@ namespace BlazorVirtualGridComponent
             // builder.AddMarkupContent(k++,"<style>.my {color:red}");
 
          
-            CssHelper<TItem> cssHelper = new CssHelper<TItem>(bvgGrid.bvgSettings);
+            CssHelper<TItem> cssHelper = new CssHelper<TItem>(bvgGrid);
 
             builder.OpenElement(k++, "style");
             builder.AddContent(k++, cssHelper.GetString());

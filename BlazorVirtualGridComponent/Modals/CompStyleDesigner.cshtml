@@ -2,7 +2,7 @@
 
 @inherits CompStyleDesignerBase<TItem>
 
-<table>
+<table style="line-height:30px">
     <tbody>
         <tr>
             <td width="160" style="padding-left:10px;vertical-align:top;text-align:left;">
@@ -20,7 +20,7 @@
 
                 <br />
                 <input style="margin:3px" bind="@currStyle.BackgroundColor" type="color" />
-                <label style="margin:3px">Background Color</label>
+                <label style="margin:3px">BG Color</label>
                 <br />
                 <input style="margin:3px" bind="@currStyle.ForeColor" type="color" />
                 <label style="margin:3px">Fore Color</label>
@@ -44,12 +44,16 @@
                 <label style="margin:3px">Header Height</label>
                 <br />
 
-                @*<input style="margin:3px" bind="@currStyle.RowHeight" type="number" min="20" max="50" step="1" />
-                    <label style="margin:3px">Row Height</label>
-                    <br />*@
+                <input style="margin:3px" bind="@currStyle.RowHeight" type="number" min="20" max="50" step="1" />
+                <label style="margin:3px">Row Height</label>
+                <br />
 
                 <input style="margin:3px" bind="@currStyle.CheckBoxZoom" type="number" min="1" max="3" step="0.1" />
                 <label style="margin:3px">CheckBox Zoom</label>
+                <br />
+
+                <input style="margin:3px" bind="@currStyle.ScrollSize" type="number" min="10" max="30" step="1" />
+                <label style="margin:3px">Scroll Size</label>
                 <br />
             </td>
             <td width="250" style="padding-left:30px;vertical-align:top;text-align:left;">

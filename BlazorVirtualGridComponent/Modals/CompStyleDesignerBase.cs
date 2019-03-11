@@ -53,8 +53,9 @@ namespace BlazorVirtualGridComponent.Modals
         private void LoadStyle()
         {
             currStyle.HeaderHeight = bvgGrid.bvgSettings.HeaderHeight;
-            //currStyle.RowHeight = bvgGrid.bvgSettings.RowHeight;
+            currStyle.RowHeight = bvgGrid.bvgSettings.RowHeight;
             currStyle.CheckBoxZoom = bvgGrid.bvgSettings.CheckBoxZoom;
+            currStyle.ScrollSize = bvgGrid.bvgSettings.ScrollSize;
 
             currStyle.BackgroundColor = bvgGrid.bvgSettings.NonFrozenCellStyle.BackgroundColor;
             currStyle.ForeColor = bvgGrid.bvgSettings.NonFrozenCellStyle.ForeColor;
@@ -113,8 +114,9 @@ namespace BlazorVirtualGridComponent.Modals
                     break;
                 case 1:
                     bvgGrid.bvgSettings.HeaderHeight = currStyle.HeaderHeight;
-                    //bvgGrid.bvgSettings.RowHeight = currStyle.RowHeight;
+                    bvgGrid.bvgSettings.RowHeight = currStyle.RowHeight;
                     bvgGrid.bvgSettings.CheckBoxZoom = currStyle.CheckBoxZoom;
+                    bvgGrid.bvgSettings.ScrollSize = (sbyte)currStyle.ScrollSize;
                     break;
                 case 2:
                     UpdateScrollObject();
@@ -414,22 +416,22 @@ namespace BlazorVirtualGridComponent.Modals
             }
 
 
-            //private double _RowHeight { get; set; }
+            private double _RowHeight { get; set; }
 
-            //public double RowHeight
-            //{
-            //    get
-            //    {
+            public double RowHeight
+            {
+                get
+                {
 
-            //        return _RowHeight;
-            //    }
-            //    set
-            //    {
+                    return _RowHeight;
+                }
+                set
+                {
 
-            //        _RowHeight = value;
-            //        PropertyChanged?.Invoke(1);
-            //    }
-            //}
+                    _RowHeight = value;
+                    PropertyChanged?.Invoke(1);
+                }
+            }
 
 
             private int _HeaderHeight { get; set; }
@@ -460,6 +462,22 @@ namespace BlazorVirtualGridComponent.Modals
                 {
 
                     _CheckBoxZoom = value;
+                    PropertyChanged?.Invoke(1);
+                }
+            }
+
+            private int _ScrollSize { get; set; }
+            public int ScrollSize
+            {
+                get
+                {
+
+                    return _ScrollSize;
+                }
+                set
+                {
+
+                    _ScrollSize = value;
                     PropertyChanged?.Invoke(1);
                 }
             }

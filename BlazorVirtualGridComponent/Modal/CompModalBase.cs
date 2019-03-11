@@ -80,7 +80,7 @@ namespace BlazorVirtualGridComponent.Modal
             StateHasChanged();
 
            
-            bvgModal.bvgGrid.compBlazorVirtualGrid.Refresh();
+            bvgModal.bvgGrid.compBlazorVirtualGrid.Refresh(false);
 
            
         }

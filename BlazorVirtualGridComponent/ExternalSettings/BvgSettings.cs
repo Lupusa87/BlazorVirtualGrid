@@ -25,6 +25,7 @@ namespace BlazorVirtualGridComponent.ExternalSettings
 
         public double CompHeight { get; set; } = 0;
 
+
         public BvgStyle NonFrozenCellStyle { get; set; } = new BvgStyle();
         public BvgStyle AlternatedNonFrozenCellStyle { get; set; } = new BvgStyle();
 
@@ -50,6 +51,8 @@ namespace BlazorVirtualGridComponent.ExternalSettings
         public ushort ColWidthMax { get; set; } = 300;
 
         public double CheckBoxZoom { get; set; } = 1.5;
+
+        public sbyte ScrollSize { get; set; } = 16;
 
         public BvgScrollStyle VerticalScrollStyle { get; set; } = new BvgScrollStyle();
         public BvgScrollStyle HorizontalScrollStyle { get; set; } = new BvgScrollStyle();

@@ -1,3 +1,18 @@
+var resizeId;
+
+window.addEventListener("resize", onResize, false);
+
+
+function onResize() {
+    clearTimeout(resizeId);
+    resizeId = setTimeout(doneResizing, 100);
+    
+}
+
+function doneResizing() {
+    DotNet.invokeMethodAsync('BlazorVirtualGridComponent', 'InvokeOnResize');
+}
+
 function getTime() {
     var d = new Date();
     var h = addZero(d.getHours());
@@ -159,11 +174,11 @@ window.BvgJsFunctions = {
 
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));
 
-        for (var i = 0; i < b.length; i += 3) {
+        for (var i = 0; i < b.length; i += 2) {
 
             if (document.getElementById("tdCell" + b[i]) !== null) {
                 document.getElementById("tdCell" + b[i]).setAttribute("style", "width:" + b[i + 1] + "px");
-                document.getElementById("divCell" + b[i]).setAttribute("style", "width:" + (b[i + 2]-5) + "px");
+                document.getElementById("divCell" + b[i]).setAttribute("style", "width:" + (b[i + 1]-5) + "px");
 
             }
         }

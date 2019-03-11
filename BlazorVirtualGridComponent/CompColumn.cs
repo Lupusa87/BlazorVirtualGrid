@@ -62,7 +62,7 @@ namespace BlazorVirtualGridComponent
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", "divCol" + bvgColumn.ID);
             builder.AddAttribute(k++, "class", "ColumnDiv");
-            builder.AddAttribute(k++, "style", string.Concat("width:", bvgColumn.ColWidthDiv, "px"));
+            builder.AddAttribute(k++, "style", string.Concat("width:", bvgColumn.ColWidth, "px"));
 
 
             builder.OpenElement(k++, "div"); //to arrange text in center

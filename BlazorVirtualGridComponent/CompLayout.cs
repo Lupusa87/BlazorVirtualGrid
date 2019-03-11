@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompTable<TItem> : ComponentBase, IDisposable
+    public class CompLayout<TItem> : ComponentBase, IDisposable
     {
         [Parameter]
         protected BvgGrid<TItem> bvgGrid { get; set; }
@@ -54,18 +54,10 @@ namespace BlazorVirtualGridComponent
 
           
 
-                builder.OpenElement(k++, "table");
-                builder.AddAttribute(k++, "id", bvgGrid.GridTableElementID);
+            builder.OpenElement(k++, "div");
+            builder.AddAttribute(k++, "class", "myContainer");
+            builder.AddAttribute(k++, "id", bvgGrid.DivContainerElementID);
 
-            if (bvgGrid.bvgSettings.LayoutFixedOrAuto)
-            {
-                builder.AddAttribute(k++, "style", "table-layout:fixed;width:" + bvgGrid.bvgSettings.CompWidth + "px;");
-            }
-            else
-            {
-                builder.AddAttribute(k++, "style", "table-layout:auto;width:100%;");
-            }
-            
 
                 builder.AddAttribute(k++, "onwheel", OnWheel);
 
@@ -82,7 +74,7 @@ namespace BlazorVirtualGridComponent
                 }
 
 
-                builder.CloseElement(); //table
+                builder.CloseElement(); //div container
            
 
             

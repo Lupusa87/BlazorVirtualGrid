@@ -69,7 +69,7 @@ namespace BlazorVirtualGridComponent
             builder.AddAttribute(k++, "id", string.Concat("divCell", bvgCell.ID));
             builder.AddAttribute(k++, "class", "CellDiv");
             builder.AddAttribute(k++, "tabindex", 0); // without this div can't get focus and don't fires keyboard events
-            builder.AddAttribute(k++, "style", string.Concat("width:", bvgCell.bvgColumn.ColWidthWithoutBorder, "px"));
+            builder.AddAttribute(k++, "style", string.Concat("width:", bvgCell.bvgColumn.ColWidth, "px"));
             builder.AddAttribute(k++, "onkeydown", OnKeyDown);
 
 
@@ -326,7 +326,7 @@ namespace BlazorVirtualGridComponent
                                 if (!bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.IsOnMinPosition())
                                 {
                                     bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar
-                                        .ThumbMove(-bvgCell.bvgGrid.RowHeightOriginal);
+                                        .ThumbMove(-bvgCell.bvgGrid.bvgSettings.RowHeight);
                                 }
                             }
                         
@@ -338,7 +338,7 @@ namespace BlazorVirtualGridComponent
                     {
                         if (!bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.IsOnMaxPosition())
                         {
-                            bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.SetScrollPosition(bvgCell.bvgGrid.RowsTotalCount * bvgCell.bvgGrid.RowHeightOriginal);
+                            bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.SetScrollPosition(bvgCell.bvgGrid.RowsTotalCount * bvgCell.bvgGrid.RowHeightAdjusted);
                         }
 
                         if (bvgCell.bvgRow.ID < bvgCell.bvgGrid.Rows.Max(x => x.ID))
@@ -366,7 +366,7 @@ namespace BlazorVirtualGridComponent
                                 if (!bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.IsOnMaxPosition())
                                 {
                                     bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar
-                                        .ThumbMove(bvgCell.bvgGrid.RowHeightOriginal);
+                                        .ThumbMove(bvgCell.bvgGrid.bvgSettings.RowHeight);
 
                                 }
                             }

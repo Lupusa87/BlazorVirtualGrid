@@ -40,7 +40,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
                     UpdatePkg[++j] = i.ToString();
                     UpdatePkg[++j] = props[i].prop.Name;
-                    UpdatePkg[++j] = _bvgGrid.Columns[i].ColWidthDiv.ToString();
+                    UpdatePkg[++j] = _bvgGrid.Columns[i].ColWidth.ToString();
                     UpdatePkg[++j] = _bvgGrid.Columns[i].ColWidthSpan.ToString();
                 }
 
@@ -99,7 +99,6 @@ namespace BlazorVirtualGridComponent.businessLayer
                 CssClass = HeaderStyle.HeaderRegular.ToString(),
                 IsFrozen = p.IsFrozen,
                 ColWidth = p.ColWidth,
-                ColWidthWithoutBorder = (ushort)(p.ColWidth - _bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth),
                 bsSettings = new BsSettings(string.Concat("Splitter" +p.prop.Name))
                 {
                     VerticalOrHorizontal = false,
@@ -232,7 +231,6 @@ namespace BlazorVirtualGridComponent.businessLayer
                     {
                         UpdatePkg2[++i2] = c.ID;
                         UpdatePkg2[++i2] = c.bvgColumn.ColWidth.ToString();
-                        UpdatePkg2[++i2] = c.bvgColumn.ColWidthWithoutBorder.ToString();
                     }
 
                 }

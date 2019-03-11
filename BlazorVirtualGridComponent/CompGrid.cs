@@ -1,4 +1,5 @@
-﻿using BlazorVirtualGridComponent.classes;
+﻿using BlazorSplitterComponent;
+using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 using System;
@@ -93,10 +94,15 @@ namespace BlazorVirtualGridComponent
 
             int k = -1;
 
-            #region FirstRow
+            #region GridArea
+            builder.OpenElement(k++, "div");
+            builder.AddAttribute(k++, "class", "myGridArea");
+
+
+            builder.OpenElement(k++, "table");
             builder.OpenElement(k++, "tr");
 
-            #region frozenPart
+            #region FrozenPart
 
             if (bvgGrid.Columns.Any(x => x.IsFrozen))
             {
@@ -113,7 +119,6 @@ namespace BlazorVirtualGridComponent
 
                 builder.OpenElement(k++, "table");
                 builder.AddAttribute(k++, "id", "FrozenTable1");
-                builder.AddAttribute(k++, "class", "BorderedTable");
                 builder.AddAttribute(k++, "style", bvgGrid.GetStyleTable(true));
 
                 builder.OpenElement(k++, "thead");
@@ -149,12 +154,11 @@ namespace BlazorVirtualGridComponent
             }
             #endregion
 
-
-            #region grid
+            #region NonFrozenPart
             builder.OpenElement(k++, "td");
             builder.AddAttribute(k++, "id", "NonFrozenTd1");
             builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(false));
-            builder.AddAttribute(k++, "align", "left");
+            //builder.AddAttribute(k++, "align", "left");
 
 
             builder.OpenElement(k++, "div");
@@ -164,7 +168,6 @@ namespace BlazorVirtualGridComponent
 
             builder.OpenElement(k++, "table");
             builder.AddAttribute(k++, "id", "NonFrozenTable1");
-            builder.AddAttribute(k++, "class", "BorderedTable");
             builder.AddAttribute(k++, "style", bvgGrid.GetStyleTable(false));
 
             builder.OpenElement(k++, "thead");
@@ -196,9 +199,18 @@ namespace BlazorVirtualGridComponent
             builder.CloseElement(); //td
             #endregion
 
+            builder.CloseElement(); //tr
+            builder.CloseElement(); //table
 
-            builder.OpenElement(k++, "td");
-            builder.AddAttribute(k++, "style", "padding-top:4px");
+            builder.CloseElement(); //div
+
+            #endregion
+
+
+            #region VericalScroll
+            builder.OpenElement(k++, "div");
+            builder.AddAttribute(k++, "class", "myVericalScroll");
+            //builder.AddAttribute(k++, "style", "padding-top:4px");
 
             builder.OpenComponent<CompScroll<TItem>>(k++);
             builder.AddAttribute(k++, "bvgScroll", bvgGrid.VericalScroll);
@@ -206,42 +218,63 @@ namespace BlazorVirtualGridComponent
 
             builder.CloseComponent();
 
-            builder.CloseElement(); //td
+            builder.CloseElement(); //div
+            #endregion
 
 
-            builder.CloseElement(); //tr
-
-            #endregion firstrow
+            #region HorizontalScroll
 
 
-            #region SecondRow
+            builder.OpenElement(k++, "div");
+            builder.AddAttribute(k++, "class", "myHorizontalScroll");
 
-            builder.OpenElement(k++, "tr");
-     
-            builder.OpenElement(k++, "td");
- 
-            builder.AddAttribute(k++, "colspan", 2);
-            builder.AddAttribute(k++, "valign", "top");
            
-
-             
             builder.OpenComponent<CompScroll<TItem>>(k++);
             builder.AddAttribute(k++, "bvgScroll", bvgGrid.HorizontalScroll);
             builder.CloseComponent();
-            
 
-
-            builder.CloseElement(); //td
-
-            builder.CloseElement(); //tr
+            builder.CloseElement(); //div
 
             #endregion
 
-           
+
+            #region Resizer
+
+            builder.OpenElement(k++, "div");
+            builder.AddAttribute(k++, "class", "myResizer");
+
+            builder.OpenComponent<CompBlazorSplitter>(k++);
+            builder.AddAttribute(k++, "bsSettings", bvgGrid.ResizerBsSettings);
+            builder.AddAttribute(k++, "OnDragStart", new Action<int,int, int>(OnDiagonalDragStart));
+            builder.AddAttribute(k++, "OnDragEnd", new Action<int, int, int>(OnDiagonalDragEnd));
+            builder.CloseComponent();
+
+            builder.CloseElement(); //div
+            #endregion
         }
 
+        public void OnDiagonalDragStart(int index, int X, int Y)
+        {
+            bvgGrid.DragStart = new BvgPointInt(X, Y);
+            
 
+        }
+        public void OnDiagonalDragEnd(int index, int X, int Y)
+        {
 
+            int tmpX = X - bvgGrid.DragStart.x;
+            int tmpY = Y - bvgGrid.DragStart.y;
+            bvgGrid.DragStart = new BvgPointInt();
+
+            if (Math.Abs(tmpX) > 3 || Math.Abs(tmpY) > 3)
+            {
+                bvgGrid.bvgSize.w += tmpX;
+                bvgGrid.bvgSize.h += tmpY;
+               
+                bvgGrid.compBlazorVirtualGrid.Refresh(false);
+            }
+
+        }
 
 
         public void Dispose()
