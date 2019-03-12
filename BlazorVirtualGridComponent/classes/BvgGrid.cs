@@ -116,11 +116,11 @@ namespace BlazorVirtualGridComponent.classes
 
             if (ForFrozen)
             {
-                return string.Concat("width:", FrozenTableWidth, "px;height:", bvgSize.h, "px;");
+                return string.Concat("width:", FrozenTableWidth, "px;height:", bvgSize.H, "px;");
             }
             else
             {
-                return string.Concat("width:", NonFrozenTableWidth, "px;height:", bvgSize.h, "px;");
+                return string.Concat("width:", NonFrozenTableWidth, "px;height:", bvgSize.W, "px;");
             }
 
 
@@ -170,7 +170,7 @@ namespace BlazorVirtualGridComponent.classes
                 c.CssClass = CellStyle.CellSelected.ToString();
 
                 UpdatePkg[++j] = c.ID.ToString();
-                UpdatePkg[++j] = c.CssClassTD.ToString();
+                UpdatePkg[++j] = c.CssClass.ToString();
                 //c.InvokePropertyChanged();
             }
 
@@ -261,7 +261,7 @@ namespace BlazorVirtualGridComponent.classes
             ActiveCell.CssClass = CellStyle.CellActive.ToString();
 
 
-            BvgJsInterop.SetAttributeBatch(new string[] { ActiveCell.ID, ActiveCell.CssClassTD }, "class");
+            BvgJsInterop.SetAttributeBatch(new string[] { ActiveCell.ID, ActiveCell.CssClass }, "class");
 
 
             //ActiveCell.InvokePropertyChanged();
@@ -352,7 +352,7 @@ namespace BlazorVirtualGridComponent.classes
         {
 
             FrozenTableWidth = ColumnsOrderedList.Where(x => x.IsFrozen).Sum(x => x.ColWidth);
-            NonFrozenTableWidth = bvgSize.w - FrozenTableWidth;
+            NonFrozenTableWidth = bvgSize.W - FrozenTableWidth;
 
             DisplayedColumnsCount = (int)(NonFrozenTableWidth / bvgSettings.ColWidthMin) + 1;
 
@@ -365,10 +365,10 @@ namespace BlazorVirtualGridComponent.classes
         public void AdjustSize()
         {
 
-            DisplayedRowsCount = (int)((bvgSize.h - bvgSettings.HeaderHeight) / bvgSettings.RowHeight);
+            DisplayedRowsCount = (int)((bvgSize.H - bvgSettings.HeaderHeight) / bvgSettings.RowHeight);
 
 
-            RowHeightAdjusted = (bvgSize.h - bvgSettings.HeaderHeight) / DisplayedRowsCount;
+            RowHeightAdjusted =Math.Round((bvgSize.H - bvgSettings.HeaderHeight) / DisplayedRowsCount,3);
     
 
             VericalScroll = new BvgScroll<TItem>
@@ -378,8 +378,8 @@ namespace BlazorVirtualGridComponent.classes
                 {
                     VerticalOrHorizontal = true,
                     width = bvgSettings.ScrollSize,
-                    height = bvgSize.h,
-                    ScrollVisibleSize = bvgSize.h - bvgSettings.HeaderHeight,
+                    height = bvgSize.H,
+                    ScrollVisibleSize = bvgSize.H - bvgSettings.HeaderHeight,
                     ScrollTotalSize = RowsTotalCount * bvgSettings.RowHeight,
                     bsbStyle = new BsbStyle
                     {
@@ -399,7 +399,7 @@ namespace BlazorVirtualGridComponent.classes
                 {
 
                     VerticalOrHorizontal = false,
-                    width = bvgSize.w,
+                    width = bvgSize.W,
                     height = bvgSettings.ScrollSize,
                     ScrollVisibleSize = 0,
                     ScrollTotalSize = 0,

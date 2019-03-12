@@ -38,13 +38,10 @@ namespace BlazorVirtualGridComponent.classes
             } set
             {
                 _CssClass = value;
-                UpdateCssClassTD();
+                UpdateCssClass();
             }
         }
 
-        public string CssClassTD { get; set; }
-
-       
 
         public void InvokePropertyChanged()
         {
@@ -52,51 +49,33 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
-        private void UpdateCssClassTD()
+        private void UpdateCssClass()
         {
-
-
+            _CssClass = _CssClass.Replace("CellDiv ", null);
 
             if (bvgColumn.IsFrozen)
             {
-                if (CssClass.Equals(CellStyle.CellFrozen.ToString()))
+                if (_CssClass.Equals(CellStyle.CellFrozen.ToString()))
                 {
                     if (bvgRow.IsEven)
                     {
-                        CssClassTD = "CellFrozenAlternated";
+                        _CssClass = "CellFrozenAlternated";
                     }
-                    else
-                    {
-                        CssClassTD = CssClass;
-                    }
+                }
 
-                }
-                else
-                {
-                    CssClassTD = CssClass;
-                }
             }
             else
             {
-                if (CssClass.Equals(CellStyle.CellNonFrozen.ToString()))
+                if (_CssClass.Equals(CellStyle.CellNonFrozen.ToString()))
                 {
                     if (bvgRow.IsEven)
                     {
-                        CssClassTD = "CellNonFrozenAlternated";
+                        _CssClass = "CellNonFrozenAlternated";
                     }
-                    else
-                    {
-                        CssClassTD = CssClass;
-                    }
-
-                }
-                else
-                {
-                    CssClassTD = CssClass;
                 }
             }
 
-
+            _CssClass = string.Concat("CellDiv ", _CssClass);
         }
 
         public void UpdateID()

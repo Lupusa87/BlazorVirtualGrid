@@ -403,26 +403,26 @@ namespace BlazorVirtualGridComponent
         {
             if (!bvgGrid.HasMeasuredRect)
             {
-                bvgGrid.bvgSize.w = await BvgJsInterop.GetElementActualWidth(bvgGrid.DivContainerElementID);
+                bvgGrid.bvgSize.W = await BvgJsInterop.GetElementActualWidth(bvgGrid.DivContainerElementID);
 
                 double top = await BvgJsInterop.GetElementActualTop(bvgGrid.DivContainerElementID);
 
                 double windowHeight = await BvgJsInterop.GetWindowHeight();
 
-                bvgGrid.bvgSize.h = windowHeight - top - 30;
+                bvgGrid.bvgSize.H = windowHeight - top - 30;
                 bvgGrid.HasMeasuredRect = true;
 
 
                 if (bvgGrid.bvgSettings.LayoutFixedOrAuto)
                 {
 
-                    if (bvgGrid.bvgSettings.CompWidth < bvgGrid.bvgSize.w)
+                    if (bvgGrid.bvgSettings.CompWidth < bvgGrid.bvgSize.W)
                     {
-                        bvgGrid.bvgSize.w = bvgGrid.bvgSettings.CompWidth;
+                        bvgGrid.bvgSize.W = bvgGrid.bvgSettings.CompWidth;
                     }
-                    if (bvgGrid.bvgSettings.CompHeight < bvgGrid.bvgSize.h)
+                    if (bvgGrid.bvgSettings.CompHeight < bvgGrid.bvgSize.H)
                     {
-                        bvgGrid.bvgSize.h = bvgGrid.bvgSettings.CompHeight;
+                        bvgGrid.bvgSize.H = bvgGrid.bvgSettings.CompHeight;
                     }
                 }
             }
@@ -430,9 +430,9 @@ namespace BlazorVirtualGridComponent
   
 
 
-            if (bvgGrid.bvgSize.h > bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight)
+            if (bvgGrid.bvgSize.H > bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight)
             {
-                bvgGrid.bvgSize.h = bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight;
+                bvgGrid.bvgSize.H = bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight;
             }
 
 
@@ -465,9 +465,9 @@ namespace BlazorVirtualGridComponent
             {
                 minHeight = 50;
             }
-            if (bvgGrid.bvgSize.h < minHeight)
+            if (bvgGrid.bvgSize.H < minHeight)
             {
-                bvgGrid.bvgSize.h = minHeight;
+                bvgGrid.bvgSize.H = minHeight;
             }
 
 
@@ -476,9 +476,9 @@ namespace BlazorVirtualGridComponent
             {
                 minWidth = 50;
             }
-            if (bvgGrid.bvgSize.w < minWidth)
+            if (bvgGrid.bvgSize.W < minWidth)
             {
-                bvgGrid.bvgSize.w = minWidth;
+                bvgGrid.bvgSize.W = minWidth;
             }
             
 

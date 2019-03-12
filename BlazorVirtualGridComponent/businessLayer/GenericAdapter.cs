@@ -17,7 +17,7 @@ namespace BlazorVirtualGridComponent.businessLayer
     {
         public static void GetColumns(ColProp[] props, BvgGrid<T> _bvgGrid, T[] list, bool UpdateUI)
         {
-            int h = _bvgGrid.bvgSettings.HeaderHeight - _bvgGrid.bvgSettings.HeaderStyle.BorderWidth * 2;
+            int h = _bvgGrid.bvgSettings.HeaderHeight - 10;
 
             if (!_bvgGrid.Columns.Any())
             {

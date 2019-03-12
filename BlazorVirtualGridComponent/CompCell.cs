@@ -55,24 +55,16 @@ namespace BlazorVirtualGridComponent
             //EnabledRender = false;
 
             int k = -1;
-            builder.OpenElement(k++, "td");
-            builder.AddAttribute(k++, "id", string.Concat("tdCell", bvgCell.ID));
-            builder.AddAttribute(k++, "class", bvgCell.CssClassTD);
-
-            builder.AddAttribute(k++, "style", string.Concat("width:", bvgCell.bvgColumn.ColWidth, "px"));
-
-
-            builder.AddAttribute(k++, "onclick", Clicked);
-
+           
+            
 
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", string.Concat("divCell", bvgCell.ID));
-            builder.AddAttribute(k++, "class", "CellDiv");
+            builder.AddAttribute(k++, "class", bvgCell.CssClass);
             builder.AddAttribute(k++, "tabindex", 0); // without this div can't get focus and don't fires keyboard events
-            builder.AddAttribute(k++, "style", string.Concat("width:", bvgCell.bvgColumn.ColWidth, "px"));
+            //builder.AddAttribute(k++, "style", string.Concat("width:", bvgCell.bvgColumn.ColWidth, "px"));
+            builder.AddAttribute(k++, "onclick", Clicked);
             builder.AddAttribute(k++, "onkeydown", OnKeyDown);
-
-
 
 
             builder.OpenElement(k++, "input");
@@ -113,11 +105,6 @@ namespace BlazorVirtualGridComponent
 
 
             builder.CloseElement(); //div
-
-
-
-            builder.CloseElement();
-
 
             base.BuildRenderTree(builder);
         }

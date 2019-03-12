@@ -48,6 +48,7 @@ namespace BlazorVirtualGridComponent
                 bvgGrid.compGrid = this;
             }
 
+
             base.OnAfterRender();
         }
 
@@ -99,79 +100,38 @@ namespace BlazorVirtualGridComponent
             builder.AddAttribute(k++, "class", "myGridArea");
 
 
-            builder.OpenElement(k++, "table");
-            builder.OpenElement(k++, "tr");
-
             #region FrozenPart
 
             if (bvgGrid.Columns.Any(x => x.IsFrozen))
             {
-                builder.OpenElement(k++, "td");
-                builder.AddAttribute(k++, "id", "FrozenTd1");
-                builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(true));
-                //builder.AddAttribute(k++, "valign", "top");
-
-
+  
                 builder.OpenElement(k++, "div");
                 builder.AddAttribute(k++, "id", "FrozenDiv1");
-                builder.AddAttribute(k++, "class", "GridDiv Border1");
-                builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(true));
-
-                builder.OpenElement(k++, "table");
-                builder.AddAttribute(k++, "id", "FrozenTable1");
-                builder.AddAttribute(k++, "style", bvgGrid.GetStyleTable(true));
-
-                builder.OpenElement(k++, "thead");
-                builder.OpenElement(k++, "tr");
-
+                builder.AddAttribute(k++, "class", "myContainerFrozen GridDiv Border1");
+               
 
                 builder.OpenComponent<CompAreaColumns<TItem>>(k++);
                 builder.AddAttribute(k++, "ForFrozen", true);
                 builder.AddAttribute(k++, "bvgAreaColumns", bvgGrid.bvgAreaColumnsFrozen);
                 builder.CloseComponent();
-                
 
-
-                builder.CloseElement(); //tr
-                builder.CloseElement(); //thead
-
-                builder.OpenElement(k++, "tbody");
 
                 builder.OpenComponent<CompAreaRows<TItem>>(k++);
                 builder.AddAttribute(k++, "ForFrozen", true);
                 builder.AddAttribute(k++, "bvgAreaRows", bvgGrid.bvgAreaRowsFrozen);
                 builder.CloseComponent();
 
-                builder.CloseElement(); //tbody
-
-                builder.CloseElement(); //table
 
                 builder.CloseElement(); //div
-
-                builder.CloseElement(); //td
-
 
             }
             #endregion
 
             #region NonFrozenPart
-            builder.OpenElement(k++, "td");
-            builder.AddAttribute(k++, "id", "NonFrozenTd1");
-            builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(false));
-            //builder.AddAttribute(k++, "align", "left");
-
-
+           
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", "NonFrozenDiv1");
-            builder.AddAttribute(k++, "class", "GridDiv Border1");
-            builder.AddAttribute(k++, "style", bvgGrid.GetStyleDiv(false));
-
-            builder.OpenElement(k++, "table");
-            builder.AddAttribute(k++, "id", "NonFrozenTable1");
-            builder.AddAttribute(k++, "style", bvgGrid.GetStyleTable(false));
-
-            builder.OpenElement(k++, "thead");
-            builder.OpenElement(k++, "tr");
+            builder.AddAttribute(k++, "class", "myContainerNonFrozen GridDiv Border2");
 
 
             builder.OpenComponent<CompAreaColumns<TItem>>(k++);
@@ -180,27 +140,17 @@ namespace BlazorVirtualGridComponent
             builder.CloseComponent();
 
 
-            builder.CloseElement(); //tr
-            builder.CloseElement(); //thead
-
-            builder.OpenElement(k++, "tbody");
-
             builder.OpenComponent<CompAreaRows<TItem>>(k++);
             builder.AddAttribute(k++, "ForFrozen", false);
             builder.AddAttribute(k++, "bvgAreaRows", bvgGrid.bvgAreaRowsNonFrozen);
             builder.CloseComponent();
 
-            builder.CloseElement(); //tbody
 
-            builder.CloseElement(); //table
             builder.CloseElement(); //div
             
-
-            builder.CloseElement(); //td
             #endregion
 
-            builder.CloseElement(); //tr
-            builder.CloseElement(); //table
+
 
             builder.CloseElement(); //div
 
@@ -262,14 +212,14 @@ namespace BlazorVirtualGridComponent
         public void OnDiagonalDragEnd(int index, int X, int Y)
         {
 
-            int tmpX = X - bvgGrid.DragStart.x;
-            int tmpY = Y - bvgGrid.DragStart.y;
+            int tmpX = X - bvgGrid.DragStart.X;
+            int tmpY = Y - bvgGrid.DragStart.Y;
             bvgGrid.DragStart = new BvgPointInt();
 
             if (Math.Abs(tmpX) > 3 || Math.Abs(tmpY) > 3)
             {
-                bvgGrid.bvgSize.w += tmpX;
-                bvgGrid.bvgSize.h += tmpY;
+                bvgGrid.bvgSize.W += tmpX;
+                bvgGrid.bvgSize.H += tmpY;
                
                 bvgGrid.compBlazorVirtualGrid.Refresh(false);
             }

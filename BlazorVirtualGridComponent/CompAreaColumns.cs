@@ -74,7 +74,7 @@ namespace BlazorVirtualGridComponent
 
             foreach (BvgColumn<TItem> c in bvgAreaColumns.bvgGrid.Columns.Where(x => x.IsFrozen == ForFrozen).OrderBy(x => x.SequenceNumber))
             {
-
+                
                 builder.OpenComponent<CompColumn<TItem>>(k++);
                 builder.AddAttribute(k++, "bvgColumn", c);
                 builder.CloseComponent();

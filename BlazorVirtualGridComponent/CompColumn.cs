@@ -53,16 +53,10 @@ namespace BlazorVirtualGridComponent
 
             int k = -1;
 
-            builder.OpenElement(k++, "th");
-            builder.AddAttribute(k++, "class", bvgColumn.CssClass);
-
-
-
-
+          
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", "divCol" + bvgColumn.ID);
-            builder.AddAttribute(k++, "class", "ColumnDiv");
-            builder.AddAttribute(k++, "style", string.Concat("width:", bvgColumn.ColWidth, "px"));
+            builder.AddAttribute(k++, "class", "ColumnDiv " + bvgColumn.CssClass);
 
 
             builder.OpenElement(k++, "div"); //to arrange text in center
@@ -96,12 +90,6 @@ namespace BlazorVirtualGridComponent
 
 
             builder.CloseElement(); //div
-
-
-            builder.CloseElement(); //th
-
-
-
         }
 
 

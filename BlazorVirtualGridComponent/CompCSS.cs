@@ -49,11 +49,10 @@ namespace BlazorVirtualGridComponent
             CssHelper<TItem> cssHelper = new CssHelper<TItem>(bvgGrid);
 
             builder.OpenElement(k++, "style");
+            builder.AddAttribute(k++,"id","bvgStyle1");
             builder.AddContent(k++, cssHelper.GetString());
             builder.CloseElement();
 
-
-     
 
             //builder.OpenElement(k++, "link");
             //builder.AddAttribute(k++, "rel", "stylesheet");

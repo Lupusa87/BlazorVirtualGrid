@@ -49,12 +49,10 @@ namespace BlazorVirtualGridComponent
          
             if (bvgRow.PropertyChanged == null)
             {
-                bvgRow.PropertyChanged += BvgRow_PropertyChanged;
+                bvgRow.PropertyChanged = BvgRow_PropertyChanged;
             }
 
             int k = -1;
-
-            builder.OpenElement(k++, "tr");
 
             foreach (var cell in bvgRow.Cells.Where(x=>x.bvgColumn.IsFrozen == ForFrozen).OrderBy(x=>x.bvgColumn.SequenceNumber))
             {
@@ -63,10 +61,6 @@ namespace BlazorVirtualGridComponent
                 builder.CloseComponent();
             }
 
-            builder.CloseElement(); //tr
-
-
-           
         }
 
 

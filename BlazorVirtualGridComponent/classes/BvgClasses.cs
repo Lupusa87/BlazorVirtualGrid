@@ -10,49 +10,99 @@ namespace BlazorVirtualGridComponent.classes
 
     public class BvgPointInt
     {
-        public int x { get; set; }
-        public int y { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
 
-        public BvgPointInt(int _x = 0, int _y = 0)
+        public BvgPointInt(int pX = 0, int pY = 0)
         {
-            x = _x;
-            y = _y;
+            X = pX;
+            Y = pY;
         }
     }
 
     public class BvgPointDouble
     {
-        public double x { get; set; }
-        public double y { get; set; }
+        private double _X { get; set; }
 
-        public BvgPointDouble(double _x = 0, double _y = 0)
+        public double X {
+            get
+            {
+                return _X;
+            }
+            set
+            {
+                _X = Math.Round(value, 3);
+            }
+        }
+
+        private double _Y { get; set; }
+
+        public double Y
         {
-            x = _x;
-            y = _y;
+            get
+            {
+                return _Y;
+            }
+            set
+            {
+                _Y = Math.Round(value, 3);
+            }
+        }
+
+        public BvgPointDouble(double pX = 0, double pY = 0)
+        {
+            _X = Math.Round(pX,3);
+            _Y = Math.Round(pY,3);
         }
     }
 
     public class BvgSizeInt
     {
-        public int w { get; set; }
-        public int h { get; set; }
+        public int W { get; set; }
+        public int H { get; set; }
 
-        public BvgSizeInt(int _w = 0, int _h = 0)
+        public BvgSizeInt(int pW = 0, int pH = 0)
         {
-            w = _w;
-            h = _h;
+            W = pW;
+            H = pH;
         }
     }
 
     public class BvgSizeDouble
     {
-        public double w { get; set; }
-        public double h { get; set; }
+        private double _W { get; set; }
 
-        public BvgSizeDouble(double _w = 0, double _h = 0)
+        public double W
         {
-            w = _w;
-            h = _h;
+            get
+            {
+                return _W;
+            }
+            set
+            {
+                _W = Math.Round(value, 3);
+            }
+        }
+
+        private double _H { get; set; }
+
+        public double H
+        {
+            get
+            {
+                return _H;
+            }
+            set
+            {
+                _H = Math.Round(value, 3);
+            }
+        }
+
+
+        public BvgSizeDouble(double pW = 0, double pH = 0)
+        {
+            _W = Math.Round(pW,3);
+            _H = Math.Round(pH,3);
         }
     }
 

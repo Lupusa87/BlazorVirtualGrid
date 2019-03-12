@@ -59,6 +59,7 @@ namespace BlazorVirtualGridComponent
                 "BvgJsFunctions.GetElementScrollLeft", elementID);
         }
 
+
         public static Task<bool> SetFocus(string elementID)
         {
             return jsRuntime.InvokeAsync<bool>(

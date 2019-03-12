@@ -41,11 +41,10 @@ namespace BlazorVirtualGrid.Pages
        
         protected override void OnInit()
         {
-
-            //FillList(5, 7);
+           
             FillList(200, 200);
 
-
+           
             bvgSettings1.LayoutFixedOrAuto = false;
 
             ConfigureBvgSettings1();
@@ -58,14 +57,16 @@ namespace BlazorVirtualGrid.Pages
             bvgSettings1.ColumnWidthsDictionary = new ValuesContainer<Tuple<string, ushort>>();
             bvgSettings1.ColumnWidthsDictionary
                 .Add(Tuple.Create(nameof(MyItem.C3), (ushort)200))
-                .Add(Tuple.Create(nameof(MyItem.Date), (ushort)200));
+                .Add(Tuple.Create(nameof(MyItem.Date), (ushort)100));
 
 
             PropertyInfo[] props = typeof(MyItem).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var item in props.Where(x=>x.Name!="Date" && x.Name!="C3"))
             {
                 bvgSettings1.ColumnWidthsDictionary
-                .Add(Tuple.Create(item.Name, (ushort)rnd1.Next(bvgSettings1.ColWidthMin, bvgSettings1.ColWidthMax)));
+                    .Add(Tuple.Create(item.Name, bvgSettings1.ColWidthMin));
+                //.Add(Tuple.Create(item.Name, (ushort)rnd1.Next(bvgSettings1.ColWidthMin, bvgSettings1.ColWidthMax)));
+
             }
 
 
@@ -153,10 +154,8 @@ namespace BlazorVirtualGrid.Pages
             {
                 BackgroundColor = "#4d88ff",
                 ForeColor = "#FFFFFF",
-                BorderColor = "#000000",
-                BorderWidth = 1,
-                OutlineColor = "#0000FF",
-                OutlineWidth = 3,
+                BorderColor = "#FFFFFF",
+                BorderWidth = 2,
             };
             bvgSettings1.HeaderStyle = new BvgStyle
             {
@@ -172,9 +171,11 @@ namespace BlazorVirtualGrid.Pages
                 BorderColor = "#000000",
                 BorderWidth = 1,
             };
+
             bvgSettings1.RowHeight = 40;
             bvgSettings1.HeaderHeight = 50;
-
+            bvgSettings1.ColWidthMin = 220;
+            bvgSettings1.ColWidthMax = 400;
 
             //bvgSettings1.VerticalScrollStyle = new BvgStyleScroll
             //{
@@ -237,8 +238,6 @@ namespace BlazorVirtualGrid.Pages
                 ForeColor = "#FFFFFF",
                 BorderColor = "#000000",
                 BorderWidth = 1,
-                OutlineColor = "#0000FF",
-                OutlineWidth = 3,
             };
             bvgSettings2.HeaderStyle = new BvgStyle
             {
@@ -291,11 +290,6 @@ namespace BlazorVirtualGrid.Pages
 
 
         }
-
-        public void Cmdqwer()
-        {
-
-        }
             
 
         public void CmdNewList2()
@@ -329,63 +323,33 @@ namespace BlazorVirtualGrid.Pages
             StateHasChanged();
         }
 
-        public void CmdPinColList1()
-        {
-            
-        }
-
-        public void CmdPinColList2()
-        {
-            
-        }
-
-       
-
 
         private void FillList(int Par_Min, int Par_Max)
         {
-
             list1 = new List<MyItem>();
-            for (int i = 1; i <= rnd1.Next(Par_Min, Par_Max); i++)
+
+            PropertyInfo[] AllProps = typeof(MyItem).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.Name.StartsWith("C")).ToArray();
+
+
+            for (ushort i = 1; i <= rnd1.Next(Par_Min, Par_Max); i++)
             {
-                list1.Add(new MyItem
+                MyItem n  = new MyItem
                 {
-                    ID = (ushort)i,
-                    Name = "Item " + i,
+                    ID = i,
+                    Name = string.Concat("Item " + i),
 
                     SomeBool = rnd1.Next(0, 5) > 1,
-                    Date = DateTime.Now.AddDays(-rnd1.Next(1, 5000)).AddHours(-rnd1.Next(1, 5000)).AddSeconds(-rnd1.Next(1, 5000)),
-                    C1 = "C1" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C2 = "C2" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C3 = "C3" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C4 = "C4" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C5 = "C5" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C6 = "C6" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C7 = "C7" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C8 = "C8" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C9 = "C9" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C10 = "C10" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C11 = "C11" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C12 = "C12" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C13 = "C13" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C14 = "C14" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C15 = "C15" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C16 = "C16" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C17 = "C17" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C18 = "C18" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C19 = "C19" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C20 = "C20" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C21 = "C21" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C22 = "C22" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C23 = "C23" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C24 = "C24" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C25 = "C25" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C26 = "C26" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C27 = "C27" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C28 = "C28" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C29 = "C29" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                    C30 = "C30" + Guid.NewGuid().ToString("d").Substring(1, 4),
-                });
+                    Date = DateTime.Now.AddDays(-i), 
+                };
+
+
+                for (int j = 0; j < AllProps.Count(); j++)
+                {
+                    AllProps[j].SetValue(n, AllProps[j].Name + "R" + i);
+                }
+
+
+                list1.Add(n);
             }
         }
 

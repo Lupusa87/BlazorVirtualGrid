@@ -44,7 +44,7 @@ namespace BlazorVirtualGridComponent.classes
                 }
 
                 l.Add(item.ID);
-                l.Add(item.CssClassTD);
+                l.Add(item.CssClass);
                 //item.InvokePropertyChanged();
 
             }

@@ -60,10 +60,8 @@ namespace BlazorVirtualGridComponent.Modals
             currStyle.BackgroundColor = bvgGrid.bvgSettings.NonFrozenCellStyle.BackgroundColor;
             currStyle.ForeColor = bvgGrid.bvgSettings.NonFrozenCellStyle.ForeColor;
             currStyle.BorderColor = bvgGrid.bvgSettings.NonFrozenCellStyle.BorderColor;
-            currStyle.OutlineColor = bvgGrid.bvgSettings.NonFrozenCellStyle.OutlineColor;
             currStyle.BorderWidth = bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth;
-            currStyle.OutlineWidth = bvgGrid.bvgSettings.NonFrozenCellStyle.OutlineWidth;
-
+           
 
             currStyle.ScrollButtonColor = bvgGrid.bvgSettings.HorizontalScrollStyle.ButtonColor;
             currStyle.ScrollThumbColor = bvgGrid.bvgSettings.HorizontalScrollStyle.ThumbColor;
@@ -200,9 +198,7 @@ namespace BlazorVirtualGridComponent.Modals
                 BackgroundColor = currStyle.BackgroundColor,
                 ForeColor = currStyle.ForeColor,
                 BorderColor = currStyle.BorderColor,
-                OutlineColor = currStyle.OutlineColor,
                 BorderWidth = (sbyte)currStyle.BorderWidth,
-                OutlineWidth = (sbyte)currStyle.OutlineWidth,
             };
 
 
@@ -264,10 +260,8 @@ namespace BlazorVirtualGridComponent.Modals
             currStyle.BackgroundColor = s.BackgroundColor;
             currStyle.ForeColor = s.ForeColor;
             currStyle.BorderColor = s.BorderColor;
-            currStyle.OutlineColor = s.OutlineColor;
             currStyle.BorderWidth = s.BorderWidth;
-            currStyle.OutlineWidth = s.OutlineWidth;
-
+        
 
         }
 
@@ -313,21 +307,6 @@ namespace BlazorVirtualGridComponent.Modals
         {
             public Action<int> PropertyChanged;
 
-            private string _OutlineColor { get; set; }
-            public string OutlineColor
-            {
-                get
-                {
-
-                    return _OutlineColor;
-                }
-                set
-                {
-
-                    _OutlineColor = value;
-                    PropertyChanged?.Invoke(0);
-                }
-            }
 
             private string _BorderColor { get; set; }
             public string BorderColor
@@ -394,23 +373,6 @@ namespace BlazorVirtualGridComponent.Modals
                 {
 
                     _BorderWidth = value;
-                    PropertyChanged?.Invoke(0);
-                }
-            }
-
-            private double _OutlineWidth { get; set; }
-
-            public double OutlineWidth
-            {
-                get
-                {
-
-                    return _OutlineWidth;
-                }
-                set
-                {
-
-                    _OutlineWidth = value;
                     PropertyChanged?.Invoke(0);
                 }
             }

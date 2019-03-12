@@ -13,6 +13,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
         private BvgGrid<TItem> bvgGrid = new BvgGrid<TItem>();
 
+        private BCssItem c = new BCssItem(string.Empty);
 
         public CssHelper(BvgGrid<TItem> _bvgGrid)
         {
@@ -41,36 +42,42 @@ namespace BlazorVirtualGridComponent.businessLayer
         {
             GenerateGlobalCSS();
 
-            GenerateCSSGridCSS();
+            GenerateCSSGridLayoutCSS();
+
+
+            if (bvgGrid.HasMeasuredRect)
+            {
+                GenerateCSSGridFrozenCSS();
+
+                GenerateCSSGridNonFrozenCSS();
+            }
 
             GenerateModalCSS();
 
-            BCssItem c = new BCssItem("td");
-            c.Values.Add("text-align", "center");
-            c.Values.Add("vertical-align", "middle");
-            blazorCSS.Children.Add(c);
+           
 
             c = new BCssItem(".CellDiv");
+            c.Values.Add("border-style", "solid");
             c.Values.Add("overflow", "hidden");
             c.Values.Add("white-space", "nowrap");
             c.Values.Add("text-overflow", "ellipsis");
-            c.Values.Add("height", (bvgGrid.RowHeightAdjusted - bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth) + "px");
-            c.Values.Add("line-height", (bvgGrid.RowHeightAdjusted - bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth) + "px");
-            blazorCSS.Children.Add(c);
-
-
-
-            c = new BCssItem("th");
             c.Values.Add("text-align", "center");
-            c.Values.Add("border-style", "solid");
+            c.Values.Add("vertical-align", "middle");
+            c.Values.Add("cursor", "cell");
+            c.Values.Add("height", bvgGrid.RowHeightAdjusted + "px");
+            c.Values.Add("line-height", bvgGrid.RowHeightAdjusted + "px");
             blazorCSS.Children.Add(c);
 
 
             c = new BCssItem(".ColumnDiv");
+            c.Values.Add("border-style", "solid");
+            c.Values.Add("font-weight", "bold");
             c.Values.Add("display", "flex");
             c.Values.Add("flex-direction", "row");
-            c.Values.Add("height", (bvgGrid.bvgSettings.HeaderHeight - bvgGrid.bvgSettings.HeaderStyle.BorderWidth) + "px");
-            c.Values.Add("line-height", (bvgGrid.bvgSettings.HeaderHeight - bvgGrid.bvgSettings.HeaderStyle.BorderWidth) + "px");
+            c.Values.Add("text-align", "center");
+            c.Values.Add("cursor", "cell");
+            c.Values.Add("height", bvgGrid.bvgSettings.HeaderHeight + "px");
+            c.Values.Add("line-height", bvgGrid.bvgSettings.HeaderHeight + "px");
             blazorCSS.Children.Add(c);
 
 
@@ -90,6 +97,13 @@ namespace BlazorVirtualGridComponent.businessLayer
             c.Values.Add("border", "1px solid black");
             blazorCSS.Children.Add(c);
 
+
+            c = new BCssItem(".Border2");
+            c.Values.Add("border-style", "solid");
+            c.Values.Add("border-color", "black");
+            c.Values.Add("border-width", "1px 1px 1px 0");
+            blazorCSS.Children.Add(c);
+
             GenerateCellCSS();
 
             GenerateHeaderCSS();
@@ -101,71 +115,56 @@ namespace BlazorVirtualGridComponent.businessLayer
         private void GenerateCellCSS()
         {
 
-            BCssItem c = new BCssItem(".CellNonFrozen");
-            c.Values.Add("border-style", "solid");
-            c.Values.Add("height", bvgGrid.RowHeightAdjusted + "px");
+            c = new BCssItem(".CellNonFrozen");
             c.Values.Add("background-color", bvgGrid.bvgSettings.NonFrozenCellStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.NonFrozenCellStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.NonFrozenCellStyle.BorderColor);
-            c.Values.Add("border-width", bvgGrid.bvgSettings.NonFrozenCellStyle.BorderWidth + "px;");
-            c.Values.Add("cursor", "cell");
+            c.Values.Add("border-width", bvgGrid.bvgSettings.NonFrozenCellStyle.GetBorderWidth());
             blazorCSS.Children.Add(c);
 
 
             c = new BCssItem(".CellNonFrozenAlternated");
-            c.Values.Add("border-style", "solid");
-            c.Values.Add("height", bvgGrid.RowHeightAdjusted + "px");
             c.Values.Add("background-color", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.BorderColor);
-            c.Values.Add("border-width", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.BorderWidth + "px;");
-            c.Values.Add("cursor", "cell");
+            c.Values.Add("border-width", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.GetBorderWidth());
             blazorCSS.Children.Add(c);
 
             c = new BCssItem(".CellFrozen");
-            c.Values.Add("border-style", "solid");
-            c.Values.Add("height", bvgGrid.RowHeightAdjusted + "px");
             c.Values.Add("background-color", bvgGrid.bvgSettings.FrozenCellStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.FrozenCellStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.FrozenCellStyle.BorderColor);
-            c.Values.Add("border-width", bvgGrid.bvgSettings.FrozenCellStyle.BorderWidth + "px;");
-            c.Values.Add("cursor", "cell");
+            c.Values.Add("border-width", bvgGrid.bvgSettings.FrozenCellStyle.GetBorderWidth());
             blazorCSS.Children.Add(c);
 
 
             c = new BCssItem(".CellFrozenAlternated");
-            c.Values.Add("border-style", "solid");
-            c.Values.Add("height", bvgGrid.RowHeightAdjusted + "px");
             c.Values.Add("background-color", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.BorderColor);
-            c.Values.Add("border-width", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.BorderWidth + "px;");
-            c.Values.Add("cursor", "cell");
+            c.Values.Add("border-width", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.GetBorderWidth());
             blazorCSS.Children.Add(c);
 
             c = new BCssItem(".CellSelected");
-            c.Values.Add("border-style", "solid");
-            c.Values.Add("height", bvgGrid.RowHeightAdjusted + "px");
             c.Values.Add("background-color", bvgGrid.bvgSettings.SelectedCellStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.SelectedCellStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.SelectedCellStyle.BorderColor);
-            c.Values.Add("border-width", bvgGrid.bvgSettings.SelectedCellStyle.BorderWidth + "px");
-            c.Values.Add("cursor", "pointer");
+            c.Values.Add("border-width", bvgGrid.bvgSettings.SelectedCellStyle.GetBorderWidth());
             blazorCSS.Children.Add(c);
 
 
 
             c = new BCssItem(".CellActive");
-            c.Values.Add("border-style", "solid");
-            c.Values.Add("height", bvgGrid.RowHeightAdjusted + "px");
             c.Values.Add("background-color", bvgGrid.bvgSettings.ActiveCellStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.ActiveCellStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.ActiveCellStyle.BorderColor);
             c.Values.Add("border-width", bvgGrid.bvgSettings.ActiveCellStyle.BorderWidth + "px");
-            c.Values.Add("cursor", "pointer");
-            c.Values.Add("outline", bvgGrid.bvgSettings.ActiveCellStyle.OutlineWidth + "px solid " + bvgGrid.bvgSettings.ActiveCellStyle.OutlineColor);
             blazorCSS.Children.Add(c);
 
+
+            c = new BCssItem(".CellActive:focus");
+            c.Values.Add("outline", "none");
+            blazorCSS.Children.Add(c);
 
         }
 
@@ -173,20 +172,15 @@ namespace BlazorVirtualGridComponent.businessLayer
         private void GenerateHeaderCSS()
         {
 
-            BCssItem c = new BCssItem(".HeaderRegular");
-            c.Values.Add("border-style", "solid");
-            c.Values.Add("height", bvgGrid.RowHeightAdjusted + "px");
+            c = new BCssItem(".HeaderRegular");
             c.Values.Add("background-color", bvgGrid.bvgSettings.HeaderStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.HeaderStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.HeaderStyle.BorderColor);
             c.Values.Add("border-width", bvgGrid.bvgSettings.HeaderStyle.BorderWidth + "px;");
-            c.Values.Add("cursor", "cell");
             blazorCSS.Children.Add(c);
 
 
             c = new BCssItem(".HeaderActive");
-            c.Values.Add("border-style", "solid");
-            c.Values.Add("height", bvgGrid.RowHeightAdjusted + "px");
             c.Values.Add("background-color", bvgGrid.bvgSettings.ActiveHeaderStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.ActiveHeaderStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.ActiveHeaderStyle.BorderColor);
@@ -199,7 +193,7 @@ namespace BlazorVirtualGridComponent.businessLayer
         private void GenerateModalCSS()
         {
 
-            BCssItem c = new BCssItem(".bm-container");
+            c = new BCssItem(".bm-container");
             c.Values.Add("display", "none");
             c.Values.Add("align-items", "center");
             c.Values.Add("justify-content", "center");
@@ -264,29 +258,41 @@ namespace BlazorVirtualGridComponent.businessLayer
 
         }
 
-        private void GenerateCSSGridCSS()
+        private void GenerateCSSGridLayoutCSS()
         {
 
-            BCssItem c = new BCssItem(".myContainer");
+            c = new BCssItem(".myContainer");
             c.Values.Add("display", "grid");
             c.Values.Add("position", "relative");
 
             if (bvgGrid.HasMeasuredRect)
             {
-                c.Values.Add("width", bvgGrid.bvgSize.w +"px");
-                c.Values.Add("height", bvgGrid.bvgSize.h + "px");
+                c.Values.Add("width", bvgGrid.bvgSize.W +"px");
+                c.Values.Add("height", bvgGrid.bvgSize.H + "px");
             }
 
             c.Values.Add("grid-template-columns", "auto "+ bvgGrid.bvgSettings.ScrollSize + "px");
             c.Values.Add("grid-template-rows", "auto "+ bvgGrid.bvgSettings.ScrollSize + "px");
-            //c.Values.Add("overflow", "auto");
+
             blazorCSS.Children.Add(c);
 
-            
-            c = new BCssItem(".myGridArea");
-            c.Values.Add("grid-column", "1/1");
-            c.Values.Add("grid-row", "1/1");
-            blazorCSS.Children.Add(c);
+            if (bvgGrid.Columns.Any(x => x.IsFrozen))
+            {
+                c = new BCssItem(".myGridArea");
+                c.Values.Add("grid-column", "1/1");
+                c.Values.Add("grid-row", "1/1");
+                c.Values.Add("display", "grid");
+                c.Values.Add("position", "relative");
+                c.Values.Add("grid-template-columns", bvgGrid.FrozenTableWidth + "px " + bvgGrid.NonFrozenTableWidth + "px");
+                blazorCSS.Children.Add(c);
+            }
+            else
+            {
+                c = new BCssItem(".myGridArea");
+                c.Values.Add("grid-column", "1/1");
+                c.Values.Add("grid-row", "1/1");
+                blazorCSS.Children.Add(c);
+            }
 
             c = new BCssItem(".myHorizontalScroll");
             c.Values.Add("grid-column", "1/1");
@@ -307,18 +313,76 @@ namespace BlazorVirtualGridComponent.businessLayer
             
         }
 
-        private void GenerateGlobalCSS()
+        private void GenerateCSSGridFrozenCSS()
         {
 
-            BCssItem c = new BCssItem("*");
+            c = new BCssItem(".myContainerFrozen");
+            c.Values.Add("display", "grid");
+            c.Values.Add("position", "relative");
+
+            c.Values.Add("width", bvgGrid.FrozenTableWidth + "px");
+            c.Values.Add("height", bvgGrid.bvgSize.H + "px");
+
+            StringBuilder sb1 = new StringBuilder();
+            foreach (var item in bvgGrid.Columns.Where(x => x.IsFrozen))
+            {
+                sb1.Append(item.ColWidth);
+                sb1.Append("px ");
+            }
+
+            c.Values.Add("grid-template-columns", sb1.ToString().Trim());
+            c.Values.Add("grid-template-rows", bvgGrid.bvgSettings.HeaderHeight + "px repeat(" + bvgGrid.DisplayedRowsCount + ", " + bvgGrid.RowHeightAdjusted + "px)");
+            c.Values.Add("overflow", "auto");
+            blazorCSS.Children.Add(c);
+
+
+        }
+
+
+        private void GenerateCSSGridNonFrozenCSS()
+        {
+
+            c = new BCssItem(".myContainerNonFrozen");
+            c.Values.Add("display", "grid");
+            c.Values.Add("position", "relative");
+
+
+            c.Values.Add("width", bvgGrid.NonFrozenTableWidth + "px");
+            c.Values.Add("height", bvgGrid.bvgSize.H + "px");
+
+            StringBuilder sb1 = new StringBuilder();
+            foreach (var item in bvgGrid.Columns.Where(x => x.IsFrozen == false))
+            {
+                sb1.Append(item.ColWidth);
+                sb1.Append("px ");
+            }
+
+            c.Values.Add("grid-template-columns", sb1.ToString().Trim());
+            c.Values.Add("grid-template-rows", bvgGrid.bvgSettings.HeaderHeight + "px repeat(" + bvgGrid.DisplayedRowsCount + ", " + bvgGrid.RowHeightAdjusted + "px)");
+            c.Values.Add("overflow", "auto");
+            blazorCSS.Children.Add(c);
+        }
+
+        private void GenerateGlobalCSS()
+        {
+            c = new BCssItem("html");
             c.Values.Add("box-sizing", "border-box");
+            blazorCSS.Children.Add(c);
+
+            c = new BCssItem("*, *:before, *:after");
+            c.Values.Add("box-sizing", "inherit");
             c.Values.Add("padding", "0");
             c.Values.Add("margin", "0");
             blazorCSS.Children.Add(c);
 
             c = new BCssItem("body");
             c.Values.Add("line-height", "0");
+            c.Values.Add("padding", "0");
+            c.Values.Add("margin", "0");
             blazorCSS.Children.Add(c);
+
+
+           
         }
 
     }

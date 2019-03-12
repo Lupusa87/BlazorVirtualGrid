@@ -176,10 +176,8 @@ window.BvgJsFunctions = {
 
         for (var i = 0; i < b.length; i += 2) {
 
-            if (document.getElementById("tdCell" + b[i]) !== null) {
-                document.getElementById("tdCell" + b[i]).setAttribute("style", "width:" + b[i + 1] + "px");
-                document.getElementById("divCell" + b[i]).setAttribute("style", "width:" + (b[i + 1]-5) + "px");
-
+            if (document.getElementById("divCell" + b[i]) !== null) {
+                document.getElementById("divCell" + b[i]).setAttribute("style", "width:" + b[i + 1] + "px");
             }
         }
         return true;
@@ -210,8 +208,8 @@ window.BvgJsFunctions = {
 
         for (var i = 0; i < b.length; i += 2) {
 
-            if (document.getElementById("tdCell" + b[i]) !== null) {
-                document.getElementById("tdCell" + b[i]).setAttribute(Blazor.platform.toJavaScriptString(attr), b[i + 1]);
+            if (document.getElementById("divCell" + b[i]) !== null) {
+                document.getElementById("divCell" + b[i]).setAttribute(Blazor.platform.toJavaScriptString(attr), b[i + 1]);
             }
         }
         return true;

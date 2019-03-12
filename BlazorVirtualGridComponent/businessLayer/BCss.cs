@@ -23,13 +23,8 @@ namespace BlazorVirtualGridComponent.businessLayer
                 sb1.Append(item.Selector);
                 sb1.Append("{");
 
-                foreach (var i in item.Values)
-                {
-                    sb1.Append(i.Key);
-                    sb1.Append(":");
-                    sb1.Append(i.Value);
-                    sb1.Append(";");
-                }
+                sb1.Append(item.GetRules());
+
                 sb1.Append("}");
             }
 
@@ -37,35 +32,16 @@ namespace BlazorVirtualGridComponent.businessLayer
         }
 
 
-
-
         public string GetStyle(string selector)
         {
 
             if (Children.Any(x => x.Selector.Equals(selector, StringComparison.InvariantCultureIgnoreCase)))
             {
-                return GetSelector(Children.Single(x => x.Selector.Equals(selector, StringComparison.InvariantCultureIgnoreCase)));
+                return Children.Single(x => x.Selector.Equals(selector, StringComparison.InvariantCultureIgnoreCase)).GetRules();
             }
 
             return string.Empty;
         }
-
-        private string GetSelector(BCssItem item)
-        {
-            StringBuilder sb1 = new StringBuilder();
-
-            foreach (var i in item.Values)
-            {
-                sb1.Append(i.Key);
-                sb1.Append(":");
-                sb1.Append(i.Value);
-                sb1.Append(";");
-            }
-
-
-            return sb1.ToString();
-        }
-
 
     }
 
@@ -84,5 +60,21 @@ namespace BlazorVirtualGridComponent.businessLayer
             Selector = s;
         }
 
+
+        public string GetRules()
+        {
+            StringBuilder sb1 = new StringBuilder();
+
+            foreach (var i in Values)
+            {
+                sb1.Append(i.Key);
+                sb1.Append(":");
+                sb1.Append(i.Value);
+                sb1.Append(";");
+            }
+
+
+            return sb1.ToString();
+        }
     }
 }
