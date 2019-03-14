@@ -43,6 +43,12 @@ namespace BlazorVirtualGridComponent.businessLayer
             return string.Empty;
         }
 
+
+
+        public string GetStyleWithSelector(string selector)
+        {
+            return (selector+"{"+GetStyle(selector)+"}").Replace(";}", "}");
+        }
     }
 
     public class BCssItem

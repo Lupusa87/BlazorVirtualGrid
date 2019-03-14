@@ -18,6 +18,9 @@ namespace BlazorVirtualGridComponent.businessLayer
         public CssHelper(BvgGrid<TItem> _bvgGrid)
         {
             bvgGrid = _bvgGrid;
+
+            bvgGrid.cssGridHelper = new CssGridHelper<TItem>(bvgGrid);
+
             GenerateCSS();
         }
 
@@ -25,6 +28,11 @@ namespace BlazorVirtualGridComponent.businessLayer
         public string GetStyle(string selector)
         {
             return blazorCSS.GetStyle(selector);
+        }
+
+        public string GetStyleWithSelector(string selector)
+        {
+            return blazorCSS.GetStyleWithSelector(selector);
         }
 
 

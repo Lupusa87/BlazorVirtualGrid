@@ -1,10 +1,12 @@
 ﻿using BlazorSplitterComponent;
+using BlazorVirtualGridComponent.businessLayer;
 using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BlazorVirtualGridComponent
@@ -12,7 +14,7 @@ namespace BlazorVirtualGridComponent
     public class CompColumn<TItem> : ComponentBase, IDisposable
     {
 
-
+      
 
         [Parameter]
         protected BvgColumn<TItem> bvgColumn { get; set; }
@@ -151,40 +153,27 @@ namespace BlazorVirtualGridComponent
                         bvgColumn.bvgGrid.ColumnsOrderedListNonFrozen.Single(x => x.prop.Name.Equals(bvgColumn.prop.Name)).ColWidth = bvgColumn.ColWidth;
                         bvgColumn.bvgGrid.UpdateNonFrozenColwidthSumsByElement();
                     }
-
-
-
-                   
-
-
+                    
+                    
                     double currScrollPosition = bvgColumn.bvgGrid.HorizontalScroll.compBlazorScrollbar.CurrentPosition;
-
+                   
+                   
                     bvgColumn.bvgGrid.CalculateWidths();
 
-                    bvgColumn.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(currScrollPosition);
-
-
-
+                  
 
                     bvgColumn.bvgGrid.OnColumnResize?.Invoke();
 
-                    if (bvgColumn.IsFrozen)
-                    {
-                        string[] updatePkg = new string[4];
-                        updatePkg[0] = bvgColumn.bvgGrid.GetStyleDiv(true);
-                        updatePkg[1] = bvgColumn.bvgGrid.GetStyleTable(true);
-                        updatePkg[2] = bvgColumn.bvgGrid.GetStyleDiv(false);
-                        updatePkg[3] = bvgColumn.bvgGrid.GetStyleTable(false);
+                    bvgColumn.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(currScrollPosition);
 
-
-                        BvgJsInterop.UpdateFrozenNonFrozenWidth(updatePkg);
-                    }
                 }
 
 
             }
 
         }
+
+
 
 
         public void Dispose()

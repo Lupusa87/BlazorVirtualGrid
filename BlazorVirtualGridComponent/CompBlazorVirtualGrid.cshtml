@@ -15,10 +15,14 @@
 @if (bvgGrid.IsReady)
 {
 
-        <h5>@bvgGrid.Name Count @bvgGrid.RowsTotalCount</h5>
+    <h5>@bvgGrid.Name Count @bvgGrid.RowsTotalCount</h5>
 
-        <CompLayout bvgGrid="@bvgGrid" ActualRender="@ActualRender"></CompLayout>
-  
+
+
+    @*<button class="btn btn-primary" style="margin:5px" onclick="@Cmd1">Cmd1</button>*@
+
+    <CompLayout bvgGrid="@bvgGrid" ActualRender="@ActualRender"></CompLayout>
+
 }
 else
 {

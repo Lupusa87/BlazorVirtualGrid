@@ -25,6 +25,12 @@ namespace BlazorVirtualGridComponent.classes
 
         public string Name { get; set; } = "null";
 
+
+        public CssHelper<TItem> cssHelper { get; set; }
+
+        internal CssGridHelper<TItem> cssGridHelper { get; set; }
+
+
         public PropertyInfo[] AllProps { get; set; }
         public PropertyInfo[] ActiveProps { get; set; }
 
@@ -95,37 +101,6 @@ namespace BlazorVirtualGridComponent.classes
 
 
         public Tuple<ushort, string> ShouldSelectCell { get; set; } = null;
-
-
-        public string GetStyleTable(bool ForFrozen)
-        {
-            if (ForFrozen)
-            {
-                return string.Concat("width:" , FrozenTableWidth , "px;");
-            }
-            else
-            {
-                return string.Concat("width:" , NonFrozenTableWidth , "px;");
-            }
-
-        }
-
-
-        public string GetStyleDiv(bool ForFrozen)
-        {
-
-            if (ForFrozen)
-            {
-                return string.Concat("width:", FrozenTableWidth, "px;height:", bvgSize.H, "px;");
-            }
-            else
-            {
-                return string.Concat("width:", NonFrozenTableWidth, "px;height:", bvgSize.W, "px;");
-            }
-
-
-            
-        }
 
 
         public void SelectCell(BvgCell<TItem> parCell, bool doFocus)
@@ -338,6 +313,8 @@ namespace BlazorVirtualGridComponent.classes
             {
                 HorizontalScroll.bsbSettings.ScrollTotalSize = b;
                 HorizontalScroll.bsbSettings.initialize();
+
+                
             }
             else
             {

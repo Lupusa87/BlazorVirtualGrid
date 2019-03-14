@@ -240,32 +240,16 @@ window.BvgJsFunctions = {
 
         return true;
     },
-    UpdateFrozenNonFrozenWidth: function (l) {
-
+    UpdateStyleRule: function (l) {
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));
-
-       
-
-        if (document.getElementById("FrozenTd1") !== null) {
-            document.getElementById("FrozenTd1").setAttribute("style", b[0]);
+        if (document.getElementById(b[0]) !== null) {
+            let a = document.getElementById(b[0]).innerHTML;
+            a = a.replace(b[1], b[2]);
+            a = a.replace(b[3], b[4]);
+            a = a.replace(b[5], b[6]);
+      
+            document.getElementById(b[0]).innerHTML = a;
         }
-        if (document.getElementById("FrozenDiv1") !== null) {
-            document.getElementById("FrozenDiv1").setAttribute("style", b[0]);
-        }
-        if (document.getElementById("FrozenTable1") !== null) {
-            document.getElementById("FrozenTable1").setAttribute("style", b[1]);
-        }
-
-        if (document.getElementById("NonFrozenTd1") !== null) {
-            document.getElementById("NonFrozenTd1").setAttribute("style", b[2]);
-        }
-        if (document.getElementById("NonFrozenDiv1") !== null) {
-            document.getElementById("NonFrozenDiv1").setAttribute("style", b[2]);
-        }
-        if (document.getElementById("NonFrozenTable1") !== null) {
-            document.getElementById("NonFrozenTable1").setAttribute("style", b[3]);
-        }
-       
         return true;
     },
     handleDragStart: function (el, id, dotnetHelper) {

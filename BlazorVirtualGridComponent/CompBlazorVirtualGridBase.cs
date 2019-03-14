@@ -212,6 +212,7 @@ namespace BlazorVirtualGridComponent
 
         public void OnColumnResize()
         {
+            Console.WriteLine("A3");
             RenderGridColumns(LastHorizontalScrollPosition, true, true);
         }
 
@@ -327,6 +328,11 @@ namespace BlazorVirtualGridComponent
 
             if (skip != LastHorizontalSkip || RequestedFromResize)
             {
+                
+  
+                Console.WriteLine("render save");
+                bvgGrid.cssGridHelper.SaveCssStyles();
+                
 
                 //BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
                 //BlazorWindowHelper.BlazorTimeAnalyzer.Add("prepare cols", MethodBase.GetCurrentMethod());
@@ -371,9 +377,10 @@ namespace BlazorVirtualGridComponent
 
                 //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
 
-
-
-
+             
+                Console.WriteLine("render refresh");
+                bvgGrid.cssGridHelper.RefreshCssStyles();
+               
 
                 if (bvgGrid.SortState.Item1)
                 {
@@ -386,6 +393,9 @@ namespace BlazorVirtualGridComponent
                         }
                     }
                 }
+
+
+                Console.WriteLine("A4");
             }
 
         }

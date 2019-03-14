@@ -57,15 +57,15 @@ namespace BlazorVirtualGrid.Pages
             bvgSettings1.ColumnWidthsDictionary = new ValuesContainer<Tuple<string, ushort>>();
             bvgSettings1.ColumnWidthsDictionary
                 .Add(Tuple.Create(nameof(MyItem.C3), (ushort)200))
-                .Add(Tuple.Create(nameof(MyItem.Date), (ushort)100));
+                .Add(Tuple.Create(nameof(MyItem.Date), (ushort)200));
 
 
             PropertyInfo[] props = typeof(MyItem).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var item in props.Where(x=>x.Name!="Date" && x.Name!="C3"))
             {
                 bvgSettings1.ColumnWidthsDictionary
-                    .Add(Tuple.Create(item.Name, bvgSettings1.ColWidthMin));
-                //.Add(Tuple.Create(item.Name, (ushort)rnd1.Next(bvgSettings1.ColWidthMin, bvgSettings1.ColWidthMax)));
+                //    .Add(Tuple.Create(item.Name, bvgSettings1.ColWidthMin));
+                .Add(Tuple.Create(item.Name, (ushort)rnd1.Next(bvgSettings1.ColWidthMin, bvgSettings1.ColWidthMax)));
 
             }
 
@@ -174,8 +174,8 @@ namespace BlazorVirtualGrid.Pages
 
             bvgSettings1.RowHeight = 40;
             bvgSettings1.HeaderHeight = 50;
-            bvgSettings1.ColWidthMin = 220;
-            bvgSettings1.ColWidthMax = 400;
+            //bvgSettings1.ColWidthMin = 220;
+            //bvgSettings1.ColWidthMax = 400;
 
             //bvgSettings1.VerticalScrollStyle = new BvgStyleScroll
             //{
@@ -374,7 +374,8 @@ namespace BlazorVirtualGrid.Pages
 
         public void CmdShowColumnsManager()
         {
-            CurrBVG1.ShowColumnsManager();
+           CurrBVG1.ShowColumnsManager();
+           
         }
 
 
