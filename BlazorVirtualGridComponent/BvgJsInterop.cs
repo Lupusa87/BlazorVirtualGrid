@@ -154,19 +154,19 @@ namespace BlazorVirtualGridComponent
                  "BvgJsFunctions.SetValueToCheckBox", el, val);
         }
 
+        
 
-        public static bool UpdateStyleRule(string[] updatepkg)
+        public static bool UpdateStyle(string el, string val)
         {
             if (jsRuntime is MonoWebAssemblyJSRuntime mono)
             {
-                return mono.InvokeUnmarshalled<string, bool>(
-                    "BvgJsFunctions.UpdateStyleRule",
-                    Json.Serialize(updatepkg));
+                return mono.InvokeUnmarshalled<string,string, bool>(
+                    "BvgJsFunctions.UpdateStyle",
+                    el, val);
             }
             return false;
 
         }
-
 
         internal static Task<bool> HandleDrag(string elementID, int id, DotNetObjectRef dotnetHelper)
         {

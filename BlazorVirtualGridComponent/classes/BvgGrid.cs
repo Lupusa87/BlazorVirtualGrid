@@ -17,29 +17,12 @@ namespace BlazorVirtualGridComponent.classes
 {
     public class BvgGrid<TItem> 
     {
+        #region Properties
+
+        #region Actions
+
         public Action PropertyChanged;
 
-        public bool IsReady { get; set; } = false;
-
-        public string DivContainerElementID { get; set; } = "DivContainer" + Guid.NewGuid().ToString("d").Substring(1, 4);
-
-        public string Name { get; set; } = "null";
-
-
-        public CssHelper<TItem> cssHelper { get; set; }
-
-        internal CssGridHelper<TItem> cssGridHelper { get; set; }
-
-
-        public PropertyInfo[] AllProps { get; set; }
-        public PropertyInfo[] ActiveProps { get; set; }
-
-        public ColProp[] ColumnsOrderedList { get; set; }
-        public ColProp[] ColumnsOrderedListFrozen { get; set; }
-        public ColProp[] ColumnsOrderedListNonFrozen { get; set; }
-
-
-        public int[] NonFrozenColwidthSumsByElement { get; set; }
         public Action<string> OnSort { get; set; }
 
         public Action OnColumnResize { get; set; }
@@ -48,12 +31,42 @@ namespace BlazorVirtualGridComponent.classes
 
         public Action<double> OnHorizontalScroll { get; set; }
 
+        #endregion
+
+        public bool IsReady { get; set; } = false;
+        public bool HasMeasuredRect { get; set; } = false;
+
+        public string DivContainerElementID { get; set; } = "DivContainer" + Guid.NewGuid().ToString("d").Substring(1, 4);
+        public string Name { get; set; } = "null";
+
+        public double FrozenTableWidth { get; set; } = 0;
+        public double NonFrozenTableWidth { get; set; } = 0;
+        public double CurrVerticalScrollPosition { get; set; } = 0;
+        public double CurrHorizontalScrollPosition { get; set; } = 0;
+        public double RowHeightAdjusted { get; set; }
+
+        public int DisplayedRowsCount { get; set; }
+        public int DisplayedColumnsCount { get; set; }
+        public int RowsTotalCount { get; set; }
+
+        public int[] NonFrozenColwidthSumsByElement { get; set; }
+
+        public Tuple<bool, string, bool> SortState;
+        public Tuple<ushort, string> ShouldSelectCell { get; set; } = null;
+
+        public PropertyInfo[] AllProps { get; set; }
+        public PropertyInfo[] ActiveProps { get; set; }
+
+        public ColProp[] ColumnsOrderedList { get; set; }
+        public ColProp[] ColumnsOrderedListFrozen { get; set; }
+        public ColProp[] ColumnsOrderedListNonFrozen { get; set; }
+
+        public CssHelper<TItem> cssHelper { get; set; }
+
         public BvgModal<TItem> bvgModal { get; set; } = new BvgModal<TItem>();
 
         public BvgRow<TItem>[] Rows { get; set; } = new BvgRow<TItem>[0];
         public BvgColumn<TItem>[] Columns { get; set; } = new BvgColumn<TItem>[0];
-
-        public int RowsTotalCount { get; set; }
 
         public CompGrid<TItem> compGrid { get; set; }
         public CompBlazorVirtualGrid<TItem> compBlazorVirtualGrid { get; set; }
@@ -61,47 +74,21 @@ namespace BlazorVirtualGridComponent.classes
         public BvgCell<TItem> ActiveCell;
         public BvgRow<TItem> ActiveRow;
         public BvgColumn<TItem> ActiveColumn;
-
-
-        public Tuple<bool, string, bool> SortState;
-
         public BvgSettings<TItem> bvgSettings { get; set; }
-
         public BvgScroll<TItem> VericalScroll { get; set; } = null;
         public BvgScroll<TItem> HorizontalScroll { get; set; } = null;
-
-        public bool HasMeasuredRect { get; set; } = false;
-        public BvgSizeDouble bvgSize { get; set; } = new BvgSizeDouble();
-       
+        public BvgSizeDouble bvgSize { get; set; } = new BvgSizeDouble();     
         public BvgPointInt DragStart { get; set; } = new BvgPointInt();
-        
-
-        public double FrozenTableWidth { get; set; } = 0;
-        public double NonFrozenTableWidth { get; set; } = 0;
-
-
-        public int DisplayedRowsCount { get; set; }
-        public int DisplayedColumnsCount { get; set; }
-
-
-
         public BsSettings ResizerBsSettings { get; set; } = new BsSettings();
-
-        public double CurrVerticalScrollPosition { get; set; } = 0;
-        public double CurrHorizontalScrollPosition { get; set; } = 0;
-
         public BvgAreaRows<TItem> bvgAreaRowsFrozen { get; set; } = new BvgAreaRows<TItem>();
         public BvgAreaRows<TItem> bvgAreaRowsNonFrozen { get; set; } = new BvgAreaRows<TItem>();
-
         public BvgAreaColumns<TItem> bvgAreaColumnsFrozen { get; set; } = new BvgAreaColumns<TItem>();
         public BvgAreaColumns<TItem> bvgAreaColumnsNonFrozen { get; set; } = new BvgAreaColumns<TItem>();
 
+        #endregion
 
-        public double RowHeightAdjusted { get; set; }
 
-
-        public Tuple<ushort, string> ShouldSelectCell { get; set; } = null;
-
+        #region Methods
 
         public void SelectCell(BvgCell<TItem> parCell, bool doFocus)
         {
@@ -184,7 +171,6 @@ namespace BlazorVirtualGridComponent.classes
 
         }
 
-
         public void SortColumn(BvgColumn<TItem> parColumn)
         {
 
@@ -242,7 +228,6 @@ namespace BlazorVirtualGridComponent.classes
             //ActiveCell.InvokePropertyChanged();
         }
 
-
         public void Cmd_Clear_Selection()
         {
             List<string> l = new List<string>();
@@ -265,8 +250,6 @@ namespace BlazorVirtualGridComponent.classes
 
         }
 
-
-
         public ValuesContainer<Tuple<string, ushort>> GetColumnWidths()
         {
             ValuesContainer<Tuple<string, ushort>> result = new ValuesContainer<Tuple<string, ushort>>();
@@ -279,10 +262,6 @@ namespace BlazorVirtualGridComponent.classes
 
             return result;
         }
-
-
-      
-
 
         public void InvokePropertyChanged()
         {
@@ -299,9 +278,6 @@ namespace BlazorVirtualGridComponent.classes
 
             PropertyChanged?.Invoke();
         }
-
-
-
 
         public void UpdateHorizontalScroll()
         {
@@ -324,7 +300,6 @@ namespace BlazorVirtualGridComponent.classes
 
         }
 
-
         public void CalculateWidths()
         {
 
@@ -337,7 +312,6 @@ namespace BlazorVirtualGridComponent.classes
 
             UpdateHorizontalScroll();
         }
-
 
         public void AdjustSize()
         {
@@ -431,6 +405,8 @@ namespace BlazorVirtualGridComponent.classes
 
             c = null;
         }
-       
-  }
+
+
+        #endregion
+    }
 }

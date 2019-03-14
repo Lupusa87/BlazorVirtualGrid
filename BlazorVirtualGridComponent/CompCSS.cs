@@ -53,9 +53,13 @@ namespace BlazorVirtualGridComponent
 
             builder.OpenElement(k++, "style");
             builder.AddAttribute(k++,"id","bvgStyle1");
-            builder.AddContent(k++, bvgGrid.cssHelper.GetString());
+            builder.AddContent(k++, bvgGrid.cssHelper.GetString("bvgStyle1"));
             builder.CloseElement();
 
+            builder.OpenElement(k++, "style");
+            builder.AddAttribute(k++, "id", "bvgStyle2");
+            builder.AddContent(k++, bvgGrid.cssHelper.GetString("bvgStyle2"));
+            builder.CloseElement();
 
             //builder.OpenElement(k++, "link");
             //builder.AddAttribute(k++, "rel", "stylesheet");

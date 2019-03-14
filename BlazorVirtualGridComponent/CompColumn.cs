@@ -156,16 +156,25 @@ namespace BlazorVirtualGridComponent
                     
                     
                     double currScrollPosition = bvgColumn.bvgGrid.HorizontalScroll.compBlazorScrollbar.CurrentPosition;
-                   
-                   
+
+
+
+                    int k = bvgColumn.bvgGrid.DisplayedColumnsCount;
+
                     bvgColumn.bvgGrid.CalculateWidths();
 
-                  
+                    if (k == bvgColumn.bvgGrid.DisplayedColumnsCount)
+                    {
 
-                    bvgColumn.bvgGrid.OnColumnResize?.Invoke();
+                        bvgColumn.bvgGrid.OnColumnResize?.Invoke();
 
-                    bvgColumn.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(currScrollPosition);
-
+                        bvgColumn.bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(currScrollPosition);
+                    }
+                    else
+                    {
+                        Console.WriteLine("A1");
+                        bvgColumn.bvgGrid.compBlazorVirtualGrid.Refresh(false);
+                    }
                 }
 
 

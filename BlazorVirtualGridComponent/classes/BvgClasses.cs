@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlazorVirtualGridComponent.businessLayer;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -107,20 +108,25 @@ namespace BlazorVirtualGridComponent.classes
     }
 
 
-    public class BvgGridTransferableState<T>
+    public class BvgGridTransferableState<TItem>
     {
         public bool ContaintState { get; set; } = false;
 
         public bool HasMeasuredRect { get; set; } = false;
         public BvgSizeDouble bvgSize { get; set; } = new BvgSizeDouble();
 
+        public ColProp[] ColumnsOrderedList { get; set; }
+        public ColProp[] ColumnsOrderedListFrozen { get; set; }
+        public ColProp[] ColumnsOrderedListNonFrozen { get; set; }
+
+        public CssHelper<TItem> cssHelper { get; set; }
 
         public BvgGridTransferableState()
         {
 
         }
 
-        public BvgGridTransferableState(BvgGrid<T> bvgGrid)
+        public BvgGridTransferableState(BvgGrid<TItem> bvgGrid)
         {
             ContaintState = true;
 
@@ -130,9 +136,11 @@ namespace BlazorVirtualGridComponent.classes
                 bvgSize = bvgGrid.bvgSize;
             }
 
-
-            
-        }
+            ColumnsOrderedList = bvgGrid.ColumnsOrderedList;
+            ColumnsOrderedListFrozen = bvgGrid.ColumnsOrderedListFrozen;
+            ColumnsOrderedListNonFrozen = bvgGrid.ColumnsOrderedListNonFrozen;
+            cssHelper = bvgGrid.cssHelper;
+    }
 
         
     }

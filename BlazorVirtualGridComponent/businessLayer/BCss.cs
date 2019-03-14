@@ -15,10 +15,10 @@ namespace BlazorVirtualGridComponent.businessLayer
         }
 
 
-        public override string ToString()
+        public string ToString(string styleID)
         {
             StringBuilder sb1 = new StringBuilder();
-            foreach (var item in Children)
+            foreach (var item in Children.Where(x=>x.StyleID== styleID))
             {
                 sb1.Append(item.Selector);
                 sb1.Append("{");
@@ -49,6 +49,19 @@ namespace BlazorVirtualGridComponent.businessLayer
         {
             return (selector+"{"+GetStyle(selector)+"}").Replace(";}", "}");
         }
+
+        public bool RemoveSelector(string selector)
+        {
+
+            if (Children.Any(x => x.Selector.Equals(selector, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                Children.Remove(Children.Single(x => x.Selector.Equals(selector, StringComparison.InvariantCultureIgnoreCase)));
+                return true;
+
+            }
+
+            return false;
+        }
     }
 
     public class BCssItem
@@ -57,13 +70,16 @@ namespace BlazorVirtualGridComponent.businessLayer
 
         public string Selector { get; private set; }
 
+        public string StyleID { get; private set; }
+
 
         public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();
 
 
-        public BCssItem(string s)
+        public BCssItem(string s, string id)
         {
             Selector = s;
+            StyleID = id;
         }
 
 

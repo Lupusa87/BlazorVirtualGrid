@@ -240,15 +240,10 @@ window.BvgJsFunctions = {
 
         return true;
     },
-    UpdateStyleRule: function (l) {
-        b = JSON.parse(Blazor.platform.toJavaScriptString(l));
-        if (document.getElementById(b[0]) !== null) {
-            let a = document.getElementById(b[0]).innerHTML;
-            a = a.replace(b[1], b[2]);
-            a = a.replace(b[3], b[4]);
-            a = a.replace(b[5], b[6]);
-      
-            document.getElementById(b[0]).innerHTML = a;
+    UpdateStyle: function (id, val) {
+        b = Blazor.platform.toJavaScriptString(id);
+        if (document.getElementById(b) !== null) {
+            document.getElementById(b).innerHTML = Blazor.platform.toJavaScriptString(val);
         }
         return true;
     },

@@ -107,7 +107,7 @@ namespace BlazorVirtualGridComponent
   
                 builder.OpenElement(k++, "div");
                 builder.AddAttribute(k++, "id", "FrozenDiv1");
-                builder.AddAttribute(k++, "class", "myContainerFrozen GridDiv Border1");
+                builder.AddAttribute(k++, "class", "myContainerFrozen Border1");
                
 
                 builder.OpenComponent<CompAreaColumns<TItem>>(k++);
@@ -131,7 +131,7 @@ namespace BlazorVirtualGridComponent
            
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", "NonFrozenDiv1");
-            builder.AddAttribute(k++, "class", "myContainerNonFrozen GridDiv Border2");
+            builder.AddAttribute(k++, "class", "myContainerNonFrozen Border2");
 
 
             builder.OpenComponent<CompAreaColumns<TItem>>(k++);

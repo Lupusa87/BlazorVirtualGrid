@@ -128,9 +128,27 @@ namespace BlazorVirtualGridComponent
             bvgGrid.bvgModal.bvgGrid = bvgGrid;
 
 
-            bvgGrid.ColumnsOrderedList = ColumnsHelper<TItem>.GetColumnsOrderedList(bvgGrid);
-            bvgGrid.ColumnsOrderedListFrozen = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen).ToArray();
-            bvgGrid.ColumnsOrderedListNonFrozen = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen == false).ToArray();
+
+            if (bvgGridTransferableState.ContaintState)
+            {
+                
+                bvgGrid.ColumnsOrderedList = bvgGridTransferableState.ColumnsOrderedList;
+                bvgGrid.ColumnsOrderedListFrozen = bvgGridTransferableState.ColumnsOrderedListFrozen;
+                bvgGrid.ColumnsOrderedListNonFrozen = bvgGridTransferableState.ColumnsOrderedListNonFrozen;
+                //Console.WriteLine(bvgGrid.ColumnsOrderedList.Count());
+                //Console.WriteLine(bvgGrid.ColumnsOrderedListFrozen.Count());
+                //Console.WriteLine(bvgGrid.ColumnsOrderedListNonFrozen.Count());
+
+
+                bvgGrid.cssHelper = bvgGridTransferableState.cssHelper;
+            }
+            else
+            {
+                bvgGrid.ColumnsOrderedList = ColumnsHelper<TItem>.GetColumnsOrderedList(bvgGrid);
+                bvgGrid.ColumnsOrderedListFrozen = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen).ToArray();
+                bvgGrid.ColumnsOrderedListNonFrozen = bvgGrid.ColumnsOrderedList.Where(x => x.IsFrozen == false).ToArray();
+
+            }
 
 
             bvgGrid.UpdateNonFrozenColwidthSumsByElement();
@@ -212,7 +230,6 @@ namespace BlazorVirtualGridComponent
 
         public void OnColumnResize()
         {
-            Console.WriteLine("A3");
             RenderGridColumns(LastHorizontalScrollPosition, true, true);
         }
 
@@ -329,11 +346,6 @@ namespace BlazorVirtualGridComponent
             if (skip != LastHorizontalSkip || RequestedFromResize)
             {
                 
-  
-                Console.WriteLine("render save");
-                bvgGrid.cssGridHelper.SaveCssStyles();
-                
-
                 //BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
                 //BlazorWindowHelper.BlazorTimeAnalyzer.Add("prepare cols", MethodBase.GetCurrentMethod());
 
@@ -377,11 +389,11 @@ namespace BlazorVirtualGridComponent
 
                 //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
 
-             
-                Console.WriteLine("render refresh");
-                bvgGrid.cssGridHelper.RefreshCssStyles();
-               
+                Console.WriteLine("B1");
+       
+                bvgGrid.cssHelper.UpdateStyle2();
 
+                Console.WriteLine("B2");
                 if (bvgGrid.SortState.Item1)
                 {
                     if (bvgGrid.Columns.Any(x => x.prop.Name.Equals(bvgGrid.SortState.Item2, StringComparison.InvariantCultureIgnoreCase)))
@@ -394,8 +406,6 @@ namespace BlazorVirtualGridComponent
                     }
                 }
 
-
-                Console.WriteLine("A4");
             }
 
         }
@@ -445,15 +455,16 @@ namespace BlazorVirtualGridComponent
                 bvgGrid.bvgSize.H = bvgGrid.RowsTotalCount * bvgGrid.bvgSettings.RowHeight + bvgGrid.bvgSettings.HeaderHeight;
             }
 
-
+            Console.WriteLine("C1");
             CheckSizeLimits();
-
+            Console.WriteLine("C2");
             bvgGrid.AdjustSize();
 
-            
+            Console.WriteLine("C3");
             RenderGridColumns(0, false);
+            Console.WriteLine("C4");
             RenderGridRows(0, false);
-         
+            Console.WriteLine("C5");
             ActualRender = true;
 
             //EnabledRender = true;
@@ -496,7 +507,7 @@ namespace BlazorVirtualGridComponent
 
 
 
-            public void Refresh(bool FullReload)
+        public void Refresh(bool FullReload)
         {
             // full reload is need when window size changes, full reload recalculates available space
 
