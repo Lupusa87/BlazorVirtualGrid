@@ -283,9 +283,9 @@ namespace BlazorVirtualGridComponent
                 case MoveDirection.up:
                     if (HasCtrl)
                     {
-                        if (!bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.IsOnMinPosition())
+                        if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMinPosition())
                         {
-                            bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.SetScrollPosition(0);
+                            bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.SetScrollPosition(0);
                         }
 
                         if (bvgCell.bvgRow.ID > 0)
@@ -310,9 +310,9 @@ namespace BlazorVirtualGridComponent
                             }
                             else
                             {
-                                if (!bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.IsOnMinPosition())
+                                if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMinPosition())
                                 {
-                                    bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar
+                                    bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar
                                         .ThumbMove(-bvgCell.bvgGrid.bvgSettings.RowHeight);
                                 }
                             }
@@ -323,9 +323,9 @@ namespace BlazorVirtualGridComponent
                 case MoveDirection.down:
                     if (HasCtrl)
                     {
-                        if (!bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.IsOnMaxPosition())
+                        if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMaxPosition())
                         {
-                            bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.SetScrollPosition(bvgCell.bvgGrid.RowsTotalCount * bvgCell.bvgGrid.RowHeightAdjusted);
+                            bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.SetScrollPosition(bvgCell.bvgGrid.RowsTotalCount * bvgCell.bvgGrid.RowHeightAdjusted);
                         }
 
                         if (bvgCell.bvgRow.ID < bvgCell.bvgGrid.Rows.Max(x => x.ID))
@@ -350,9 +350,9 @@ namespace BlazorVirtualGridComponent
                             }
                             else
                             {
-                                if (!bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar.IsOnMaxPosition())
+                                if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMaxPosition())
                                 {
-                                    bvgCell.bvgGrid.VericalScroll.compBlazorScrollbar
+                                    bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar
                                         .ThumbMove(bvgCell.bvgGrid.bvgSettings.RowHeight);
 
                                 }

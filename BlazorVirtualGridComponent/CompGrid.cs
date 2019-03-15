@@ -163,7 +163,7 @@ namespace BlazorVirtualGridComponent
             //builder.AddAttribute(k++, "style", "padding-top:4px");
 
             builder.OpenComponent<CompScroll<TItem>>(k++);
-            builder.AddAttribute(k++, "bvgScroll", bvgGrid.VericalScroll);
+            builder.AddAttribute(k++, "bvgScroll", bvgGrid.VerticalScroll);
 
 
             builder.CloseComponent();
@@ -220,8 +220,10 @@ namespace BlazorVirtualGridComponent
             {
                 bvgGrid.bvgSize.W += tmpX;
                 bvgGrid.bvgSize.H += tmpY;
-               
-                bvgGrid.compBlazorVirtualGrid.Refresh(false);
+
+                bvgGrid.HasMeasuredRect = true;
+                //bvgGrid.compBlazorVirtualGrid.Refresh(true, false);
+                bvgGrid.compBlazorVirtualGrid.Refresh(true, false);
             }
 
         }

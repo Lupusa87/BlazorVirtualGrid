@@ -66,10 +66,10 @@ namespace BlazorVirtualGridComponent.Modal
             {
                 case ModalForm.ColumnsManager:
                     compColumnsManager.SaveChanges();
-                    bvgModal.bvgGrid.compBlazorVirtualGrid.Refresh(true);
+                    bvgModal.bvgGrid.compBlazorVirtualGrid.Refresh(true, true);
                     break;
                 case ModalForm.StyleDesigner:
-                    bvgModal.bvgGrid.compBlazorVirtualGrid.Refresh(false);
+                    bvgModal.bvgGrid.compBlazorVirtualGrid.Refresh(false, false);
                     break;
                 case ModalForm.FilterManager:
                    
@@ -80,10 +80,6 @@ namespace BlazorVirtualGridComponent.Modal
 
             StateHasChanged();
 
-           
-            
-
-           
         }
 
         public void Dispose()

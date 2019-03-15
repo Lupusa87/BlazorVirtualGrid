@@ -83,7 +83,7 @@ namespace BlazorVirtualGridComponent
 
         public void OnWheel(UIWheelEventArgs e)
         {
-            bvgGrid.VericalScroll.compBlazorScrollbar.DoWheel(e.DeltaY > 0);
+            bvgGrid.VerticalScroll.compBlazorScrollbar.DoWheel(e.DeltaY > 0);
         }
 
         public void Dispose()

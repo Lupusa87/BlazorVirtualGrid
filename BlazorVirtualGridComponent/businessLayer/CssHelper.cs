@@ -11,7 +11,7 @@ namespace BlazorVirtualGridComponent.businessLayer
     {
         private BCss blazorCSS = new BCss();
 
-        private BvgGrid<TItem> bvgGrid = new BvgGrid<TItem>();
+        private BvgGrid<TItem> bvgGrid { get; set; } 
 
         private BCssItem c = new BCssItem(string.Empty, string.Empty);
 
@@ -48,8 +48,13 @@ namespace BlazorVirtualGridComponent.businessLayer
         }
 
 
-        public void UpdateStyle2()
+        public void UpdateStyle2(BvgGrid<TItem> _bvgGrid)
         {
+            //without this it was generating old data, weird but fact.
+            //now we are sure that we have last version of bvgGrid state
+            bvgGrid = _bvgGrid;
+
+
             blazorCSS.RemoveSelector(".myGridArea");
             blazorCSS.RemoveSelector(".myContainerFrozen");
             blazorCSS.RemoveSelector(".myContainerNonFrozen");
@@ -59,7 +64,10 @@ namespace BlazorVirtualGridComponent.businessLayer
             GenerateCSSGridFrozenCSS();
             GenerateCSSGridNonFrozenCSS();
 
+
+
             BvgJsInterop.UpdateStyle(StyleID2, GetString(StyleID2));
+
         }
 
 
@@ -246,30 +254,37 @@ namespace BlazorVirtualGridComponent.businessLayer
             c.Values.Add("display", "flex");
             c.Values.Add("flex-direction", "column");
             c.Values.Add("width", "auto");
-            c.Values.Add("background-color", "#fff");
-            c.Values.Add("border-radius", "4px");
-            c.Values.Add("border", "1px solid #fff");
-            c.Values.Add("padding", "1.5rem");
+            c.Values.Add("background-color", "#f2f2f2");
+            c.Values.Add("border-radius", "10px");
+            c.Values.Add("border", "1px solid black");
+            c.Values.Add("padding", "0");
             c.Values.Add("z-index", "3");
             blazorCSS.Children.Add(c);
 
 
             c = new BCssItem(".bm-header", StyleID1);
             c.Values.Add("display", "flex");
+            c.Values.Add("border-top-left-radius", "10px");
+            c.Values.Add("border-top-right-radius", "10px");
+           // c.Values.Add("border", "1px solid black");
+            c.Values.Add("height", "60px");
             c.Values.Add("align-items", "flex-start");
             c.Values.Add("justify-content", "space-between");
-            c.Values.Add("padding", "0 0 2rem 0");
+            c.Values.Add("padding", "0");
+            c.Values.Add("background-color", "lightgray");
             blazorCSS.Children.Add(c);
 
 
             c = new BCssItem(".bm-title", StyleID1);
-            c.Values.Add("margin-bottom", "0");
+            c.Values.Add("margin", "1rem");
             blazorCSS.Children.Add(c);
 
 
             c = new BCssItem(".bm-close", StyleID1);
             c.Values.Add("padding", "1rem");
-            c.Values.Add("margin", "-1rem -1rem -1rem auto");
+            c.Values.Add("margin", "1rem");
+            c.Values.Add("margin-right", "0");
+            c.Values.Add("font-size", "2rem");
             c.Values.Add("background-color", "transparent");
             c.Values.Add("border", "0");
             c.Values.Add("-webkit-appearance", "none");
@@ -377,6 +392,8 @@ namespace BlazorVirtualGridComponent.businessLayer
             c.Values.Add("height", bvgGrid.bvgSize.H + "px");
 
             StringBuilder sb1 = new StringBuilder();
+
+
             foreach (var item in bvgGrid.Columns.Where(x => x.IsFrozen == false))
             {
                 sb1.Append(item.ColWidth);
@@ -386,7 +403,9 @@ namespace BlazorVirtualGridComponent.businessLayer
             c.Values.Add("grid-template-columns", sb1.ToString().Trim());
             c.Values.Add("grid-template-rows", bvgGrid.bvgSettings.HeaderHeight + "px repeat(" + bvgGrid.DisplayedRowsCount + ", " + bvgGrid.RowHeightAdjusted + "px)");
             c.Values.Add("overflow", "hidden");
+            //c.Values.Add("overflow-x", "scroll");
             blazorCSS.Children.Add(c);
+
         }
 
         private void GenerateGlobalCSS()

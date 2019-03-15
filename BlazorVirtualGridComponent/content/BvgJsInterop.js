@@ -101,8 +101,6 @@ window.BvgJsFunctions = {
       
     },
     SetElementScrollLeft: function (el, val) {
-        //console.log(el);
-        //console.log(val);
         if (document.getElementById(el) !== null) {
             document.getElementById(el).scrollLeft=val;
             return true;

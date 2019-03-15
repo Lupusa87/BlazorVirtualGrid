@@ -19,10 +19,10 @@ namespace BlazorVirtualGridComponent.classes
         public void InvokePropertyChanged()
         {
 
-            if (PropertyChanged == null)
-            {
-                Console.WriteLine("BvgAreaColumns InvokePropertyChanged is null");
-            }
+            //if (PropertyChanged == null)
+            //{
+            //    Console.WriteLine("BvgAreaColumns InvokePropertyChanged is null");
+            //}
 
 
 

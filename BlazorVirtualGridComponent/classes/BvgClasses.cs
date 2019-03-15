@@ -1,4 +1,5 @@
-﻿using BlazorVirtualGridComponent.businessLayer;
+﻿using BlazorScrollbarComponent;
+using BlazorVirtualGridComponent.businessLayer;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -119,6 +120,11 @@ namespace BlazorVirtualGridComponent.classes
         public ColProp[] ColumnsOrderedListFrozen { get; set; }
         public ColProp[] ColumnsOrderedListNonFrozen { get; set; }
 
+
+
+        public CompBlazorScrollbar compBlazorScrollbarHorizontal { get; set; }
+        public CompBlazorScrollbar compBlazorScrollbarVerical { get; set; }
+
         public CssHelper<TItem> cssHelper { get; set; }
 
         public BvgGridTransferableState()
@@ -126,7 +132,7 @@ namespace BlazorVirtualGridComponent.classes
 
         }
 
-        public BvgGridTransferableState(BvgGrid<TItem> bvgGrid)
+        public BvgGridTransferableState(BvgGrid<TItem> bvgGrid, bool SaveColumns = true)
         {
             ContaintState = true;
 
@@ -136,11 +142,27 @@ namespace BlazorVirtualGridComponent.classes
                 bvgSize = bvgGrid.bvgSize;
             }
 
-            ColumnsOrderedList = bvgGrid.ColumnsOrderedList;
-            ColumnsOrderedListFrozen = bvgGrid.ColumnsOrderedListFrozen;
-            ColumnsOrderedListNonFrozen = bvgGrid.ColumnsOrderedListNonFrozen;
+            if (SaveColumns)
+            {
+                ColumnsOrderedList = bvgGrid.ColumnsOrderedList;
+                ColumnsOrderedListFrozen = bvgGrid.ColumnsOrderedListFrozen;
+                ColumnsOrderedListNonFrozen = bvgGrid.ColumnsOrderedListNonFrozen;
+            }
+
             cssHelper = bvgGrid.cssHelper;
-    }
+
+
+            if (bvgGrid.HorizontalScroll.compBlazorScrollbar != null)
+            {
+                compBlazorScrollbarHorizontal = bvgGrid.HorizontalScroll.compBlazorScrollbar;
+            }
+
+
+            if (bvgGrid.VerticalScroll.compBlazorScrollbar != null)
+            {
+                compBlazorScrollbarVerical = bvgGrid.VerticalScroll.compBlazorScrollbar;
+            }
+        }
 
         
     }

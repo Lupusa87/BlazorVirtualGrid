@@ -44,6 +44,7 @@ namespace BlazorVirtualGridComponent
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+           
             //EnabledRender = false;
 
             base.BuildRenderTree(builder);
@@ -92,23 +93,44 @@ namespace BlazorVirtualGridComponent
 
 
             builder.CloseElement(); //div
+
+           
         }
 
 
         public void Clicked(UIMouseEventArgs e)
         {
-
+            EnsureIdentity();
             // bvgColumn.bvgGrid.SelectColumn(bvgColumn);
             bvgColumn.bvgGrid.SortColumn(bvgColumn);
         }
 
 
+        public void EnsureIdentity()
+        {
+            //because updating cols is cheap operation we call it in all case after updating from JS
+            //whithout this columns does not update and we need to ensure identity
+            //also sort icon does not update and stays in old position
 
+                //////when virtualization updates column in memory and in dom from js we don't do blazor component refresh,
+                //////so it will keep old data
+                ////if (bvgColumn.prop.Name != bvgColumn.bvgGrid.Columns.Single(x => x.ID == bvgColumn.ID).prop.Name)
+                ////{
+                ////    Console.WriteLine("updated col");
+                ////    bvgColumn = bvgColumn.bvgGrid.Columns.Single(x => x.ID == bvgColumn.ID);
+                ////}
+        }
 
         public void OnPositionChange(bool b, int index, int p)
         {
+
+            EnsureIdentity();
+
+
             if (!b)
             {
+
+
 
                 if (bvgColumn.ColWidth == bvgColumn.bvgGrid.bvgSettings.ColWidthMin && p <= 0)
                 {
@@ -121,7 +143,7 @@ namespace BlazorVirtualGridComponent
                     return;
                 }
 
-
+              
 
                 ushort old_Value_col = bvgColumn.ColWidth;
 
@@ -137,12 +159,12 @@ namespace BlazorVirtualGridComponent
                     bvgColumn.ColWidth = bvgColumn.bvgGrid.bvgSettings.ColWidthMax;
                 }
 
-
+               
                 if (bvgColumn.ColWidth != old_Value_col)
                 {
-
+                    
                     bvgColumn.bvgGrid.ColumnsOrderedList.Single(x => x.prop.Name.Equals(bvgColumn.prop.Name)).ColWidth = bvgColumn.ColWidth;
-
+                  
                     if (bvgColumn.IsFrozen)
                     {
                         bvgColumn.bvgGrid.ColumnsOrderedListFrozen.Single(x => x.prop.Name.Equals(bvgColumn.prop.Name)).ColWidth = bvgColumn.ColWidth;
@@ -153,11 +175,10 @@ namespace BlazorVirtualGridComponent
                         bvgColumn.bvgGrid.ColumnsOrderedListNonFrozen.Single(x => x.prop.Name.Equals(bvgColumn.prop.Name)).ColWidth = bvgColumn.ColWidth;
                         bvgColumn.bvgGrid.UpdateNonFrozenColwidthSumsByElement();
                     }
-                    
-                    
+
+
+
                     double currScrollPosition = bvgColumn.bvgGrid.HorizontalScroll.compBlazorScrollbar.CurrentPosition;
-
-
 
                     int k = bvgColumn.bvgGrid.DisplayedColumnsCount;
 
@@ -172,14 +193,14 @@ namespace BlazorVirtualGridComponent
                     }
                     else
                     {
-                        Console.WriteLine("A1");
-                        bvgColumn.bvgGrid.compBlazorVirtualGrid.Refresh(false);
+                        //Console.WriteLine("Full Refresh");
+                        bvgColumn.bvgGrid.compBlazorVirtualGrid.Refresh(false, false);
                     }
                 }
 
 
             }
-
+           
         }
 
 

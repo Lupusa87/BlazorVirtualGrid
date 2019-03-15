@@ -75,7 +75,7 @@ namespace BlazorVirtualGridComponent.classes
         public BvgRow<TItem> ActiveRow;
         public BvgColumn<TItem> ActiveColumn;
         public BvgSettings<TItem> bvgSettings { get; set; }
-        public BvgScroll<TItem> VericalScroll { get; set; } = null;
+        public BvgScroll<TItem> VerticalScroll { get; set; } = null;
         public BvgScroll<TItem> HorizontalScroll { get; set; } = null;
         public BvgSizeDouble bvgSize { get; set; } = new BvgSizeDouble();     
         public BvgPointInt DragStart { get; set; } = new BvgPointInt();
@@ -306,7 +306,11 @@ namespace BlazorVirtualGridComponent.classes
             FrozenTableWidth = ColumnsOrderedList.Where(x => x.IsFrozen).Sum(x => x.ColWidth);
             NonFrozenTableWidth = bvgSize.W - FrozenTableWidth;
 
-            DisplayedColumnsCount = (int)(NonFrozenTableWidth / bvgSettings.ColWidthMin) + 1;
+            //It was more correct to calculate for nonfrozen but when frozen columns resize happens
+            // we get different Displayed columns count and should full refresh component, which is slow
+            
+            //DisplayedColumnsCount = (int)(NonFrozenTableWidth / bvgSettings.ColWidthMin) + 1;
+            DisplayedColumnsCount = (int)(bvgSize.W / bvgSettings.ColWidthMin) + 1;
 
             HorizontalScroll.bsbSettings.ScrollVisibleSize = NonFrozenTableWidth;
 
@@ -320,9 +324,26 @@ namespace BlazorVirtualGridComponent.classes
 
 
             RowHeightAdjusted =Math.Round((bvgSize.H - bvgSettings.HeaderHeight) / DisplayedRowsCount,3);
-    
 
-            VericalScroll = new BvgScroll<TItem>
+            InitializeScrollsAndResizer();
+
+            CalculateWidths();
+
+
+            bvgAreaRowsFrozen.bvgGrid = this;
+            bvgAreaRowsNonFrozen.bvgGrid = this;
+
+            bvgAreaColumnsFrozen.bvgGrid = this;
+            bvgAreaColumnsNonFrozen.bvgGrid = this;
+
+           
+        }
+
+
+        public void InitializeScrollsAndResizer()
+        {
+
+            VerticalScroll = new BvgScroll<TItem>
             {
                 bvgGrid = this,
                 bsbSettings = new BsbSettings("VericalScroll")
@@ -340,8 +361,12 @@ namespace BlazorVirtualGridComponent.classes
                     }
                 }
             };
-            VericalScroll.ID = VericalScroll.bsbSettings.ID;
-            VericalScroll.bsbSettings.initialize();
+            VerticalScroll.ID = VerticalScroll.bsbSettings.ID;
+            VerticalScroll.bsbSettings.initialize();
+
+
+            
+
 
             HorizontalScroll = new BvgScroll<TItem>
             {
@@ -365,8 +390,6 @@ namespace BlazorVirtualGridComponent.classes
             HorizontalScroll.ID = HorizontalScroll.bsbSettings.ID;
 
 
-
-
             ResizerBsSettings = new BsSettings(string.Concat("SplitterResizer"))
             {
                 VerticalOrHorizontal = true,
@@ -377,17 +400,6 @@ namespace BlazorVirtualGridComponent.classes
                 BgColor = bvgSettings.VerticalScrollStyle.ThumbColor,
             };
 
-
-            CalculateWidths();
-
-
-            bvgAreaRowsFrozen.bvgGrid = this;
-            bvgAreaRowsNonFrozen.bvgGrid = this;
-
-            bvgAreaColumnsFrozen.bvgGrid = this;
-            bvgAreaColumnsNonFrozen.bvgGrid = this;
-
-           
         }
 
         public void UpdateNonFrozenColwidthSumsByElement()

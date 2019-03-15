@@ -78,7 +78,7 @@ namespace BlazorVirtualGridComponent
             if (bvgScroll.bsbSettings.VerticalOrHorizontal)
             {
 
-                double b = (ScrollPosition + bvgScroll.bvgGrid.VericalScroll.bsbSettings.ScrollVisibleSize)
+                double b = (ScrollPosition + bvgScroll.bvgGrid.VerticalScroll.bsbSettings.ScrollVisibleSize)
                         / bvgScroll.bvgGrid.bvgSettings.RowHeight - bvgScroll.bvgGrid.DisplayedRowsCount;
 
                 if (b != bvgScroll.bvgGrid.CurrVerticalScrollPosition)
