@@ -8,35 +8,48 @@ namespace BlazorVirtualGridComponent.businessLayer
 {
     public static class NavigationHelper<TItem>
     {
-
-        public static double GetScrollPositionForColumn(string ColName, bool AlignLeftOrRight, BvgGrid<TItem> _bvgGrid)
+        public static void SelectCell(bool AlignLeftOrRight, string ColName, ushort RowID, BvgGrid<TItem> _bvgGrid, double p=-1)
         {
-            double result = 0;
+            double p1 = p+5;
+            if (p == -1)
+            {
+                p1 = GetScrollPositionForColumn(ColName, AlignLeftOrRight, _bvgGrid);
+            }
 
-      
-            int b = 0;
+            _bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(p1);
+
+            _bvgGrid.ShouldSelectCell = Tuple.Create(true, RowID, ColName);
+
+            _bvgGrid.HorizontalScroll.compBlazorScrollbar.SetScrollPosition(p1 - 5);
+        }
+
+
+        private static double GetScrollPositionForColumn(string ColName, bool AlignLeftOrRight, BvgGrid<TItem> _bvgGrid)
+        {
+            if (!_bvgGrid.ColumnsOrderedListNonFrozen.Any(x => x.prop.Name.Equals(ColName)))
+            {
+                return 0;
+            }
+
+            double result = 0;
+        
+
+            ColProp a = _bvgGrid.ColumnsOrderedListNonFrozen.Single(x => x.prop.Name.Equals(ColName));
+            int index = _bvgGrid.ColumnsOrderedListNonFrozen.ToList().IndexOf(a);
+
+            string s=string.Empty;
+            for (int i = 0; i < _bvgGrid.NonFrozenColwidthSumsByElement.Count(); i++)
+            {
+                s += _bvgGrid.NonFrozenColwidthSumsByElement[i] + " ";
+            }
+
+
+            result = _bvgGrid.NonFrozenColwidthSumsByElement[index] - a.ColWidth + 5;
+
             if (!AlignLeftOrRight)
             {
-                b = _bvgGrid.DisplayedColumnsCount;
+                result -= _bvgGrid.NonFrozenTableWidth;
             }
-
-
-
-
-            ColProp a = _bvgGrid.ColumnsOrderedList.Single(x => x.prop.Name.Equals(ColName));
-            int index = _bvgGrid.ColumnsOrderedList.ToList().IndexOf(a)-b+1;
-
-
-
-            if (AlignLeftOrRight)
-            {
-                result = _bvgGrid.NonFrozenColwidthSumsByElement[index] - a.ColWidth;
-            }
-            else
-            {
-                result = _bvgGrid.NonFrozenColwidthSumsByElement[index] - a.ColWidth;
-            }
-          
 
             return result;
         }

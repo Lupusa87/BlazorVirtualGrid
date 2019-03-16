@@ -52,7 +52,8 @@ namespace BlazorVirtualGridComponent.classes
         public int[] NonFrozenColwidthSumsByElement { get; set; }
 
         public Tuple<bool, string, bool> SortState;
-        public Tuple<ushort, string> ShouldSelectCell { get; set; } = null;
+        public Tuple<bool, ushort, string> ShouldSelectCell { get; set; } = Tuple.Create(false,(ushort)1,string.Empty);
+        public Tuple<bool, ushort, string> ShouldSelectActiveCell { get; set; } = Tuple.Create(false, (ushort)1, string.Empty);
 
         public PropertyInfo[] AllProps { get; set; }
         public PropertyInfo[] ActiveProps { get; set; }
@@ -93,6 +94,9 @@ namespace BlazorVirtualGridComponent.classes
         public void SelectCell(BvgCell<TItem> parCell, bool doFocus)
         {
             ActiveCell = parCell;
+
+            ShouldSelectActiveCell = Tuple.Create(true, parCell.bvgRow.ID, parCell.bvgColumn.prop.Name);
+
             ActiveRow = parCell.bvgRow;
             ActiveColumn = parCell.bvgColumn;
 
@@ -226,6 +230,32 @@ namespace BlazorVirtualGridComponent.classes
 
 
             //ActiveCell.InvokePropertyChanged();
+        }
+
+
+        public void Cmd_Clear_ActiveCellSelection()
+        {
+            List<string> l = new List<string>();
+
+            foreach (var item in Rows.Where(x => x.Cells.Any(y => y.IsActive)))
+            {
+                foreach (var cell in item.Cells.Where(x => x.IsActive))
+                {
+                    cell.IsActive = false;
+                    cell.CssClass = CellStyle.CellSelected.ToString();
+
+
+                    l.Add(cell.ID);
+                    l.Add(cell.CssClass);
+                }
+
+            }
+
+
+            BvgJsInterop.SetAttributeBatch(l.ToArray(), "class");
+
+
+
         }
 
         public void Cmd_Clear_Selection()

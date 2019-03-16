@@ -28,7 +28,6 @@ namespace BlazorVirtualGridComponent.classes
 
         public bool IsActive { get; set; }
 
-        public bool HasCol { get; set; }
 
         private string _CssClass { get; set; }
         public string CssClass {

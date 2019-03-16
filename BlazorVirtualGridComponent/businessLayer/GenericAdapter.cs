@@ -51,15 +51,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                     {
                         foreach (BvgCell<T> c in r.Cells)
                         {
-                            if (c.bvgColumn.ID < props.Count())
-                            {
-                                c.bvgColumn = _bvgGrid.Columns[c.bvgColumn.ID];
-                                c.HasCol = true;
-                            }
-                            else
-                            {
-                                c.HasCol = false;
-                            }
+                          c.bvgColumn = _bvgGrid.Columns[c.bvgColumn.ID];                           
                         }
                     }
                 }
@@ -168,7 +160,6 @@ namespace BlazorVirtualGridComponent.businessLayer
             {
                 bvgRow = row,
                 bvgColumn = col,
-                HasCol = true,
                 bvgGrid = _bvgGrid,
             };
 
@@ -209,7 +200,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
             foreach (T item in list)
             {
-                foreach (BvgCell<T> c in _bvgGrid.Rows[g].Cells.Where(x=>x.HasCol))
+                foreach (BvgCell<T> c in _bvgGrid.Rows[g].Cells)
                 {
 
                     c.Value = c.bvgColumn.prop.GetValue(item, null).ToString();

@@ -252,27 +252,41 @@ namespace BlazorVirtualGridComponent
 
             RenderGridColumns(p, true);
 
-           
-            //if (bvgGrid.ShouldSelectCell == null)
-            //{
-               
+
             SetScrollLeftToNonFrozenColumnsDiv(p);
 
-            //}
-            //else
-            //{
-            //    BvgJsInterop.SetElementScrollLeft("NonFrozenDiv1", 10000);
+            if (bvgGrid.ShouldSelectCell.Item1)
+            {
+                
+                bvgGrid.SelectCell(bvgGrid.Rows.Single(x => x.ID == bvgGrid.ShouldSelectCell.Item2).Cells.Single(x => x.bvgColumn.prop.Name.Equals(bvgGrid.ShouldSelectCell.Item3)), true);
+                bvgGrid.ShouldSelectCell = Tuple.Create(false, (ushort)1, string.Empty);
+            }
+            else
+            {
+                if (bvgGrid.ShouldSelectActiveCell.Item1)
+                {
+                    if (bvgGrid.Columns.Any(x => x.prop.Name.Equals(bvgGrid.ShouldSelectActiveCell.Item3)))
+                    {
+                        if (bvgGrid.Rows.Any(x => x.ID == bvgGrid.ShouldSelectActiveCell.Item2))
+                        {
+                              bvgGrid.SelectCell(bvgGrid.Rows.Single(x => x.ID == bvgGrid.ShouldSelectActiveCell.Item2).Cells.Single(x => x.bvgColumn.prop.Name.Equals(bvgGrid.ShouldSelectActiveCell.Item3)), true);
+                        }
+                        else
+                        {
+                            bvgGrid.Cmd_Clear_ActiveCellSelection();
+                        }
 
-       
-            //    bvgGrid.SelectCell(bvgGrid.Rows.Single(x=>x.ID == bvgGrid.ShouldSelectCell.Item1).Cells.Single(x=>x.bvgColumn.prop.Name.Equals(bvgGrid.ShouldSelectCell.Item2)), true);
-            //    bvgGrid.ShouldSelectCell = null;
-
-               
-            //}
+                    }
+                    else
+                    {
+                        bvgGrid.Cmd_Clear_ActiveCellSelection();
+                    }
+                }
+            }
 
             //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
 
-            
+
         }
 
         public void SortGrid(string s)
@@ -485,6 +499,9 @@ namespace BlazorVirtualGridComponent
 
             //EnabledRender = true;
 
+
+           
+            //bvgGrid.SelectCell(bvgGrid.Rows.First().Cells.First(), true);
 
             StateHasChanged();
 

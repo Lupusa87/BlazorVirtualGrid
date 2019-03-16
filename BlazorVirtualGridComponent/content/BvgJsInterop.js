@@ -119,7 +119,6 @@ window.BvgJsFunctions = {
     },
     SetFocus: function (el) {
         if (document.getElementById("divCell" + el) !== null) {
-
             document.getElementById("divCell" + el).focus();
             return true;
         }
