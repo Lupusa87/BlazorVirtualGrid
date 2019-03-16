@@ -122,7 +122,6 @@ namespace BlazorVirtualGridComponent
         public void Clicked(UIMouseEventArgs e)
         {
             bvgCell.bvgGrid.SelectCell(bvgCell, false);
-
         }
 
 
@@ -174,8 +173,6 @@ namespace BlazorVirtualGridComponent
                 case MoveDirection.right:
                     if (HasCtrl)
                     {
-                     
-
                         if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMaxPosition())
                         {
 
@@ -289,16 +286,17 @@ namespace BlazorVirtualGridComponent
 
                     break;
                 case MoveDirection.down:
+                    int MaxID = bvgCell.bvgGrid.Rows.Max(x => x.ID);
                     if (HasCtrl)
                     {
                         if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMaxPosition())
                         {
                             bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.SetScrollPosition(bvgCell.bvgGrid.RowsTotalCount * bvgCell.bvgGrid.RowHeightAdjusted);
                         }
-
-                        if (bvgCell.bvgRow.ID < bvgCell.bvgGrid.Rows.Max(x => x.ID))
+                        
+                        if (bvgCell.bvgRow.ID < MaxID-1)
                         {
-                            BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == bvgCell.bvgGrid.Rows.Max(x2 => x2.ID)).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
+                            BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == MaxID-1).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
 
                             bvgCell.bvgGrid.SelectCell(c, true);
                         }
@@ -306,11 +304,9 @@ namespace BlazorVirtualGridComponent
                     else
                     {
 
-                        
-
                             sn = bvgCell.bvgRow.ID + 1;
 
-                            if (bvgCell.bvgGrid.Rows.Any(x => x.ID == sn))
+                            if (bvgCell.bvgGrid.Rows.Any(x => x.ID == sn) && sn!=MaxID)
                             {
                                 BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
 

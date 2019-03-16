@@ -44,8 +44,6 @@ namespace BlazorVirtualGridComponent
 
         private bool FirstLoad = true;
 
-        private int LastVerticalSkip = -1;
-
         private int LastHorizontalSkip = -1;
 
         private double LastHorizontalScrollPosition = 0;
@@ -94,8 +92,6 @@ namespace BlazorVirtualGridComponent
         {
             FirstLoad = true;
             ActualRender = true;
-
-            LastVerticalSkip = -1;
 
             LastHorizontalSkip = -1;
 
@@ -228,10 +224,10 @@ namespace BlazorVirtualGridComponent
         }
 
 
-        public void OnVerticalScroll(double p)
+        public void OnVerticalScroll(int p)
         {
-            RenderGridRows((int)p, true);
-
+            RenderGridRows(p, true);
+           
         }
 
 
@@ -246,6 +242,11 @@ namespace BlazorVirtualGridComponent
         
             BvgJsInterop.SetElementScrollLeft("NonFrozenDiv1", p2);
         }
+
+
+
+        
+
 
         public void OnHorizontalScroll(double p)
         {
@@ -295,7 +296,6 @@ namespace BlazorVirtualGridComponent
             SortedRowsList = GenericAdapter<TItem>.GetSortedRowsList(SourceList.AsQueryable(), s).ToArray();
 
             bvgGrid.CurrVerticalScrollPosition = 0;
-            LastVerticalSkip = -1;
             bvgGrid.VerticalScroll.compBlazorScrollbar.SetScrollPosition(0);
 
 
@@ -308,26 +308,17 @@ namespace BlazorVirtualGridComponent
         public void RenderGridRows(int skip, bool UpdateUI)
         {
 
-            if (skip != LastVerticalSkip)
+            if (skip > 0)
             {
-
-                LastVerticalSkip = skip;
-
-
-                if (skip > 0)
-                {
-                    SortedRowsListActual = SortedRowsList.Skip(skip).Take(bvgGrid.DisplayedRowsCount).ToArray();
-                    GenericAdapter<TItem>.GetRows(SortedRowsListActual, bvgGrid);
-                    
-                }
-                else
-                {
-                    SortedRowsListActual = SortedRowsList.Take(bvgGrid.DisplayedRowsCount).ToArray();
-                    GenericAdapter<TItem>.GetRows(SortedRowsListActual, bvgGrid);
-                }
+                SortedRowsListActual = SortedRowsList.Skip(skip).Take(bvgGrid.DisplayedRowsCount).ToArray();
+                GenericAdapter<TItem>.GetRows(SortedRowsListActual, bvgGrid, skip);
 
             }
-
+            else
+            {
+                SortedRowsListActual = SortedRowsList.Take(bvgGrid.DisplayedRowsCount).ToArray();
+                GenericAdapter<TItem>.GetRows(SortedRowsListActual, bvgGrid, 0);
+            }
         }
 
 

@@ -12,6 +12,23 @@ namespace BlazorVirtualGridComponent.classes
     {
         public Action PropertyChanged { get; set; }
 
+        private int _IndexInSource { get; set; }
+
+        public int IndexInSource
+        {
+            get
+            {
+                return _IndexInSource;
+            }
+            set
+            {
+                _IndexInSource = value;
+                IsEven =_IndexInSource % 2 == 0;
+            }
+        }
+
+        
+
         public ushort ID { get; set; }
 
         public BvgCell<TItem>[] Cells { get; set; } = new BvgCell<TItem>[0];

@@ -64,8 +64,8 @@ namespace BlazorVirtualGrid.Pages
             foreach (var item in props.Where(x=>x.Name!="Date" && x.Name!="C3"))
             {
                 bvgSettings1.ColumnWidthsDictionary
-                    .Add(Tuple.Create(item.Name, bvgSettings1.ColWidthMin));
-                //.Add(Tuple.Create(item.Name, (ushort)rnd1.Next(bvgSettings1.ColWidthMin, bvgSettings1.ColWidthMax)));
+                    //.Add(Tuple.Create(item.Name, bvgSettings1.ColWidthMin));
+                    .Add(Tuple.Create(item.Name, (ushort)rnd1.Next(bvgSettings1.ColWidthMin, bvgSettings1.ColWidthMax)));
 
             }
 

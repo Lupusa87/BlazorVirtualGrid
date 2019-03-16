@@ -231,7 +231,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             c.Values.Add("left", "0");
             c.Values.Add("width", "100%");
             c.Values.Add("height", "100%");
-            c.Values.Add("z-index", "2");
+            c.Values.Add("z-index", "90");
             blazorCSS.Children.Add(c);
 
 
@@ -240,7 +240,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             c.Values.Add("position", "fixed");
             c.Values.Add("width", "100%");
             c.Values.Add("height", "100%");
-            c.Values.Add("z-index", "3");
+            c.Values.Add("z-index", "95");
             c.Values.Add("background-color", "rgba(0,0,0,0.5)");
             blazorCSS.Children.Add(c);
 
@@ -258,7 +258,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             c.Values.Add("border-radius", "10px");
             c.Values.Add("border", "1px solid black");
             c.Values.Add("padding", "0");
-            c.Values.Add("z-index", "3");
+            c.Values.Add("z-index", "99");
             blazorCSS.Children.Add(c);
 
 
@@ -314,6 +314,9 @@ namespace BlazorVirtualGridComponent.businessLayer
 
             GenerateCSSGridmyGridArea();
 
+
+
+
             c = new BCssItem(".myHorizontalScroll", StyleID1);
             c.Values.Add("grid-column", "1/1");
             c.Values.Add("grid-row", "2/2");
@@ -330,6 +333,12 @@ namespace BlazorVirtualGridComponent.businessLayer
             c.Values.Add("grid-row", "2/2");
             blazorCSS.Children.Add(c);
 
+
+            c = new BCssItem(".fixedToTop", StyleID1);
+            c.Values.Add("position", "sticky");
+            c.Values.Add("top", "0");
+            c.Values.Add("z-index", "10");
+            blazorCSS.Children.Add(c);
 
         }
 
@@ -374,6 +383,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             c.Values.Add("grid-template-columns", sb1.ToString().Trim());
             c.Values.Add("grid-template-rows", bvgGrid.bvgSettings.HeaderHeight + "px repeat(" + bvgGrid.DisplayedRowsCount + ", " + bvgGrid.RowHeightAdjusted + "px)");
             c.Values.Add("overflow", "hidden");
+            //c.Values.Add("overflow-y", "scroll");
             blazorCSS.Children.Add(c);
 
 
@@ -403,7 +413,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             c.Values.Add("grid-template-columns", sb1.ToString().Trim());
             c.Values.Add("grid-template-rows", bvgGrid.bvgSettings.HeaderHeight + "px repeat(" + bvgGrid.DisplayedRowsCount + ", " + bvgGrid.RowHeightAdjusted + "px)");
             c.Values.Add("overflow", "hidden");
-            //c.Values.Add("overflow-x", "scroll");
+            //c.Values.Add("overflow-y", "scroll");
             blazorCSS.Children.Add(c);
 
         }

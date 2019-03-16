@@ -14,6 +14,9 @@ namespace BlazorVirtualGridComponent.classes
 
         public Action PropertyChanged;
 
+
+       
+
         public string ID { get; set; }
 
 
@@ -48,9 +51,10 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
-        private void UpdateCssClass()
+        public void UpdateCssClass()
         {
             _CssClass = _CssClass.Replace("CellDiv ", null);
+            _CssClass = _CssClass.Replace("Alternated", null);
 
             if (bvgColumn.IsFrozen)
             {

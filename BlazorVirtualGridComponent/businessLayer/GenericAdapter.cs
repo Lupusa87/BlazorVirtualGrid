@@ -60,7 +60,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                 if (UpdateUI)
                 {
                     BvgJsInterop.UpdateColContentsBatch(UpdatePkg);
-                    RefreshRows(list, _bvgGrid, true);
+                    RefreshRows(list, _bvgGrid, true, 0);
                 }
             }
 
@@ -109,9 +109,9 @@ namespace BlazorVirtualGridComponent.businessLayer
         }
 
 
-        public static void GetRows(T[] list, BvgGrid<T> _bvgGrid)
+        public static void GetRows(T[] list, BvgGrid<T> _bvgGrid, int skip)
         {
-
+ 
             ushort k = 0;
             if (!_bvgGrid.Rows.Any())
             {
@@ -125,12 +125,10 @@ namespace BlazorVirtualGridComponent.businessLayer
                     BvgRow<T> row = new BvgRow<T>
                     {
                         ID = k++,
+                        IndexInSource = k + skip,
                         bvgGrid = _bvgGrid,
                         Cells = new BvgCell<T>[_bvgGrid.Columns.Count()],
                     };
-
-
-                    row.IsEven = row.ID % 2==0;
 
                     g = 0;
                     foreach (BvgColumn<T> col in _bvgGrid.Columns)
@@ -146,7 +144,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             }
             else
             {
-                RefreshRows(list, _bvgGrid, false);
+                RefreshRows(list, _bvgGrid, false, skip);
               
             }
 
@@ -183,31 +181,51 @@ namespace BlazorVirtualGridComponent.businessLayer
             return cell;
         }
 
-        private static void RefreshRows(T[] list, BvgGrid<T> _bvgGrid, bool updateWidths)
+        private static void RefreshRows(T[] list, BvgGrid<T> _bvgGrid, bool updateWidths, int skip)
         {
 
             short i = -1;
             short i2 = -1;
+            short i3 = -1;
             byte g = 0;
             string[] UpdatePkg = new string[_bvgGrid.Rows.Count() * _bvgGrid.Rows[0].Cells.Count() * 3];
 
+           
 
             string[] UpdatePkg2 = new string[1];
             if (updateWidths)
             {
-                UpdatePkg2 = new string[_bvgGrid.Rows.Count() * _bvgGrid.Rows[0].Cells.Count() * 3];
+                UpdatePkg2 = new string[_bvgGrid.Rows.Count() * _bvgGrid.Rows[0].Cells.Count() * 2];
             }
+
+            string[] UpdatePkgClass = new string[1];
+            if (!updateWidths)
+            {
+                UpdatePkgClass = new string[_bvgGrid.Rows.Count() * _bvgGrid.Rows[0].Cells.Count() * 2];
+            }
+
 
             foreach (T item in list)
             {
+                if (!updateWidths)
+                {
+                    _bvgGrid.Rows[g].IndexInSource = g + skip+1;
+                }
+
                 foreach (BvgCell<T> c in _bvgGrid.Rows[g].Cells)
                 {
-
+                   
                     c.Value = c.bvgColumn.prop.GetValue(item, null).ToString();
-            
-
+                   
                     UpdatePkg[++i] = c.ID;
                     UpdatePkg[++i] = c.Value;
+
+                    if (!updateWidths)
+                    {
+                        c.UpdateCssClass();
+                        UpdatePkgClass[++i3] = c.ID;
+                        UpdatePkgClass[++i3] = c.CssClass;
+                    }
 
                     if (c.bvgColumn.prop.PropertyType.Equals(typeof(bool)))
                     {
@@ -231,6 +249,11 @@ namespace BlazorVirtualGridComponent.businessLayer
 
 
             BvgJsInterop.UpdateRowContentBatch(UpdatePkg);
+
+            if (!updateWidths)
+            {
+                BvgJsInterop.UpdateCellClassBatch(UpdatePkgClass);
+            }
 
             if (updateWidths)
             {

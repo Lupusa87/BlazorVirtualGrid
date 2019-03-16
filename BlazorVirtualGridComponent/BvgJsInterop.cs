@@ -52,6 +52,12 @@ namespace BlazorVirtualGridComponent
                 "BvgJsFunctions.SetElementScrollLeft", elementID, val);
         }
 
+        public static Task<bool> SetElementScrollTop(string elementID, double val)
+        {
+            return jsRuntime.InvokeAsync<bool>(
+                "BvgJsFunctions.SetElementScrollTop", elementID, val);
+        }
+
         public static Task<double> GetElementScrollLeft(string elementID)
         {
            
@@ -76,6 +82,23 @@ namespace BlazorVirtualGridComponent
 
                 return mono.InvokeUnmarshalled<string, bool>(
                     "BvgJsFunctions.UpdateRowContentBatch",
+                    Json.Serialize(updatepkg));
+            }
+
+
+            return false;
+        }
+
+
+        public static bool UpdateCellClassBatch(string[] updatepkg)
+        {
+
+
+            if (jsRuntime is MonoWebAssemblyJSRuntime mono)
+            {
+
+                return mono.InvokeUnmarshalled<string, bool>(
+                    "BvgJsFunctions.UpdateCellClassBatch",
                     Json.Serialize(updatepkg));
             }
 

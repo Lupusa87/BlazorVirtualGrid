@@ -109,6 +109,15 @@ window.BvgJsFunctions = {
             return false;
         }
     },
+    SetElementScrollTop: function (el, val) {
+        if (document.getElementById(el) !== null) {
+            document.getElementById(el).scrollTop = val;
+            return true;
+        }
+        else {
+            return false;
+        }
+    },
     GetElementScrollLeft: function (el) {
         if (document.getElementById(el) !== null) {
             return document.getElementById(el).scrollLeft + document.getElementById(el).clientWidth;
@@ -167,6 +176,18 @@ window.BvgJsFunctions = {
         
         return true;
     }, 
+    UpdateCellClassBatch: function (l) {
+
+        b = JSON.parse(Blazor.platform.toJavaScriptString(l));
+
+        for (var i = 0; i < b.length; i += 2) {
+
+            if (document.getElementById("divCell" + b[i]) !== null) {
+                document.getElementById("divCell" + b[i]).setAttribute("class", b[i + 1]);
+            }
+        }
+        return true;
+    },
     UpdateRowWidthsBatch: function (l) {
 
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));

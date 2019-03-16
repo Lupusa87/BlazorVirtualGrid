@@ -79,17 +79,36 @@ namespace BlazorVirtualGridComponent
             {
 
                 double b = (ScrollPosition + bvgScroll.bvgGrid.VerticalScroll.bsbSettings.ScrollVisibleSize)
-                        / bvgScroll.bvgGrid.bvgSettings.RowHeight - bvgScroll.bvgGrid.DisplayedRowsCount;
+                        / bvgScroll.bvgGrid.bvgSettings.RowHeight - (bvgScroll.bvgGrid.DisplayedRowsCount-1);
 
-                if (b != bvgScroll.bvgGrid.CurrVerticalScrollPosition)
+             
+                int skip = (int)b;
+
+
+                if (skip != bvgScroll.bvgGrid.CurrVerticalScrollPosition)
+                {
+                    
+                    bvgScroll.bvgGrid.CurrVerticalScrollPosition = skip;
+
+                    bvgScroll.bvgGrid.OnVerticalScroll?.Invoke(skip);
+                    bvgScroll.bvgGrid.SetScrollTop(0);
+                }
+                else
                 {
 
-                    bvgScroll.bvgGrid.CurrVerticalScrollPosition = b;
 
-                   
-                    bvgScroll.bvgGrid.OnVerticalScroll?.Invoke(b);
-
+                    if (bvgScroll.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMinPosition() ||
+                        bvgScroll.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMaxPosition())
+                    {
+                        bvgScroll.bvgGrid.SetScrollTop(0);
+                    }
+                    else
+                    {
+                        double m = (b - skip) * bvgScroll.bvgGrid.RowHeightAdjusted;
+                        bvgScroll.bvgGrid.SetScrollTop(m);
+                    }
                 }
+
             }
             else
             {

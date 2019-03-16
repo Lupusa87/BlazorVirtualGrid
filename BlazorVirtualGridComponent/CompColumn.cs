@@ -59,7 +59,7 @@ namespace BlazorVirtualGridComponent
           
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", "divCol" + bvgColumn.ID);
-            builder.AddAttribute(k++, "class", "ColumnDiv " + bvgColumn.CssClass);
+            builder.AddAttribute(k++, "class", "ColumnDiv fixedToTop " + bvgColumn.CssClass);
 
 
             builder.OpenElement(k++, "div"); //to arrange text in center

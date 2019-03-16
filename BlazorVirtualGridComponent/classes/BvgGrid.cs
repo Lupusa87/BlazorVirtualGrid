@@ -27,7 +27,7 @@ namespace BlazorVirtualGridComponent.classes
 
         public Action OnColumnResize { get; set; }
 
-        public Action<double> OnVerticalScroll { get; set; }
+        public Action<int> OnVerticalScroll { get; set; }
 
         public Action<double> OnHorizontalScroll { get; set; }
 
@@ -351,9 +351,12 @@ namespace BlazorVirtualGridComponent.classes
         {
 
             DisplayedRowsCount = (int)((bvgSize.H - bvgSettings.HeaderHeight) / bvgSettings.RowHeight);
-
+            
 
             RowHeightAdjusted =Math.Round((bvgSize.H - bvgSettings.HeaderHeight) / DisplayedRowsCount,3);
+
+
+            DisplayedRowsCount += 1; //for scroll by pixel effect
 
             InitializeScrollsAndResizer();
 
@@ -448,6 +451,19 @@ namespace BlazorVirtualGridComponent.classes
             c = null;
         }
 
+
+        public void SetScrollTop(double p)
+        {
+
+            //double p2 = p;
+            //if (LastHorizontalSkip > 0)
+            //{
+            //    p2 -= bvgGrid.ColumnsOrderedListNonFrozen.Take(LastHorizontalSkip).Sum(x => x.ColWidth);
+            //}
+
+            BvgJsInterop.SetElementScrollTop("FrozenDiv1", p);
+            BvgJsInterop.SetElementScrollTop("NonFrozenDiv1", p);
+        }
 
         #endregion
     }
