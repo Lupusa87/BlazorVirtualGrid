@@ -12,13 +12,15 @@ Please send [email](VakhtangiAbashidze@gmail.com) if you consider to **hire me**
 ![](https://placehold.it/15/00e600/000000?text=+) 
 
 
+=================================================
+
 Component is live [here](https://lupblazorvirtualgrid.z13.web.core.windows.net)
 
-In this repo are component and blazor app where you can see how component can be used.
+In this repo there are component itself and consumer blazor app where you can see how component can be used.
 
 Here I will also give some basic usage info.
 
-Component can be downloaded from nuget, also we need four more nuget packages:
+[Component](https://www.nuget.org/packages/BlazorVirtualGridComponent/) can be downloaded from nuget, also we need four more nuget packages to install:
 1. [BlazorSpitter](https://www.nuget.org/packages/BlazorSplitterComponent/);
 2. [BlazorScrollbar](https://www.nuget.org/packages/BlazorScrollbarComponent/);
 3. [Mono.WebAssembly.Interop](https://www.nuget.org/packages/Mono.WebAssembly.Interop);
@@ -30,7 +32,9 @@ Client app csproj file should have configured linker
     <BlazorLinkerDescriptor Include="Linker.xml" />
   </ItemGroup>
 ```
-and linker file inside app folder
+
+and have linker file inside app folder with this content:
+
 ```
 <?xml version="1.0" encoding="UTF-8" ?>
 <linker>
@@ -45,8 +49,8 @@ and linker file inside app folder
   <assembly fullname="BlazorVirtualGrid" />
 </linker>
 ```
-Last item - BlazorVirtualGrid should be repaced with your app name.
-This is necessary linker not to remove libraries which component uses, for example without System.Linq.Dynamic.Core sorting will not work.
+Last item - BlazorVirtualGrid should be replaced with your blazor app name.
+This is necessary because linker can remove libraries which are used by component, for example without System.Linq.Dynamic.Core sorting will not work.
 
 [Index.html](https://github.com/Lupusa87/BlazorVirtualGrid/blob/master/BlazorVirtualGrid/Pages/Index.cshtml) and [Indexbase.cs](https://github.com/Lupusa87/BlazorVirtualGrid/blob/master/BlazorVirtualGrid/Pages/IndexBase.cs) have example how component can be configured and consumed.
 
@@ -55,9 +59,10 @@ Component can receive any list object in parameter SourceList, table name and co
 `<CompBlazorVirtualGrid ref="Bvg1" SourceList="@list1" TableName="@TableName1" bvgSettings="@bvgSettings1"></CompBlazorVirtualGrid>`
 
 For BvgSettings you will provide TItem and all desired configurations.
+
 `public BvgSettings<MyItem> bvgSettings1 { get; set; } = new BvgSettings<MyItem>();`
 
-You can configure styles and global properties
+You can configure styles and global properties:
 
 ```
   bvgSettings1.NonFrozenCellStyle = new BvgStyle
@@ -89,14 +94,14 @@ bvgSettings1.FrozenColumnsListOrdered = new ValuesContainer<string>();
         .Add(nameof(MyItem.Date));
 ```
 
-Hide column:
+Hide columns:
 ```
     bvgSettings1.HiddenColumns
         .Add(nameof(MyItem.C1))
         .Add(nameof(MyItem.C2));
 ```
 
-Set Columns Order:
+Set columns order, code will organize columns by provided order, after this by default:
 ```
 bvgSettings1.NonFrozenColumnsListOrdered = new ValuesContainer<string>();
             bvgSettings1.NonFrozenColumnsListOrdered
@@ -104,13 +109,19 @@ bvgSettings1.NonFrozenColumnsListOrdered = new ValuesContainer<string>();
                 .Add(nameof(MyItem.C2));
 ```
 
-Set column widths if you like:
+Set column widths if you like any of them to have individual width:
 ```
   bvgSettings1.ColumnWidthsDictionary = new ValuesContainer<Tuple<string, ushort>>();
   bvgSettings1.ColumnWidthsDictionary
       .Add(Tuple.Create(nameof(MyItem.C3), (ushort)200))
       .Add(Tuple.Create(nameof(MyItem.Date), (ushort)200));
 ```
+
+Please also check this youtube video about BlazorVirtualGrid.
+
+You can always open new issue or make PR, also ask questions at VakhtangiAbashidze@gmail.com
+
+Thank you for your interest and happy coding with blazor.
 
 
 
