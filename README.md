@@ -117,7 +117,7 @@ Set column widths if you like any of them to have individual width:
       .Add(Tuple.Create(nameof(MyItem.Date), (ushort)200));
 ```
 
-Please also check this youtube video about BlazorVirtualGrid.
+Please also check [this youtube video](https://www.youtube.com/watch?v=UDylcERISeY) about BlazorVirtualGrid.
 
 You can always open new issue or make PR, also ask questions at VakhtangiAbashidze@gmail.com or reach me out in twitter @lupusa1
 
