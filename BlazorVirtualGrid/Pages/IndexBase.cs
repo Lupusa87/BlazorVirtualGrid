@@ -49,6 +49,7 @@ namespace BlazorVirtualGrid.Pages
 
             ConfigureBvgSettings1();
 
+
             bvgSettings1.FrozenColumnsListOrdered = new ValuesContainer<string>();
             bvgSettings1.FrozenColumnsListOrdered
                 .Add(nameof(MyItem.C3))

@@ -43,7 +43,9 @@ namespace BlazorVirtualGridComponent.classes
         public double NonFrozenTableWidth { get; set; } = 0;
         public double CurrVerticalScrollPosition { get; set; } = 0;
         public double CurrHorizontalScrollPosition { get; set; } = 0;
-        public double RowHeightAdjusted { get; set; }
+
+        public double HeightGap { get; private set; } = 0;
+        
 
         public int DisplayedRowsCount { get; set; }
         public int DisplayedColumnsCount { get; set; }
@@ -52,8 +54,7 @@ namespace BlazorVirtualGridComponent.classes
         public int[] NonFrozenColwidthSumsByElement { get; set; }
 
         public Tuple<bool, string, bool> SortState;
-        public Tuple<bool, ushort, string> ShouldSelectCell { get; set; } = Tuple.Create(false,(ushort)1,string.Empty);
-        public Tuple<bool, ushort, string> ShouldSelectActiveCell { get; set; } = Tuple.Create(false, (ushort)1, string.Empty);
+        public Tuple<bool, ushort, string> ActiveCell { get; set; } = Tuple.Create(false, (ushort)1, string.Empty);
 
         public PropertyInfo[] AllProps { get; set; }
         public PropertyInfo[] ActiveProps { get; set; }
@@ -72,9 +73,8 @@ namespace BlazorVirtualGridComponent.classes
         public CompGrid<TItem> compGrid { get; set; }
         public CompBlazorVirtualGrid<TItem> compBlazorVirtualGrid { get; set; }
 
-        public BvgCell<TItem> ActiveCell;
-        public BvgRow<TItem> ActiveRow;
-        public BvgColumn<TItem> ActiveColumn;
+        public BvgCell<TItem> ActiveBvgCell;
+
         public BvgSettings<TItem> bvgSettings { get; set; }
         public BvgScroll<TItem> VerticalScroll { get; set; } = null;
         public BvgScroll<TItem> HorizontalScroll { get; set; } = null;
@@ -93,15 +93,11 @@ namespace BlazorVirtualGridComponent.classes
 
         public void SelectCell(BvgCell<TItem> parCell, bool doFocus)
         {
-            ActiveCell = parCell;
+            ActiveBvgCell = parCell;
 
-            ShouldSelectActiveCell = Tuple.Create(true, parCell.bvgRow.ID, parCell.bvgColumn.prop.Name);
-
-            ActiveRow = parCell.bvgRow;
-            ActiveColumn = parCell.bvgColumn;
-
+            ActiveCell = Tuple.Create(true, parCell.bvgRow.IndexInSource, parCell.bvgColumn.prop.Name);
           
-            SelectActiveRow();
+            SelectRow(parCell.bvgRow);
             SelectActiveCell(false);
 
             if (doFocus)
@@ -114,12 +110,12 @@ namespace BlazorVirtualGridComponent.classes
         {
             if (ActiveCell != null)
             {
-                BvgJsInterop.SetFocus(ActiveCell.ID);
+                BvgJsInterop.SetFocus(ActiveBvgCell.ID);
             }
         }
 
 
-        private void SelectActiveRow()
+        public void SelectRow(BvgRow<TItem> ActiveRow)
         {
             Cmd_Clear_Selection();
 
@@ -147,7 +143,7 @@ namespace BlazorVirtualGridComponent.classes
             //InvokePropertyChanged();
         }
 
-        private void SelectActiveColumn()
+        private void SelectColumn(BvgColumn<TItem> ActiveColumn)
         {
             Cmd_Clear_Selection();
 
@@ -221,15 +217,28 @@ namespace BlazorVirtualGridComponent.classes
                 Cmd_Clear_Selection();
             }
 
-            ActiveCell.IsSelected = true;
-            ActiveCell.IsActive = true;
-            ActiveCell.CssClass = CellStyle.CellActive.ToString();
+            ActiveBvgCell.IsSelected = true;
+            ActiveBvgCell.IsActive = true;
+            ActiveBvgCell.CssClass = CellStyle.CellActive.ToString();
 
 
-            BvgJsInterop.SetAttributeBatch(new string[] { ActiveCell.ID, ActiveCell.CssClass }, "class");
+            BvgJsInterop.SetAttributeBatch(new string[] { ActiveBvgCell.ID, ActiveBvgCell.CssClass }, "class");
 
+
+
+            EnsureCellIsShownFully();
 
             //ActiveCell.InvokePropertyChanged();
+        }
+
+
+        public void EnsureCellIsShownFully()
+        {
+            if (ActiveBvgCell.bvgRow.ID==0)
+            { 
+                SetScrollTop(0);
+                return;
+            }
         }
 
 
@@ -269,14 +278,6 @@ namespace BlazorVirtualGridComponent.classes
 
 
             BvgJsInterop.SetAttributeBatch(l.ToArray(), "class");
-
-            //foreach (var item in Columns.Where(x => x.IsSelected))
-            //{
-            //    item.IsSelected = false;
-            //    item.CssClass = HeaderStyle.HeaderRegular.ToString();
-            //    item.BSplitter.SetColor(bvgSettings.HeaderStyle.BackgroundColor);
-            //    item.InvokePropertyChanged();
-            //}
 
         }
 
@@ -350,11 +351,13 @@ namespace BlazorVirtualGridComponent.classes
         public void AdjustSize()
         {
 
-            DisplayedRowsCount = (int)((bvgSize.H - bvgSettings.HeaderHeight) / bvgSettings.RowHeight);
-            
+            double d = (bvgSize.H - bvgSettings.HeaderHeight) / bvgSettings.RowHeight;
 
-            RowHeightAdjusted =Math.Round((bvgSize.H - bvgSettings.HeaderHeight) / DisplayedRowsCount,3);
+            HeightGap = bvgSize.H - bvgSettings.HeaderHeight - (int)Math.Floor(d) * bvgSettings.RowHeight;
+      
 
+            DisplayedRowsCount = (int)Math.Ceiling(d);
+          
 
             DisplayedRowsCount += 1; //for scroll by pixel effect
 

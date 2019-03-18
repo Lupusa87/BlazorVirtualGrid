@@ -109,7 +109,7 @@ namespace BlazorVirtualGridComponent.businessLayer
         }
 
 
-        public static void GetRows(T[] list, BvgGrid<T> _bvgGrid, int skip)
+        public static void GetRows(T[] list, BvgGrid<T> _bvgGrid, ushort skip)
         {
  
             ushort k = 0;
@@ -125,7 +125,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                     BvgRow<T> row = new BvgRow<T>
                     {
                         ID = k++,
-                        IndexInSource = k + skip,
+                        IndexInSource = (ushort)(k + skip),
                         bvgGrid = _bvgGrid,
                         Cells = new BvgCell<T>[_bvgGrid.Columns.Count()],
                     };
@@ -209,7 +209,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             {
                 if (!updateWidths)
                 {
-                    _bvgGrid.Rows[g].IndexInSource = g + skip+1;
+                    _bvgGrid.Rows[g].IndexInSource = (ushort)(g + skip+1);
                 }
 
                 foreach (BvgCell<T> c in _bvgGrid.Rows[g].Cells)

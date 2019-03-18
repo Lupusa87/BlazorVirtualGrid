@@ -126,6 +126,14 @@ window.BvgJsFunctions = {
             return 0;
         }
     },
+    GetElementScrollTop: function (el) {
+        if (document.getElementById(el) !== null) {
+            return document.getElementById(el).scrollTop + document.getElementById(el).clientHeight;
+        }
+        else {
+            return 0;
+        }
+    },
     SetFocus: function (el) {
         if (document.getElementById("divCell" + el) !== null) {
             document.getElementById("divCell" + el).focus();

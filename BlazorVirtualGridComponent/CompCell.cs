@@ -176,13 +176,13 @@ namespace BlazorVirtualGridComponent
                         if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMaxPosition())
                         {
 
-                            NavigationHelper<TItem>.SelectCell(true,bvgCell.bvgGrid.ColumnsOrderedListNonFrozen.Last().prop.Name, bvgCell.bvgRow.ID, bvgCell.bvgGrid);
+                            NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true,bvgCell.bvgGrid.ColumnsOrderedListNonFrozen.Last().prop.Name, bvgCell.bvgRow.IndexInSource, bvgCell.bvgGrid);
                         }
                         else
                         {
-                            if (!bvgCell.bvgGrid.ActiveCell.bvgColumn.prop.Name.Equals(bvgCell.bvgGrid.ColumnsOrderedListNonFrozen.Last().prop.Name))
+                            if (!bvgCell.bvgGrid.ActiveBvgCell.bvgColumn.prop.Name.Equals(bvgCell.bvgGrid.ColumnsOrderedListNonFrozen.Last().prop.Name))
                             {
-                                NavigationHelper<TItem>.SelectCell(true,bvgCell.bvgGrid.ColumnsOrderedListNonFrozen.Last().prop.Name, bvgCell.bvgRow.ID, bvgCell.bvgGrid);
+                                NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true,bvgCell.bvgGrid.ColumnsOrderedListNonFrozen.Last().prop.Name, bvgCell.bvgRow.IndexInSource, bvgCell.bvgGrid);
                             }
                         }
                     }
@@ -202,7 +202,7 @@ namespace BlazorVirtualGridComponent
                             }
                             else
                             {
-                              NavigationHelper<TItem>.SelectCell(false,bvgCell.bvgGrid.ColumnsOrderedList[index + 1].prop.Name, bvgCell.bvgRow.ID, bvgCell.bvgGrid);
+                              NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(false,bvgCell.bvgGrid.ColumnsOrderedList[index + 1].prop.Name, bvgCell.bvgRow.IndexInSource, bvgCell.bvgGrid);
                             }
                         }
                        
@@ -213,13 +213,13 @@ namespace BlazorVirtualGridComponent
                     {
                         if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMinPosition())
                         {
-                            NavigationHelper<TItem>.SelectCell(true,bvgCell.bvgGrid.ColumnsOrderedList.First().prop.Name, bvgCell.bvgRow.ID, bvgCell.bvgGrid, 0);
+                            NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true,bvgCell.bvgGrid.ColumnsOrderedList.First().prop.Name, bvgCell.bvgRow.IndexInSource, bvgCell.bvgGrid, 0);
                         }
                         else
                         {
-                            if (!bvgCell.bvgGrid.ActiveCell.bvgColumn.prop.Name.Equals(bvgCell.bvgGrid.ColumnsOrderedList.First().prop.Name))
+                            if (!bvgCell.bvgGrid.ActiveBvgCell.bvgColumn.prop.Name.Equals(bvgCell.bvgGrid.ColumnsOrderedList.First().prop.Name))
                             {
-                                NavigationHelper<TItem>.SelectCell(true, bvgCell.bvgGrid.ColumnsOrderedList.First().prop.Name, bvgCell.bvgRow.ID, bvgCell.bvgGrid, 0);
+                                NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true, bvgCell.bvgGrid.ColumnsOrderedList.First().prop.Name, bvgCell.bvgRow.IndexInSource, bvgCell.bvgGrid, 0);
                             }
                         }
                     }
@@ -240,7 +240,7 @@ namespace BlazorVirtualGridComponent
                             }
                             else
                             {
-                                NavigationHelper<TItem>.SelectCell(true, bvgCell.bvgGrid.ColumnsOrderedList[index - 1].prop.Name, bvgCell.bvgRow.ID, bvgCell.bvgGrid);
+                                NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true, bvgCell.bvgGrid.ColumnsOrderedList[index - 1].prop.Name, bvgCell.bvgRow.IndexInSource, bvgCell.bvgGrid);
                             }
                         }
                     }
@@ -264,26 +264,28 @@ namespace BlazorVirtualGridComponent
                     else
                     {
                         
-                            sn = bvgCell.bvgRow.ID - 1;
+                        sn = bvgCell.bvgRow.ID - 1;
 
-                            if (bvgCell.bvgGrid.Rows.Any(x => x.ID == sn))
+                        if (bvgCell.bvgGrid.Rows.Any(x => x.ID == sn))
+                        {
+                            BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
+
+                            bvgCell.bvgGrid.SelectCell(c, true);
+
+                        }
+                        else
+                        {
+                            if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMinPosition())
                             {
-                                BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
-
-                                bvgCell.bvgGrid.SelectCell(c, true);
-
-                            }
-                            else
-                            {
-                                if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMinPosition())
+                                if (bvgCell.bvgRow.IndexInSource > 1)
                                 {
-                                    bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar
-                                        .ThumbMove(-bvgCell.bvgGrid.bvgSettings.RowHeight);
+                                    NavigationHelper<TItem>.ScrollIntoViewVertical(true, (ushort)(bvgCell.bvgRow.IndexInSource - 1), bvgCell.bvgColumn.prop.Name, bvgCell.bvgGrid);
                                 }
                             }
+                        }
                         
                     }
-
+                   
                     break;
                 case MoveDirection.down:
                     int MaxID = bvgCell.bvgGrid.Rows.Max(x => x.ID);
@@ -291,7 +293,7 @@ namespace BlazorVirtualGridComponent
                     {
                         if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMaxPosition())
                         {
-                            bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.SetScrollPosition(bvgCell.bvgGrid.RowsTotalCount * bvgCell.bvgGrid.RowHeightAdjusted);
+                            bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.SetScrollPosition(bvgCell.bvgGrid.RowsTotalCount * bvgCell.bvgGrid.bvgSettings.RowHeight);
                         }
                         
                         if (bvgCell.bvgRow.ID < MaxID-1)
@@ -304,26 +306,24 @@ namespace BlazorVirtualGridComponent
                     else
                     {
 
-                            sn = bvgCell.bvgRow.ID + 1;
+                        sn = bvgCell.bvgRow.ID + 1;
 
-                            if (bvgCell.bvgGrid.Rows.Any(x => x.ID == sn) && sn!=MaxID)
+                        if (bvgCell.bvgGrid.Rows.Any(x => x.ID == sn) && sn < MaxID-1)
+                        {
+                            BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
+
+                            bvgCell.bvgGrid.SelectCell(c, true);
+                        }
+                        else
+                        {
+                            if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMaxPosition())
                             {
-                                BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
+                                NavigationHelper<TItem>.ScrollIntoViewVertical(false, (ushort)(bvgCell.bvgRow.IndexInSource + MaxID - sn), bvgCell.bvgColumn.prop.Name, bvgCell.bvgGrid);
 
-                                bvgCell.bvgGrid.SelectCell(c, true);
                             }
-                            else
-                            {
-                                if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMaxPosition())
-                                {
-                                    bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar
-                                        .ThumbMove(bvgCell.bvgGrid.bvgSettings.RowHeight);
-
-                                }
-                            }
+                        }
                         
                     }
-
                     break;
                 default:
                     break;

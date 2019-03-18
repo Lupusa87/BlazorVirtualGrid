@@ -12,9 +12,9 @@ namespace BlazorVirtualGridComponent.classes
     {
         public Action PropertyChanged { get; set; }
 
-        private int _IndexInSource { get; set; }
+        private ushort _IndexInSource { get; set; }
 
-        public int IndexInSource
+        public ushort IndexInSource
         {
             get
             {

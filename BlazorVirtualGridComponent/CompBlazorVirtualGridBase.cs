@@ -226,8 +226,32 @@ namespace BlazorVirtualGridComponent
 
         public void OnVerticalScroll(int p)
         {
-            RenderGridRows(p, true);
+
+            RenderGridRows((ushort)p, true);
+
+
+            if (bvgGrid.ActiveCell.Item1)
+            {
+
+                if (bvgGrid.Rows.Any(x => x.IndexInSource == bvgGrid.ActiveCell.Item2))
+                {
+                    if (bvgGrid.Rows.Single(x => x.IndexInSource == bvgGrid.ActiveCell.Item2).Cells.Any(x => x.bvgColumn.prop.Name.Equals(bvgGrid.ActiveCell.Item3)))
+                    {
+                        bvgGrid.SelectCell(bvgGrid.Rows.Single(x => x.IndexInSource == bvgGrid.ActiveCell.Item2).Cells.Single(x => x.bvgColumn.prop.Name.Equals(bvgGrid.ActiveCell.Item3)), true);
+                    }
+                    else
+                    {
+                        bvgGrid.SelectRow(bvgGrid.Rows.Single(x => x.IndexInSource == bvgGrid.ActiveCell.Item2));
+                    }
+                }
+                else
+                {
+                    bvgGrid.Cmd_Clear_Selection();
+                }
+            }
+
            
+
         }
 
 
@@ -245,7 +269,7 @@ namespace BlazorVirtualGridComponent
 
 
 
-        
+
 
 
         public void OnHorizontalScroll(double p)
@@ -256,34 +280,27 @@ namespace BlazorVirtualGridComponent
 
             SetScrollLeftToNonFrozenColumnsDiv(p);
 
-            if (bvgGrid.ShouldSelectCell.Item1)
-            {
-                
-                bvgGrid.SelectCell(bvgGrid.Rows.Single(x => x.ID == bvgGrid.ShouldSelectCell.Item2).Cells.Single(x => x.bvgColumn.prop.Name.Equals(bvgGrid.ShouldSelectCell.Item3)), true);
-                bvgGrid.ShouldSelectCell = Tuple.Create(false, (ushort)1, string.Empty);
-            }
-            else
-            {
-                if (bvgGrid.ShouldSelectActiveCell.Item1)
-                {
-                    if (bvgGrid.Columns.Any(x => x.prop.Name.Equals(bvgGrid.ShouldSelectActiveCell.Item3)))
-                    {
-                        if (bvgGrid.Rows.Any(x => x.ID == bvgGrid.ShouldSelectActiveCell.Item2))
-                        {
-                              bvgGrid.SelectCell(bvgGrid.Rows.Single(x => x.ID == bvgGrid.ShouldSelectActiveCell.Item2).Cells.Single(x => x.bvgColumn.prop.Name.Equals(bvgGrid.ShouldSelectActiveCell.Item3)), true);
-                        }
-                        else
-                        {
-                            bvgGrid.Cmd_Clear_ActiveCellSelection();
-                        }
 
+            if (bvgGrid.ActiveCell.Item1)
+            {
+                if (bvgGrid.Columns.Any(x => x.prop.Name.Equals(bvgGrid.ActiveCell.Item3)))
+                {
+                    if (bvgGrid.Rows.Any(x => x.IndexInSource == bvgGrid.ActiveCell.Item2))
+                    {
+                        bvgGrid.SelectCell(bvgGrid.Rows.Single(x => x.IndexInSource == bvgGrid.ActiveCell.Item2).Cells.Single(x => x.bvgColumn.prop.Name.Equals(bvgGrid.ActiveCell.Item3)), true);
                     }
                     else
                     {
                         bvgGrid.Cmd_Clear_ActiveCellSelection();
                     }
+
+                }
+                else
+                {
+                    bvgGrid.Cmd_Clear_ActiveCellSelection();
                 }
             }
+
 
             //BlazorWindowHelper.BlazorTimeAnalyzer.Log();
 
@@ -305,7 +322,7 @@ namespace BlazorVirtualGridComponent
             RenderGridRows(0, true);
         }
 
-        public void RenderGridRows(int skip, bool UpdateUI)
+        public void RenderGridRows(ushort skip, bool UpdateUI)
         {
 
             if (skip > 0)

@@ -41,23 +41,6 @@ namespace BlazorVirtualGridComponent
         }
 
 
-
-        protected override void OnAfterRender()
-        {
-            if (bvgAreaRows.bvgGrid.ActiveCell != null)
-            {
-                bvgAreaRows.bvgGrid.ActiveCellFocus();
-            }
-
-            base.OnAfterRender();
-
-
-            //if (!ForFrozen)
-            //{
-            //    BlazorWindowHelper.BlazorTimeAnalyzer.Log();
-            //}
-        }
-
         private void BvgAreaRows_PropertyChanged()
         {
             //EnabledRender = true;
