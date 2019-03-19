@@ -78,7 +78,7 @@ namespace BlazorVirtualGrid.Pages
             //}
 
             bvgSettings1.HiddenColumns
-                .Add(nameof(MyItem.C1))
+               // .Add(nameof(MyItem.SomeBool))
                 .Add(nameof(MyItem.C2));
 
             base.OnInit();

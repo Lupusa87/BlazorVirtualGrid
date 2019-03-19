@@ -35,7 +35,6 @@ function addZero(i, j = 1) {
 }
 
 
-
 function dragstart1(e, id, dotnetHelper) {
 
     e.dataTransfer.setData('text', id.toString());
@@ -145,48 +144,62 @@ window.BvgJsFunctions = {
         }
     },
     UpdateRowContentBatch: function (l) {
-        
-        b = JSON.parse(Blazor.platform.toJavaScriptString(l));
+       
+        try {
 
-        for (var i = 0; i < b.length; i += 3) {
-            if (b[i+2] === "b") {
+            b = JSON.parse(Blazor.platform.toJavaScriptString(l));
 
-                if (document.getElementById("chCell" + b[i]) !== null) {
-                    if (b[i + 1].toLowerCase() === "true") {
-                        document.getElementById("chCell" + b[i]).checked = true;
+            for (var i = 0; i < b.length; i += 3) {
+                if (b[i + 2] === "b") {
+
+                    if (document.getElementById("chCell" + b[i]) !== null) {
+                        if (b[i + 1].toLowerCase() === "true") {
+                            document.getElementById("chCell" + b[i]).checked = true;
+                        }
+                        else {
+                            document.getElementById("chCell" + b[i]).checked = false;
+                        }
+
+
+                        if (document.getElementById("chCell" + b[i]).hidden) {
+                            document.getElementById("chCell" + b[i]).hidden = false;
+                            document.getElementById("spCell" + b[i]).hidden = true;
+                        }
                     }
-                    else {
-                        document.getElementById("chCell" + b[i]).checked = false;
-                    }
+                }
+                else {
+                    if (document.getElementById("spCell" + b[i]) !== null) {
 
-                    if (document.getElementById("chCell" + b[i]).hidden) {
-                        document.getElementById("chCell" + b[i]).hidden = false;
-                        document.getElementById("spCell" + b[i]).hidden = true;
+                        if (document.getElementById("spCell" + b[i]).lastChild !== null) {
+                            document.getElementById("spCell" + b[i]).removeChild(document.getElementById("spCell" + b[i]).lastChild);
+                        }
+
+                        var c = document.createTextNode(b[i + 1]);
+
+                        document.getElementById("spCell" + b[i]).appendChild(c);
+
+                      
+                        if (document.getElementById("spCell" + b[i]).hidden) {
+                            document.getElementById("spCell" + b[i]).hidden = false;
+                            document.getElementById("chCell" + b[i]).hidden = true;
+                        }
                     }
                 }
             }
-            else {
-                if (document.getElementById("spCell" + b[i]) !== null) {
-                    document.getElementById("spCell" + b[i]).removeChild(document.getElementById("spCell" + b[i]).lastChild);
 
-                    var c = document.createTextNode(b[i + 1]);
-
-                    document.getElementById("spCell" + b[i]).appendChild(c);
-
-                    if (document.getElementById("spCell" + b[i]).hidden) {
-                        document.getElementById("spCell" + b[i]).hidden = false;
-                        document.getElementById("chCell" + b[i]).hidden = true;     
-                    }
-                }
-            }
+        }
+        catch (err) {
+           
+            console.warn(err.message);
         }
 
-        
+       
         return true;
     }, 
     UpdateCellClassBatch: function (l) {
-
+       
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));
+
 
         for (var i = 0; i < b.length; i += 2) {
 
@@ -194,10 +207,11 @@ window.BvgJsFunctions = {
                 document.getElementById("divCell" + b[i]).setAttribute("class", b[i + 1]);
             }
         }
+       
         return true;
     },
     UpdateRowWidthsBatch: function (l) {
-
+      
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));
 
         for (var i = 0; i < b.length; i += 2) {
@@ -206,10 +220,11 @@ window.BvgJsFunctions = {
                 document.getElementById("divCell" + b[i]).setAttribute("style", "width:" + b[i + 1] + "px");
             }
         }
+      
         return true;
     },
     UpdateColContentsBatch: function (l) {
-       
+        
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));
 
         for (var i = 0; i < b.length; i += 4) {
@@ -226,10 +241,12 @@ window.BvgJsFunctions = {
                     document.getElementById("divCol" + b[i]).setAttribute("style", "width:" + b[i + 2] + "px");
                 } 
         }
+
+       
         return true;
     },
     SetAttributeBatch: function (l, attr) {
-
+        
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));
 
         for (var i = 0; i < b.length; i += 2) {
@@ -238,10 +255,11 @@ window.BvgJsFunctions = {
                 document.getElementById("divCell" + b[i]).setAttribute(Blazor.platform.toJavaScriptString(attr), b[i + 1]);
             }
         }
+        
         return true;
     },
     UpdateElementContentBatchMonoByteArray: function (l) {
-
+        
         b = JSON.parse(new TextDecoder("utf-8").decode(Blazor.platform.toUint8Array(l)));
 
         for (var i = 0; i < b.length; i += 2) {
@@ -249,11 +267,11 @@ window.BvgJsFunctions = {
                 document.getElementById(b[i]).innerText = b[i + 1];
             }
         }
-
+        
         return true;
     },
     SetValueToCheckBox: function (el, val) {
-
+        
         if (document.getElementById(el) !== null) {
             if (val.toLowerCase() === "true") {
                 document.getElementById(el).checked = true;
@@ -262,15 +280,17 @@ window.BvgJsFunctions = {
                 document.getElementById(el).checked = false;
             }
         }
-
+  
 
         return true;
     },
     UpdateStyle: function (id, val) {
+       
         b = Blazor.platform.toJavaScriptString(id);
         if (document.getElementById(b) !== null) {
             document.getElementById(b).innerHTML = Blazor.platform.toJavaScriptString(val);
         }
+  
         return true;
     },
     handleDragStart: function (el, id, dotnetHelper) {

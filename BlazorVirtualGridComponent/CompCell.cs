@@ -34,11 +34,11 @@ namespace BlazorVirtualGridComponent
         //    return base.OnParametersSetAsync();
         //}
 
-        //protected override bool ShouldRender()
-        //{
-
-        //    return EnabledRender;
-        //}
+        protected override bool ShouldRender()
+        {
+            return false;
+            //return EnabledRender;
+        }
 
 
         protected override void OnInit()
@@ -82,7 +82,7 @@ namespace BlazorVirtualGridComponent
                 {
                     if (bvgCell.Value.ToLower() == "true")
                     {
-                        builder.AddAttribute(k++, "checked", string.Empty);
+                        builder.AddAttribute(k++, "checked", "true");
                     }
                 }
             }
@@ -164,34 +164,40 @@ namespace BlazorVirtualGridComponent
 
                     if (e.Repeat)
                     {
-                        //SelectNeightbourCell(CurrDirection);
+                        //if (CurrDirection == MoveDirection.up || CurrDirection == MoveDirection.down)
+                        //{
+                            keyPressState = new PressState(CurrDirection, 99);
+                            TimerHelper.OnTick = TimerOnTick2;
+                            TimerHelper.Start(1, 1);
+                        //}
+                        //else
+                        //{
+                        //    SelectNeightbourCell(CurrDirection);
+                        //}
+
+                  
+                        //if (keyPressState.Direction == MoveDirection.undefined)
+                        //{
+                        //    keyPressState = new PressState(CurrDirection, 0);
+                        //}
+
+                        //if (CurrDirection == keyPressState.Direction)
+                        //{
+                        //    keyPressState.Count++;
 
 
-                        if (keyPressState.Direction == MoveDirection.undefined)
-                        {
-                            keyPressState = new PressState(CurrDirection, 0);
-                        }
+                        //    if (keyPressState.Count > 5)
+                        //    {
+                        //        SelectNeightbourCell(CurrDirection);
+                        //        keyPressState.Count -= 5;
+                        //    }
 
-                        if (CurrDirection == keyPressState.Direction)
-                        {
-                            keyPressState.Count++;
-
-
-                            if (keyPressState.Count > 5)
-                            {
-                                SelectNeightbourCell(CurrDirection);
-                                keyPressState.Count -= 5;
-                            }
-
-                        }
-                        else
-                        {
-                            keyPressState = new PressState(CurrDirection, 1);
-                        }
+                        //}
+                        //else
+                        //{
+                        //    keyPressState = new PressState(CurrDirection, 1);
+                        //}
                     }
-
-
-
                 }
             }
             else
@@ -236,20 +242,20 @@ namespace BlazorVirtualGridComponent
 
                
 
-                if (keyPressState.Direction == MoveDirection.undefined)
-                {
+                //if (keyPressState.Direction == MoveDirection.undefined)
+                //{
                     if (!e.CtrlKey)
                     {
                         SelectNeightbourCell(CurrDirection);
                     }
-                }
-                else
-                {
-                    if (CurrDirection == keyPressState.Direction && keyPressState.Count > 0)
-                    {
-                        SelectNeightbourCell(CurrDirection);
-                    }
-                }
+                //}
+                //else
+                //{
+                //    if (CurrDirection == keyPressState.Direction && keyPressState.Count > 0)
+                //    {
+                //        SelectNeightbourCell(CurrDirection);
+                //    }
+                //}
             }
 
             
@@ -377,6 +383,13 @@ namespace BlazorVirtualGridComponent
           
            SelectNeightbourCell(keyPressState.Direction);
             
+        }
+
+        public void TimerOnTick2()
+        {
+
+            SelectNeightbourCell(keyPressState.Direction);
+            TimerHelper.Stop();
         }
 
 

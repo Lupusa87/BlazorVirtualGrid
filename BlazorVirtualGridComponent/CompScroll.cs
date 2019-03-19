@@ -84,7 +84,7 @@ namespace BlazorVirtualGridComponent
 
                 if (skip != bvgScroll.bvgGrid.CurrVerticalScrollPosition)
                 {
-
+        
                     bvgScroll.bvgGrid.CurrVerticalScrollPosition = skip;
 
                     bvgScroll.bvgGrid.OnVerticalScroll?.Invoke(skip);
