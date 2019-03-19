@@ -164,31 +164,34 @@ namespace BlazorVirtualGridComponent
 
                     if (e.Repeat)
                     {
-                        SelectNeightbourCell(CurrDirection);
+                        //SelectNeightbourCell(CurrDirection);
+
+
+                        if (keyPressState.Direction == MoveDirection.undefined)
+                        {
+                            keyPressState = new PressState(CurrDirection, 0);
+                        }
+
+                        if (CurrDirection == keyPressState.Direction)
+                        {
+                            keyPressState.Count++;
+
+
+                            if (keyPressState.Count > 5)
+                            {
+                                SelectNeightbourCell(CurrDirection);
+                                keyPressState.Count -= 5;
+                            }
+
+                        }
+                        else
+                        {
+                            keyPressState = new PressState(CurrDirection, 1);
+                        }
                     }
 
 
-                    //if (keyPressState.Direction == MoveDirection.undefined)
-                    //{
-                    //    keyPressState = new PressState(CurrDirection, 0);
-                    //}
 
-                    //if (CurrDirection == keyPressState.Direction)
-                    //{
-                    //    keyPressState.Count++;
-
-
-                    //    if (keyPressState.Count > 5)
-                    //    {
-                    //        SelectNeightbourCell(5, CurrDirection);
-                    //        keyPressState.Count -= 5;
-                    //    }
-
-                    //}
-                    //else
-                    //{
-                    //    keyPressState = new PressState(CurrDirection, 1);
-                    //}
                 }
             }
             else
@@ -231,27 +234,22 @@ namespace BlazorVirtualGridComponent
             {
                 MoveDirection CurrDirection = StringToDirection(a.Replace("arrow", null));
 
-                if (!e.CtrlKey)
+               
+
+                if (keyPressState.Direction == MoveDirection.undefined)
                 {
-                    SelectNeightbourCell(CurrDirection);
+                    if (!e.CtrlKey)
+                    {
+                        SelectNeightbourCell(CurrDirection);
+                    }
                 }
-              
-
-                //    if (keyPressState.Direction == MoveDirection.undefined)
-                //    {
-                //        if (!e.CtrlKey)
-                //        {
-                //            SelectNeightbourCell(CurrDirection);
-                //        }
-                //        return;
-                //    }
-
-
-                //    if (CurrDirection == keyPressState.Direction && keyPressState.Count > 0)
-                //    {
-                //        SelectNeightbourCell(1, CurrDirection);
-                //        //SelectNeightbourCell(keyPressState.Count+1, CurrDirection);  
-                //    }
+                else
+                {
+                    if (CurrDirection == keyPressState.Direction && keyPressState.Count > 0)
+                    {
+                        SelectNeightbourCell(CurrDirection);
+                    }
+                }
             }
 
             
