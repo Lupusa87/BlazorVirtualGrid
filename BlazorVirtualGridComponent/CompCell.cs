@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using static BlazorVirtualGridComponent.classes.BvgEnums;
 
@@ -14,9 +15,12 @@ namespace BlazorVirtualGridComponent
     public class CompCell<TItem> : ComponentBase, IDisposable
     {
 
+        private bool loop = false;
 
         [Parameter]
         protected BvgCell<TItem> bvgCell { get; set; }
+
+        private PressState keyPressState = new PressState();
 
 
         //bool EnabledRender = true;
@@ -24,7 +28,7 @@ namespace BlazorVirtualGridComponent
 
         //protected override Task OnParametersSetAsync()
         //{
-            
+
         //    EnabledRender = true;
 
         //    return base.OnParametersSetAsync();
@@ -32,7 +36,7 @@ namespace BlazorVirtualGridComponent
 
         //protected override bool ShouldRender()
         //{
-            
+
         //    return EnabledRender;
         //}
 
@@ -64,7 +68,8 @@ namespace BlazorVirtualGridComponent
             builder.AddAttribute(k++, "tabindex", 0); // without this div can't get focus and don't fires keyboard events
             //builder.AddAttribute(k++, "style", string.Concat("width:", bvgCell.bvgColumn.ColWidth, "px"));
             builder.AddAttribute(k++, "onclick", Clicked);
-            builder.AddAttribute(k++, "onkeydown", OnKeyDown);
+            builder.AddAttribute(k++, "onkeydown", EventCallback.Factory.Create<UIKeyboardEventArgs>(this, OnKeyDown));
+            builder.AddAttribute(k++, "onkeyup", OnKeyUp);
 
 
             builder.OpenElement(k++, "input");
@@ -128,201 +133,237 @@ namespace BlazorVirtualGridComponent
 
         public void OnKeyDown(UIKeyboardEventArgs e)
         {
+
+            if (e.Repeat && e.ShiftKey)
+            {
+                return;
+            }
+
+
             string a = e.Key.ToLower();
 
             if (a.Contains("arrow"))
             {
+                MoveDirection CurrDirection = StringToDirection(a.Replace("arrow", null));
 
-                a = a.Replace("arrow", null);
 
-                switch (a)
+                if (e.CtrlKey)
                 {
-                    case "right":
-                        SelectNeightbourCell(MoveDirection.right, e.CtrlKey);
+                    SelectCornerCell(CurrDirection);
+                    keyPressState = new PressState();
+                }
+                else if (e.ShiftKey)
+                {
+
+                    keyPressState = new PressState(CurrDirection, 99);
+                    TimerHelper.OnTick = TimerOnTick;
+                    TimerHelper.Start(0, 1);
+                }
+                else
+                { 
+
+                    if (e.Repeat)
+                    {
+                        SelectNeightbourCell(CurrDirection);
+                    }
+
+
+                    //if (keyPressState.Direction == MoveDirection.undefined)
+                    //{
+                    //    keyPressState = new PressState(CurrDirection, 0);
+                    //}
+
+                    //if (CurrDirection == keyPressState.Direction)
+                    //{
+                    //    keyPressState.Count++;
+
+
+                    //    if (keyPressState.Count > 5)
+                    //    {
+                    //        SelectNeightbourCell(5, CurrDirection);
+                    //        keyPressState.Count -= 5;
+                    //    }
+
+                    //}
+                    //else
+                    //{
+                    //    keyPressState = new PressState(CurrDirection, 1);
+                    //}
+                }
+            }
+            else
+            {
+                switch (e.Key.ToLower())
+                {
+                    case "home":
+                        SelectCornerCell(MoveDirection.up);
                         break;
-                    case "left":
-                        SelectNeightbourCell(MoveDirection.left,e.CtrlKey);
+                    case "end":
+                        SelectCornerCell(MoveDirection.down);
                         break;
-                    case "up":
-                        SelectNeightbourCell(MoveDirection.up,e.CtrlKey);
+                    case "pageup":
+                        bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.ThumbMove(-(bvgCell.bvgGrid.DisplayedRowsCount-1)* bvgCell.bvgGrid.bvgSettings.RowHeight);
                         break;
-                    case "down":
-                        SelectNeightbourCell(MoveDirection.down, e.CtrlKey);
+                    case "pagedown":
+                        bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.ThumbMove((bvgCell.bvgGrid.DisplayedRowsCount - 1) * bvgCell.bvgGrid.bvgSettings.RowHeight);
                         break;
                     default:
                         break;
                 }
             }
-
-            
-            
         }
 
 
        
 
-
-        public void SelectNeightbourCell(MoveDirection d, bool HasCtrl)
+        public void OnKeyUp(UIKeyboardEventArgs e)
         {
+            if (keyPressState.Count == 99)
+            {
+                keyPressState = new PressState();
+                TimerHelper.Stop();
+                return;
+            }
 
-            BvgCell<TItem> result = new BvgCell<TItem>();
+            string a = e.Key.ToLower();
+
+            if (a.Contains("arrow"))
+            {
+                MoveDirection CurrDirection = StringToDirection(a.Replace("arrow", null));
+
+                if (!e.CtrlKey)
+                {
+                    SelectNeightbourCell(CurrDirection);
+                }
+              
+
+                //    if (keyPressState.Direction == MoveDirection.undefined)
+                //    {
+                //        if (!e.CtrlKey)
+                //        {
+                //            SelectNeightbourCell(CurrDirection);
+                //        }
+                //        return;
+                //    }
+
+
+                //    if (CurrDirection == keyPressState.Direction && keyPressState.Count > 0)
+                //    {
+                //        SelectNeightbourCell(1, CurrDirection);
+                //        //SelectNeightbourCell(keyPressState.Count+1, CurrDirection);  
+                //    }
+            }
+
+            
+        }
+
+
+        public void SelectNeightbourCell(MoveDirection d)
+        {
+            int StepSize = 1;
+
+            //After refresh from JS bvgCell for this component is old because we don't do component refresh
+            //So we will depend Active cell data because it is always up to date.
+            BvgCell<TItem> bvgActiveCell = bvgCell.bvgGrid.ActiveBvgCell;
+
             int sn = 0;
+            ColProp a = new ColProp();
+            int index = 0;
 
             switch (d)
             {
                 case MoveDirection.right:
-                    if (HasCtrl)
-                    {
-                        if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMaxPosition())
-                        {
+                    a = bvgActiveCell.bvgGrid.ColumnsOrderedList.Single(x => x.prop.Name.Equals(bvgActiveCell.bvgColumn.prop.Name));
+                    index = bvgActiveCell.bvgGrid.ColumnsOrderedList.ToList().IndexOf(a);
 
-                            NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true,bvgCell.bvgGrid.ColumnsOrderedListNonFrozen.Last().prop.Name, bvgCell.bvgRow.IndexInSource, bvgCell.bvgGrid);
+                    if (index < bvgActiveCell.bvgGrid.ColumnsOrderedList.Count() - StepSize)
+                    {
+
+                        if (bvgActiveCell.bvgRow.Cells.Any(x => x.bvgColumn.prop.Name.Equals(bvgActiveCell.bvgGrid.ColumnsOrderedList[index + StepSize].prop.Name)))
+                        {
+                            BvgCell<TItem> c = bvgActiveCell.bvgRow.Cells.Single(x => x.bvgColumn.prop.Name.Equals(bvgActiveCell.bvgGrid.ColumnsOrderedList[index + StepSize].prop.Name));
+                            bvgActiveCell.bvgGrid.SelectCell(c, true);
+
                         }
                         else
                         {
-                            if (!bvgCell.bvgGrid.ActiveBvgCell.bvgColumn.prop.Name.Equals(bvgCell.bvgGrid.ColumnsOrderedListNonFrozen.Last().prop.Name))
-                            {
-                                NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true,bvgCell.bvgGrid.ColumnsOrderedListNonFrozen.Last().prop.Name, bvgCell.bvgRow.IndexInSource, bvgCell.bvgGrid);
-                            }
+                            NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(false, bvgActiveCell.bvgGrid.ColumnsOrderedList[index + StepSize].prop.Name, bvgActiveCell.bvgRow.IndexInSource, bvgActiveCell.bvgGrid);
                         }
-                    }
-                    else
-                    {
-                        ColProp a = bvgCell.bvgGrid.ColumnsOrderedList.Single(x => x.prop.Name.Equals(bvgCell.bvgColumn.prop.Name));
-                        int index = bvgCell.bvgGrid.ColumnsOrderedList.ToList().IndexOf(a);
-
-                        if (index < bvgCell.bvgGrid.ColumnsOrderedList.Count() - 1)
-                        {
-
-                            if (bvgCell.bvgRow.Cells.Any(x => x.bvgColumn.prop.Name.Equals(bvgCell.bvgGrid.ColumnsOrderedList[index + 1].prop.Name)))
-                            {
-                                BvgCell<TItem> c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.prop.Name.Equals(bvgCell.bvgGrid.ColumnsOrderedList[index + 1].prop.Name));
-                                bvgCell.bvgGrid.SelectCell(c, true);
-
-                            }
-                            else
-                            {
-                              NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(false,bvgCell.bvgGrid.ColumnsOrderedList[index + 1].prop.Name, bvgCell.bvgRow.IndexInSource, bvgCell.bvgGrid);
-                            }
-                        }
-                       
                     }
                     break;
                 case MoveDirection.left:
-                    if (HasCtrl)
+
+                    a = bvgActiveCell.bvgGrid.ColumnsOrderedList.Single(x => x.prop.Name.Equals(bvgActiveCell.bvgColumn.prop.Name));
+                    index = bvgActiveCell.bvgGrid.ColumnsOrderedList.ToList().IndexOf(a);
+
+                    if (index > 0)
                     {
-                        if (!bvgCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMinPosition())
+
+                        if (bvgActiveCell.bvgRow.Cells.Any(x => x.bvgColumn.prop.Name.Equals(bvgActiveCell.bvgGrid.ColumnsOrderedList[index - StepSize].prop.Name)))
                         {
-                            NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true,bvgCell.bvgGrid.ColumnsOrderedList.First().prop.Name, bvgCell.bvgRow.IndexInSource, bvgCell.bvgGrid, 0);
+                            BvgCell<TItem> c = bvgActiveCell.bvgRow.Cells.Single(x => x.bvgColumn.prop.Name.Equals(bvgActiveCell.bvgGrid.ColumnsOrderedList[index - StepSize].prop.Name));
+
+                            bvgActiveCell.bvgGrid.SelectCell(c, true);
                         }
                         else
                         {
-                            if (!bvgCell.bvgGrid.ActiveBvgCell.bvgColumn.prop.Name.Equals(bvgCell.bvgGrid.ColumnsOrderedList.First().prop.Name))
-                            {
-                                NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true, bvgCell.bvgGrid.ColumnsOrderedList.First().prop.Name, bvgCell.bvgRow.IndexInSource, bvgCell.bvgGrid, 0);
-                            }
+                            NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true, bvgActiveCell.bvgGrid.ColumnsOrderedList[index - StepSize].prop.Name, bvgActiveCell.bvgRow.IndexInSource, bvgActiveCell.bvgGrid);
                         }
                     }
-                    else
-                    {
 
-                        ColProp a = bvgCell.bvgGrid.ColumnsOrderedList.Single(x => x.prop.Name.Equals(bvgCell.bvgColumn.prop.Name));
-                        int index = bvgCell.bvgGrid.ColumnsOrderedList.ToList().IndexOf(a);
-
-                        if (index > 0)
-                        {
-
-                            if (bvgCell.bvgRow.Cells.Any(x => x.bvgColumn.prop.Name.Equals(bvgCell.bvgGrid.ColumnsOrderedList[index-1].prop.Name)))
-                            {
-                                BvgCell<TItem> c = bvgCell.bvgRow.Cells.Single(x => x.bvgColumn.prop.Name.Equals(bvgCell.bvgGrid.ColumnsOrderedList[index - 1].prop.Name));
-
-                                bvgCell.bvgGrid.SelectCell(c, true);
-                            }
-                            else
-                            {
-                                NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true, bvgCell.bvgGrid.ColumnsOrderedList[index - 1].prop.Name, bvgCell.bvgRow.IndexInSource, bvgCell.bvgGrid);
-                            }
-                        }
-                    }
                     break;
                 case MoveDirection.up:
-                    if (HasCtrl)
+                    sn = bvgActiveCell.bvgRow.ID - StepSize;
+
+                    if (bvgActiveCell.bvgGrid.Rows.Any(x => x.ID == sn))
                     {
-                        if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMinPosition())
-                        {
-                            bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.SetScrollPosition(0);
-                        }
+                        BvgCell<TItem> c = bvgActiveCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgActiveCell.bvgColumn.ID);
 
-                        if (bvgCell.bvgRow.ID > 0)
-                        {
-                            BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == 0).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
-
-                            bvgCell.bvgGrid.SelectCell(c, true);
-                        }
+                        bvgActiveCell.bvgGrid.SelectCell(c, true);
 
                     }
                     else
                     {
-                        
-                        sn = bvgCell.bvgRow.ID - 1;
-
-                        if (bvgCell.bvgGrid.Rows.Any(x => x.ID == sn))
+                        if (bvgActiveCell.bvgRow.IndexInSource>1)
                         {
-                            BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
-
-                            bvgCell.bvgGrid.SelectCell(c, true);
-
-                        }
-                        else
-                        {
-                            if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMinPosition())
+                            if (bvgActiveCell.bvgRow.IndexInSource > StepSize)
                             {
-                                if (bvgCell.bvgRow.IndexInSource > 1)
-                                {
-                                    NavigationHelper<TItem>.ScrollIntoViewVertical(true, (ushort)(bvgCell.bvgRow.IndexInSource - 1), bvgCell.bvgColumn.prop.Name, bvgCell.bvgGrid);
-                                }
+                                NavigationHelper<TItem>.ScrollIntoViewVertical(true, (ushort)(bvgActiveCell.bvgRow.IndexInSource - StepSize), bvgActiveCell.bvgColumn.prop.Name, bvgActiveCell.bvgGrid);
                             }
                         }
-                        
                     }
-                   
                     break;
                 case MoveDirection.down:
-                    int MaxID = bvgCell.bvgGrid.Rows.Max(x => x.ID);
-                    if (HasCtrl)
-                    {
-                        if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMaxPosition())
-                        {
-                            bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.SetScrollPosition(bvgCell.bvgGrid.RowsTotalCount * bvgCell.bvgGrid.bvgSettings.RowHeight);
-                        }
-                        
-                        if (bvgCell.bvgRow.ID < MaxID-1)
-                        {
-                            BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == MaxID-1).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
+                    int MaxID = bvgActiveCell.bvgGrid.Rows.Max(x => x.ID);
+                    sn = bvgActiveCell.bvgRow.ID + StepSize;
 
-                            bvgCell.bvgGrid.SelectCell(c, true);
-                        }
+                    if (bvgActiveCell.bvgGrid.Rows.Any(x => x.ID == sn) && sn < MaxID-1)
+                    {
+                        BvgCell<TItem> c = bvgActiveCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgActiveCell.bvgColumn.ID);
+
+                        bvgActiveCell.bvgGrid.SelectCell(c, true);
                     }
                     else
                     {
-
-                        sn = bvgCell.bvgRow.ID + 1;
-
-                        if (bvgCell.bvgGrid.Rows.Any(x => x.ID == sn) && sn < MaxID-1)
+                        if (bvgActiveCell.bvgRow.IndexInSource < bvgCell.bvgGrid.RowsTotalCount)
                         {
-                            BvgCell<TItem> c = bvgCell.bvgGrid.Rows.Single(x => x.ID == sn).Cells.Single(x => x.bvgColumn.ID == bvgCell.bvgColumn.ID);
 
-                            bvgCell.bvgGrid.SelectCell(c, true);
-                        }
-                        else
-                        {
-                            if (!bvgCell.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMaxPosition())
+                            int tmpindex = bvgCell.bvgGrid.ActiveBvgCell.bvgRow.IndexInSource;
+
+                            NavigationHelper<TItem>.ScrollIntoViewVertical(false, (ushort)(bvgActiveCell.bvgRow.IndexInSource + 1), bvgActiveCell.bvgColumn.prop.Name, bvgActiveCell.bvgGrid);
+                          
+
+                            if (tmpindex == bvgCell.bvgGrid.ActiveBvgCell.bvgRow.IndexInSource)
                             {
-                                NavigationHelper<TItem>.ScrollIntoViewVertical(false, (ushort)(bvgCell.bvgRow.IndexInSource + MaxID - sn), bvgCell.bvgColumn.prop.Name, bvgCell.bvgGrid);
 
+                                NavigationHelper<TItem>.ScrollIntoViewVertical(false, (ushort)(bvgActiveCell.bvgRow.IndexInSource + 2), bvgActiveCell.bvgColumn.prop.Name, bvgActiveCell.bvgGrid);
                             }
-                        }
-                        
+
+                            if (tmpindex == bvgCell.bvgGrid.ActiveBvgCell.bvgRow.IndexInSource)
+                            {
+                                SelectCornerCell(d);
+                            }
+                      }
                     }
                     break;
                 default:
@@ -330,13 +371,103 @@ namespace BlazorVirtualGridComponent
             }
 
 
+        }
 
+
+        public void TimerOnTick()
+        {
+          
+           SelectNeightbourCell(keyPressState.Direction);
+            
+        }
+
+
+        public void SelectCornerCell(MoveDirection d)
+        {
+            BvgCell<TItem> bvgActiveCell = bvgCell.bvgGrid.ActiveBvgCell;
+
+            switch (d)
+            {
+                case MoveDirection.right:
+                    if (!bvgActiveCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMaxPosition())
+                    {
+                        NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true, bvgActiveCell.bvgGrid.ColumnsOrderedListNonFrozen.Last().prop.Name, bvgActiveCell.bvgRow.IndexInSource, bvgActiveCell.bvgGrid);
+                    }
+                    else
+                    {
+                        if (!bvgActiveCell.bvgColumn.prop.Name.Equals(bvgActiveCell.bvgGrid.ColumnsOrderedListNonFrozen.Last().prop.Name))
+                        {
+                            NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true, bvgActiveCell.bvgGrid.ColumnsOrderedListNonFrozen.Last().prop.Name, bvgActiveCell.bvgRow.IndexInSource, bvgActiveCell.bvgGrid);
+                        }
+                    }
+                    break;
+                case MoveDirection.left:
+                    if (!bvgActiveCell.bvgGrid.HorizontalScroll.compBlazorScrollbar.IsOnMinPosition())
+                    {
+                        NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true, bvgActiveCell.bvgGrid.ColumnsOrderedList.First().prop.Name, bvgActiveCell.bvgRow.IndexInSource, bvgActiveCell.bvgGrid, 0);
+                    }
+                    else
+                    {
+                        if (!bvgActiveCell.bvgColumn.prop.Name.Equals(bvgActiveCell.bvgGrid.ColumnsOrderedList.First().prop.Name))
+                        {
+                            NavigationHelper<TItem>.SelectAndScrollIntoViewHorizontal(true, bvgActiveCell.bvgGrid.ColumnsOrderedList.First().prop.Name, bvgActiveCell.bvgRow.IndexInSource, bvgActiveCell.bvgGrid, 0);
+                        }
+                    }
+                    break;
+                case MoveDirection.up:
+                    if (bvgActiveCell.bvgRow.IndexInSource > 1)
+                    {
+                        bvgActiveCell.bvgGrid.VerticalScroll.compBlazorScrollbar.SetScrollPosition(0);
+                    }
+
+                    if (bvgActiveCell.bvgRow.ID > 0)
+                    {
+                        BvgCell<TItem> c = bvgActiveCell.bvgGrid.Rows.Single(x => x.ID == 0).Cells.Single(x => x.bvgColumn.ID == bvgActiveCell.bvgColumn.ID);
+
+                        bvgActiveCell.bvgGrid.SelectCell(c, true);
+                    }
+                    break;
+                case MoveDirection.down:
+                    int MaxID = bvgActiveCell.bvgGrid.Rows.Max(x => x.ID);
+
+                    if (bvgActiveCell.bvgRow.IndexInSource < bvgActiveCell.bvgGrid.RowsTotalCount)
+                    {
+                        bvgActiveCell.bvgGrid.VerticalScroll.compBlazorScrollbar.SetScrollPosition(bvgActiveCell.bvgGrid.RowsTotalCount * bvgActiveCell.bvgGrid.bvgSettings.RowHeight);
+                    }
+
+                    if (bvgActiveCell.bvgRow.ID < MaxID - 1)
+                    {
+                        BvgCell<TItem> c = bvgActiveCell.bvgGrid.Rows.Single(x => x.ID == MaxID - 1).Cells.Single(x => x.bvgColumn.ID == bvgActiveCell.bvgColumn.ID);
+
+                        bvgActiveCell.bvgGrid.SelectCell(c, true);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
 
         public void Dispose()
         {
          
+        }
+
+
+        private class PressState
+        {
+            public MoveDirection Direction { get; set; } = MoveDirection.undefined;
+            public int Count { get; set; } = 0;
+
+            public PressState()
+            {
+            }
+
+            public PressState(MoveDirection direction, int count)
+            {
+                Direction = direction;
+                Count = count; 
+            }
         }
     }
 }

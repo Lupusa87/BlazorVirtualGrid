@@ -116,7 +116,6 @@ namespace BlazorVirtualGridComponent
                 //////so it will keep old data
                 ////if (bvgColumn.prop.Name != bvgColumn.bvgGrid.Columns.Single(x => x.ID == bvgColumn.ID).prop.Name)
                 ////{
-                ////    Console.WriteLine("updated col");
                 ////    bvgColumn = bvgColumn.bvgGrid.Columns.Single(x => x.ID == bvgColumn.ID);
                 ////}
         }
@@ -193,7 +192,6 @@ namespace BlazorVirtualGridComponent
                     }
                     else
                     {
-                        //Console.WriteLine("Full Refresh");
                         bvgColumn.bvgGrid.compBlazorVirtualGrid.Refresh(false, false);
                     }
                 }

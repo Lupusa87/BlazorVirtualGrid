@@ -21,7 +21,7 @@ namespace BlazorVirtualGridComponent.classes
 
             //if (PropertyChanged==null)
             //{
-            //    Console.WriteLine("BvgAreaRows InvokePropertyChanged is null");
+           
             //}
 
 

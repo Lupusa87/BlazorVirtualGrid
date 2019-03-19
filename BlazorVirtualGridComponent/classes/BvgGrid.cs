@@ -36,6 +36,8 @@ namespace BlazorVirtualGridComponent.classes
         public bool IsReady { get; set; } = false;
         public bool HasMeasuredRect { get; set; } = false;
 
+
+
         public string DivContainerElementID { get; set; } = "DivContainer" + Guid.NewGuid().ToString("d").Substring(1, 4);
         public string Name { get; set; } = "null";
 

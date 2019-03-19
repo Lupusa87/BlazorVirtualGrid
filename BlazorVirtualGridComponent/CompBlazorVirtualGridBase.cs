@@ -250,8 +250,6 @@ namespace BlazorVirtualGridComponent
                 }
             }
 
-           
-
         }
 
 

@@ -8,6 +8,7 @@ namespace BlazorVirtualGridComponent.classes
     {
         public enum MoveDirection
         {
+            undefined,
             right,
             left,
             up,
@@ -36,6 +37,30 @@ namespace BlazorVirtualGridComponent.classes
         {
             HeaderRegular,
             HeaderActive,
+        }
+
+
+        public static MoveDirection StringToDirection(string par_Direction)
+        {
+
+            if (string.IsNullOrEmpty(par_Direction))
+            {
+                return MoveDirection.undefined;
+            }
+
+            switch (par_Direction.ToLower())
+            {
+                case "right":
+                    return MoveDirection.right;
+                case "left":
+                    return MoveDirection.left;
+                case "up":
+                    return MoveDirection.up;
+                case "down":
+                    return MoveDirection.down;
+                default:
+                    return MoveDirection.undefined;
+            }
         }
     }
 }
