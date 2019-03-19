@@ -23,6 +23,17 @@ namespace BlazorVirtualGridComponent.businessLayer
             else
             {
                 IsRunning = true;
+
+                if (DueTime<1)
+                {
+                    DueTime = 1; //It can be 0 but in case of 0 blazor does not update
+                }
+
+                if (Period < 1)
+                {
+                    Period = 1;
+                }
+
                 timer1 = new Timer(Timer1Callback, null, DueTime, Period);
                 
             }

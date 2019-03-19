@@ -157,7 +157,7 @@ namespace BlazorVirtualGridComponent
 
                     keyPressState = new PressState(CurrDirection, 99);
                     TimerHelper.OnTick = TimerOnTick;
-                    TimerHelper.Start(0, 1);
+                    TimerHelper.Start(1, 1);
                 }
                 else
                 { 
