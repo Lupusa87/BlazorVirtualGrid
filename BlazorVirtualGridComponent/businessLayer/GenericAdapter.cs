@@ -133,7 +133,7 @@ namespace BlazorVirtualGridComponent.businessLayer
                     g = 0;
                     foreach (BvgColumn<T> col in _bvgGrid.Columns)
                     {
-                        row.Cells[g] = GetCell(row, col, item, _bvgGrid,true);
+                        row.Cells[g] = GetCell(row, col, item, _bvgGrid);
                         g++;
                     }
 
@@ -145,13 +145,12 @@ namespace BlazorVirtualGridComponent.businessLayer
             else
             {
                 RefreshRows(list, _bvgGrid, false, skip);
-              
             }
 
            
         }
 
-        private static BvgCell<T> GetCell(BvgRow<T> row, BvgColumn<T> col, T item, BvgGrid<T> _bvgGrid, bool SetValue)
+        private static BvgCell<T> GetCell(BvgRow<T> row, BvgColumn<T> col, T item, BvgGrid<T> _bvgGrid)
         {
 
             BvgCell<T> cell = new BvgCell<T>
@@ -159,49 +158,49 @@ namespace BlazorVirtualGridComponent.businessLayer
                 bvgRow = row,
                 bvgColumn = col,
                 bvgGrid = _bvgGrid,
+                Value = col.prop.GetValue(item, null).ToString(),
+                ID = string.Concat("C", col.ID, "R", row.ID),
             };
 
-            if (SetValue)
-            {
-                cell.Value = col.prop.GetValue(item, null).ToString();
-            }
 
-            
+           
             if (col.IsFrozen)
             {
-                cell.CssClass = CellStyle.CellFrozen.ToString();
+                cell.CssClassBase = CellStyle.CF.ToString();
             }
             else
             {
-                cell.CssClass = CellStyle.CellNonFrozen.ToString();
+                cell.CssClassBase = CellStyle.CNF.ToString();
             }
 
-            cell.UpdateID();
-            
             return cell;
         }
 
         private static void RefreshRows(T[] list, BvgGrid<T> _bvgGrid, bool updateWidths, int skip)
         {
-
+            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("Refresh rows start", MethodBase.GetCurrentMethod());
             short i = -1;
+            short i1 = -1;
             short i2 = -1;
             short i3 = -1;
             byte g = 0;
-            string[] UpdatePkg = new string[_bvgGrid.Rows.Count() * _bvgGrid.Rows[0].Cells.Count() * 3];
+            int lenght = _bvgGrid.Rows.Count() * _bvgGrid.Rows[0].Cells.Count();
+            string[] PkgIDs = new string[lenght];
+
+            string[] UpdatePkg = new string[lenght * 2];
 
            
 
             string[] UpdatePkg2 = new string[1];
             if (updateWidths)
             {
-                UpdatePkg2 = new string[_bvgGrid.Rows.Count() * _bvgGrid.Rows[0].Cells.Count() * 2];
+                UpdatePkg2 = new string[lenght];
             }
 
             string[] UpdatePkgClass = new string[1];
             if (!updateWidths)
             {
-                UpdatePkgClass = new string[_bvgGrid.Rows.Count() * _bvgGrid.Rows[0].Cells.Count() * 2];
+                UpdatePkgClass = new string[lenght];
             }
 
 
@@ -217,15 +216,9 @@ namespace BlazorVirtualGridComponent.businessLayer
                    
                     c.Value = c.bvgColumn.prop.GetValue(item, null).ToString();
                    
-                    UpdatePkg[++i] = c.ID;
-                    UpdatePkg[++i] = c.Value;
+                    PkgIDs[++i1] = c.ID;
 
-                    if (!updateWidths)
-                    {
-                        c.UpdateCssClass();
-                        UpdatePkgClass[++i3] = c.ID;
-                        UpdatePkgClass[++i3] = c.CssClass;
-                    }
+                    UpdatePkg[++i] = c.Value;
 
                     if (c.bvgColumn.prop.PropertyType.Equals(typeof(bool)))
                     {
@@ -236,9 +229,15 @@ namespace BlazorVirtualGridComponent.businessLayer
                         UpdatePkg[++i] = "s";
                     }
 
+
+                    if (!updateWidths)
+                    {
+                        c.UpdateCssClass();
+                        UpdatePkgClass[++i3] = c.CssClassFull;
+                    }
+
                     if (updateWidths)
                     {
-                        UpdatePkg2[++i2] = c.ID;
                         UpdatePkg2[++i2] = c.bvgColumn.ColWidth.ToString();
                     }
 
@@ -246,19 +245,26 @@ namespace BlazorVirtualGridComponent.businessLayer
                 g++;
             }
 
+            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("js calls start", MethodBase.GetCurrentMethod());
 
 
-            BvgJsInterop.UpdateRowContentBatch(UpdatePkg);
+            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("js calls 1 start", MethodBase.GetCurrentMethod());
+            BvgJsInterop.UpdateElementContentBatchMonoByteArray(PkgIDs, UpdatePkg);
 
             if (!updateWidths)
             {
-                BvgJsInterop.UpdateCellClassBatch(UpdatePkgClass);
+                //BlazorWindowHelper.BlazorTimeAnalyzer.Add("js calls 2 start", MethodBase.GetCurrentMethod());
+                BvgJsInterop.UpdateCellClassBatchMonoByteArray(PkgIDs, UpdatePkgClass);
             }
 
             if (updateWidths)
             {
-                BvgJsInterop.UpdateRowWidthsBatch(UpdatePkg2);
+                //BlazorWindowHelper.BlazorTimeAnalyzer.Add("js calls 3 start", MethodBase.GetCurrentMethod());
+                BvgJsInterop.UpdateRowWidthsBatch(PkgIDs, UpdatePkg2);
             }
+            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("js calls end", MethodBase.GetCurrentMethod());
+
+            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("Refresh rows end", MethodBase.GetCurrentMethod());
 
         }
     }

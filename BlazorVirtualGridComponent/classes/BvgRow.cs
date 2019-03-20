@@ -33,7 +33,6 @@ namespace BlazorVirtualGridComponent.classes
 
         public BvgCell<TItem>[] Cells { get; set; } = new BvgCell<TItem>[0];
 
-        public bool IsSelected { get; set; }
 
         public bool IsEven { get; set; }
 
@@ -53,15 +52,15 @@ namespace BlazorVirtualGridComponent.classes
 
                 if (item.bvgColumn.IsFrozen)
                 {
-                    item.CssClass = CellStyle.CellFrozen.ToString();
+                    item.CssClassBase = CellStyle.CF.ToString();
                 }
                 else
                 {
-                    item.CssClass = CellStyle.CellNonFrozen.ToString();
+                    item.CssClassBase = CellStyle.CNF.ToString();
                 }
 
                 l.Add(item.ID);
-                l.Add(item.CssClass);
+                l.Add(item.CssClassFull);
                 //item.InvokePropertyChanged();
 
             }

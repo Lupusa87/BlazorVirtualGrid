@@ -78,8 +78,8 @@ namespace BlazorVirtualGridComponent
             if (bvgScroll.bsbSettings.VerticalOrHorizontal)
             {
 
+                //BlazorWindowHelper.BlazorTimeAnalyzer.Add("scroll start", MethodBase.GetCurrentMethod());
 
-             
 
                 double b = ScrollPosition / bvgScroll.bvgGrid.bvgSettings.RowHeight;
 
@@ -91,8 +91,10 @@ namespace BlazorVirtualGridComponent
                    
                     bvgScroll.bvgGrid.CurrVerticalScrollPosition = skip;
 
+
+                    //BlazorWindowHelper.BlazorTimeAnalyzer.Add("OnVerticalScroll invoke start", MethodBase.GetCurrentMethod());
                     bvgScroll.bvgGrid.OnVerticalScroll?.Invoke(skip);
-                
+                    //BlazorWindowHelper.BlazorTimeAnalyzer.Add("OnVerticalScroll invoke end", MethodBase.GetCurrentMethod());
                 }
 
               
@@ -114,8 +116,8 @@ namespace BlazorVirtualGridComponent
                         bvgScroll.bvgGrid.SetScrollTop(m);
                     }
                 }
-              
 
+                //BlazorWindowHelper.BlazorTimeAnalyzer.Add("scroll end", MethodBase.GetCurrentMethod());
             }
             else
             {

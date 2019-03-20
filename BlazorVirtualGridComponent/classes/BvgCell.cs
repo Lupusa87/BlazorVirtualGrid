@@ -32,18 +32,19 @@ namespace BlazorVirtualGridComponent.classes
         public bool IsActive { get; set; }
 
 
-        private string _CssClass { get; set; }
-        public string CssClass {
+        private string _CssClassBase { get; set; }
+        public string CssClassBase {
             get
             {
-                return _CssClass;
+                return _CssClassBase;
             } set
             {
-                _CssClass = value;
+                _CssClassBase = value;
                 UpdateCssClass();
             }
         }
 
+        public string CssClassFull { get; set; }
 
         public void InvokePropertyChanged()
         {
@@ -53,37 +54,26 @@ namespace BlazorVirtualGridComponent.classes
 
         public void UpdateCssClass()
         {
-            _CssClass = _CssClass.Replace("CellDiv ", null);
-            _CssClass = _CssClass.Replace("Alternated", null);
 
-            if (bvgColumn.IsFrozen)
+            if (IsActive || IsSelected)
             {
-                if (_CssClass.Equals(CellStyle.CellFrozen.ToString()))
-                {
-                    if (bvgRow.IsEven)
-                    {
-                        _CssClass = "CellFrozenAlternated";
-                    }
-                }
-
+                CssClassFull = string.Concat("CDiv ", CssClassBase);
             }
             else
             {
-                if (_CssClass.Equals(CellStyle.CellNonFrozen.ToString()))
-                {
-                    if (bvgRow.IsEven)
-                    {
-                        _CssClass = "CellNonFrozenAlternated";
-                    }
-                }
-            }
 
-            _CssClass = string.Concat("CellDiv ", _CssClass);
+                string a = bvgColumn.IsFrozen ? "F" : "NF";
+                if (bvgRow.IsEven)
+                {
+                    a += "Alt";
+                }
+                CssClassFull = string.Concat("CDiv C",a);
+            }
         }
 
         public void UpdateID()
         {
-            ID =string.Concat("C", bvgColumn.ID, "R" , bvgRow.ID);
+            ID = string.Concat("C", bvgColumn.ID, "R" , bvgRow.ID);
         }
     }
 }

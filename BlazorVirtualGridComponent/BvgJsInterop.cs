@@ -58,6 +58,13 @@ namespace BlazorVirtualGridComponent
                 "BvgJsFunctions.SetElementScrollTop", elementID, val);
         }
 
+
+        public static Task<bool> SetDivsScrollTop(double val)
+        {
+            return jsRuntime.InvokeAsync<bool>(
+                "BvgJsFunctions.SetDivsScrollTop", val);
+        }
+
         public static Task<double> GetElementScrollLeft(string elementID)
         {
            
@@ -114,13 +121,30 @@ namespace BlazorVirtualGridComponent
         }
 
 
-        public static bool UpdateRowWidthsBatch(string[] updatepkg)
+        public static bool UpdateCellClassBatchMonoByteArray(string[] pkgIDs, string[] updatepkg)
+        {
+
+            if (jsRuntime is MonoWebAssemblyJSRuntime mono)
+            {
+
+                return mono.InvokeUnmarshalled<byte[], byte[], bool>(
+                    "BvgJsFunctions.UpdateCellClassBatchMonoByteArray",
+                     Encoding.UTF8.GetBytes(Json.Serialize(pkgIDs)),
+                     Encoding.UTF8.GetBytes(Json.Serialize(updatepkg)));
+            }
+
+            return false;
+        }
+
+
+        public static bool UpdateRowWidthsBatch(string[] pkgIDs, string[] updatepkg)
         {
             if (jsRuntime is MonoWebAssemblyJSRuntime mono)
             {
 
-                return mono.InvokeUnmarshalled<string, bool>(
+                return mono.InvokeUnmarshalled<string, string, bool>(
                     "BvgJsFunctions.UpdateRowWidthsBatch",
+                    Json.Serialize(pkgIDs),
                     Json.Serialize(updatepkg));
             }
             return false;
@@ -144,14 +168,15 @@ namespace BlazorVirtualGridComponent
         }
 
 
-        public static bool UpdateElementContentBatchMonoByteArray(string[] updatepkg)
+        public static bool UpdateElementContentBatchMonoByteArray(string[] pkgIDs, string[] updatepkg)
         {
 
             if (jsRuntime is MonoWebAssemblyJSRuntime mono)
             {
 
-                return mono.InvokeUnmarshalled<byte[], bool>(
-                    "BvgJsFunctions.UpdateElementContentBatchMonoByteArray",
+                return mono.InvokeUnmarshalled<byte[], byte[], bool>(
+                    "BvgJsFunctions.UpdateRowContentBatchMonoByteArray",
+                    Encoding.UTF8.GetBytes(Json.Serialize(pkgIDs)),
                     Encoding.UTF8.GetBytes(Json.Serialize(updatepkg)));
             }
 

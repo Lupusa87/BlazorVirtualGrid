@@ -95,11 +95,31 @@ namespace BlazorVirtualGridComponent.classes
 
         public void SelectCell(BvgCell<TItem> parCell, bool doFocus)
         {
+            string oldActiveCellID = string.Empty;
+            bool IsSameRow = false;
+
+            if (ActiveBvgCell != null)
+            {
+                oldActiveCellID = ActiveBvgCell.ID;
+                IsSameRow = ActiveBvgCell.bvgRow.ID == parCell.bvgRow.ID;
+            }
+
+
             ActiveBvgCell = parCell;
 
             ActiveCell = Tuple.Create(true, parCell.bvgRow.IndexInSource, parCell.bvgColumn.prop.Name);
-          
-            SelectRow(parCell.bvgRow);
+
+
+            if (IsSameRow)
+            {
+                BvgJsInterop.SetAttributeBatch(new string[] { oldActiveCellID, "CDiv " + CellStyle.CS.ToString() }, "class");
+            }
+            else
+            { 
+                SelectRow(parCell.bvgRow, true);
+            }
+
+
             SelectActiveCell(false);
 
             if (doFocus)
@@ -117,13 +137,14 @@ namespace BlazorVirtualGridComponent.classes
         }
 
 
-        public void SelectRow(BvgRow<TItem> ActiveRow)
+        public void SelectRow(BvgRow<TItem> ActiveRow, bool DoClear)
         {
-            Cmd_Clear_Selection();
+            if (DoClear)
+            {
+                Cmd_Clear_Selection();
+            }
 
-
-            ActiveRow.IsSelected = true;
-
+        
             short j = -1;
             string[] UpdatePkg = new string[ActiveRow.Cells.Count() * 2];
             
@@ -131,10 +152,10 @@ namespace BlazorVirtualGridComponent.classes
             foreach (var c in ActiveRow.Cells)
             {
                 c.IsSelected = true;
-                c.CssClass = CellStyle.CellSelected.ToString();
+                c.CssClassBase = CellStyle.CS.ToString();
 
-                UpdatePkg[++j] = c.ID.ToString();
-                UpdatePkg[++j] = c.CssClass.ToString();
+                UpdatePkg[++j] = c.ID;
+                UpdatePkg[++j] = c.CssClassFull.ToString();
                 //c.InvokePropertyChanged();
             }
 
@@ -159,7 +180,7 @@ namespace BlazorVirtualGridComponent.classes
                 BvgCell<TItem> c = item.Cells.Single(x => x.bvgColumn.ID == ActiveColumn.ID);
 
                 c.IsSelected = true;
-                c.CssClass = CellStyle.CellSelected.ToString();
+                c.CssClassBase = CellStyle.CS.ToString();
                 c.InvokePropertyChanged();
             }
 
@@ -212,6 +233,7 @@ namespace BlazorVirtualGridComponent.classes
 
         }
 
+
         private void SelectActiveCell(bool DoClear = true)
         {
             if (DoClear)
@@ -221,10 +243,10 @@ namespace BlazorVirtualGridComponent.classes
 
             ActiveBvgCell.IsSelected = true;
             ActiveBvgCell.IsActive = true;
-            ActiveBvgCell.CssClass = CellStyle.CellActive.ToString();
+            ActiveBvgCell.CssClassBase = CellStyle.CA.ToString();
 
 
-            BvgJsInterop.SetAttributeBatch(new string[] { ActiveBvgCell.ID, ActiveBvgCell.CssClass }, "class");
+            BvgJsInterop.SetAttributeBatch(new string[] { ActiveBvgCell.ID, ActiveBvgCell.CssClassFull }, "class");
 
 
 
@@ -253,11 +275,11 @@ namespace BlazorVirtualGridComponent.classes
                 foreach (var cell in item.Cells.Where(x => x.IsActive))
                 {
                     cell.IsActive = false;
-                    cell.CssClass = CellStyle.CellSelected.ToString();
+                    cell.CssClassBase = CellStyle.CS.ToString();
 
 
                     l.Add(cell.ID);
-                    l.Add(cell.CssClass);
+                    l.Add(cell.CssClassFull);
                 }
 
             }
@@ -459,8 +481,9 @@ namespace BlazorVirtualGridComponent.classes
 
         public void SetScrollTop(double p)
         {
-            BvgJsInterop.SetElementScrollTop("FrozenDiv1", p);
-            BvgJsInterop.SetElementScrollTop("NonFrozenDiv1", p);
+            //BvgJsInterop.SetElementScrollTop("FrozenDiv1", p);
+            //BvgJsInterop.SetElementScrollTop("NonFrozenDiv1", p);
+            BvgJsInterop.SetDivsScrollTop(p);
         }
 
         #endregion

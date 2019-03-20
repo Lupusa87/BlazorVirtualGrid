@@ -89,7 +89,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
            
 
-            c = new BCssItem(".CellDiv", StyleID1);
+            c = new BCssItem(".CDiv", StyleID1);
             c.Values.Add("border-style", "solid");
             c.Values.Add("overflow", "hidden");
             c.Values.Add("white-space", "nowrap");
@@ -144,7 +144,7 @@ namespace BlazorVirtualGridComponent.businessLayer
         private void GenerateCellCSS()
         {
 
-            c = new BCssItem(".CellNonFrozen", StyleID1);
+            c = new BCssItem(".CNF", StyleID1);
             c.Values.Add("background-color", bvgGrid.bvgSettings.NonFrozenCellStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.NonFrozenCellStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.NonFrozenCellStyle.BorderColor);
@@ -152,14 +152,14 @@ namespace BlazorVirtualGridComponent.businessLayer
             blazorCSS.Children.Add(c);
 
 
-            c = new BCssItem(".CellNonFrozenAlternated", StyleID1);
+            c = new BCssItem(".CNFAlt", StyleID1);
             c.Values.Add("background-color", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.BorderColor);
             c.Values.Add("border-width", bvgGrid.bvgSettings.AlternatedNonFrozenCellStyle.GetBorderWidth());
             blazorCSS.Children.Add(c);
 
-            c = new BCssItem(".CellFrozen", StyleID1);
+            c = new BCssItem(".CF", StyleID1);
             c.Values.Add("background-color", bvgGrid.bvgSettings.FrozenCellStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.FrozenCellStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.FrozenCellStyle.BorderColor);
@@ -167,14 +167,14 @@ namespace BlazorVirtualGridComponent.businessLayer
             blazorCSS.Children.Add(c);
 
 
-            c = new BCssItem(".CellFrozenAlternated", StyleID1);
+            c = new BCssItem(".CFAlt", StyleID1);
             c.Values.Add("background-color", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.BorderColor);
             c.Values.Add("border-width", bvgGrid.bvgSettings.AlternatedFrozenCellStyle.GetBorderWidth());
             blazorCSS.Children.Add(c);
 
-            c = new BCssItem(".CellSelected", StyleID1);
+            c = new BCssItem(".CS", StyleID1);
             c.Values.Add("background-color", bvgGrid.bvgSettings.SelectedCellStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.SelectedCellStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.SelectedCellStyle.BorderColor);
@@ -183,7 +183,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
 
 
-            c = new BCssItem(".CellActive", StyleID1);
+            c = new BCssItem(".CA", StyleID1);
             c.Values.Add("background-color", bvgGrid.bvgSettings.ActiveCellStyle.BackgroundColor);
             c.Values.Add("color", bvgGrid.bvgSettings.ActiveCellStyle.ForeColor);
             c.Values.Add("border-color", bvgGrid.bvgSettings.ActiveCellStyle.BorderColor);
@@ -191,7 +191,7 @@ namespace BlazorVirtualGridComponent.businessLayer
             blazorCSS.Children.Add(c);
 
 
-            c = new BCssItem(".CellActive:focus", StyleID1);
+            c = new BCssItem(".CA:focus", StyleID1);
             c.Values.Add("outline", "none");
             blazorCSS.Children.Add(c);
 

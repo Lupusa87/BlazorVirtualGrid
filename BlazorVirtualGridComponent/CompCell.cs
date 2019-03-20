@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using static BlazorVirtualGridComponent.classes.BvgEnums;
@@ -15,7 +16,6 @@ namespace BlazorVirtualGridComponent
     public class CompCell<TItem> : ComponentBase, IDisposable
     {
 
-        private bool loop = false;
 
         [Parameter]
         protected BvgCell<TItem> bvgCell { get; set; }
@@ -64,7 +64,7 @@ namespace BlazorVirtualGridComponent
 
             builder.OpenElement(k++, "div");
             builder.AddAttribute(k++, "id", string.Concat("divCell", bvgCell.ID));
-            builder.AddAttribute(k++, "class", bvgCell.CssClass);
+            builder.AddAttribute(k++, "class", bvgCell.CssClassFull);
             builder.AddAttribute(k++, "tabindex", 0); // without this div can't get focus and don't fires keyboard events
             //builder.AddAttribute(k++, "style", string.Concat("width:", bvgCell.bvgColumn.ColWidth, "px"));
             builder.AddAttribute(k++, "onclick", Clicked);
@@ -264,6 +264,11 @@ namespace BlazorVirtualGridComponent
 
         public void SelectNeightbourCell(MoveDirection d)
         {
+
+            //BlazorWindowHelper.BWHJsInterop.jsRuntime = BvgJsInterop.jsRuntime;
+            //BlazorWindowHelper.BlazorTimeAnalyzer.Reset();
+            //BlazorWindowHelper.BlazorTimeAnalyzer.Add("A1", MethodBase.GetCurrentMethod());
+
             int StepSize = 1;
 
             //After refresh from JS bvgCell for this component is old because we don't do component refresh
@@ -377,6 +382,9 @@ namespace BlazorVirtualGridComponent
             }
 
 
+
+
+           // BlazorWindowHelper.BlazorTimeAnalyzer.Log();
         }
 
 

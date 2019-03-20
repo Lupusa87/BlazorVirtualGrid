@@ -13,6 +13,51 @@ function doneResizing() {
     DotNet.invokeMethodAsync('BlazorVirtualGridComponent', 'InvokeOnResize');
 }
 
+function updateCells(IDs, b) {
+    let j = 0;
+    for (var i = 0; i < b.length; i += 2) {
+        if (b[i + 1] === "b") {
+
+            if (document.getElementById("chCell" + IDs[j]) !== null) {
+                if (b[i].toLowerCase() === "true") {
+                    document.getElementById("chCell" + IDs[j]).checked = true;
+                }
+                else {
+                    document.getElementById("chCell" + IDs[j]).checked = false;
+                }
+
+
+                if (document.getElementById("chCell" + IDs[j]).hidden) {
+                    document.getElementById("chCell" + IDs[j]).hidden = false;
+                    document.getElementById("spCell" + IDs[j]).hidden = true;
+                }
+            }
+        }
+        else {
+            if (document.getElementById("spCell" + IDs[j]) !== null) {
+
+                if (document.getElementById("spCell" + IDs[j]).lastChild !== null) {
+                    document.getElementById("spCell" + IDs[j]).removeChild(document.getElementById("spCell" + IDs[j]).lastChild);
+                }
+
+                var c = document.createTextNode(b[i]);
+
+                document.getElementById("spCell" + IDs[j]).appendChild(c);
+
+
+                if (document.getElementById("spCell" + IDs[j]).hidden) {
+                    document.getElementById("spCell" + IDs[j]).hidden = false;
+                    document.getElementById("chCell" + IDs[j]).hidden = true;
+                }
+            }
+        }
+
+        j++;
+    }
+
+
+}
+
 function getTime() {
     var d = new Date();
     var h = addZero(d.getHours());
@@ -117,6 +162,15 @@ window.BvgJsFunctions = {
             return false;
         }
     },
+    SetDivsScrollTop: function (val) {
+        if (document.getElementById("FrozenDiv1") !== null) {
+            document.getElementById("FrozenDiv1").scrollTop = val;
+        }
+        if (document.getElementById("NonFrozenDiv1") !== null) {
+            document.getElementById("NonFrozenDiv1").scrollTop = val;
+        }
+        return true;
+    },
     GetElementScrollLeft: function (el) {
         if (document.getElementById(el) !== null) {
             return document.getElementById(el).scrollLeft + document.getElementById(el).clientWidth;
@@ -145,55 +199,7 @@ window.BvgJsFunctions = {
     },
     UpdateRowContentBatch: function (l) {
        
-        try {
-
-            b = JSON.parse(Blazor.platform.toJavaScriptString(l));
-
-            for (var i = 0; i < b.length; i += 3) {
-                if (b[i + 2] === "b") {
-
-                    if (document.getElementById("chCell" + b[i]) !== null) {
-                        if (b[i + 1].toLowerCase() === "true") {
-                            document.getElementById("chCell" + b[i]).checked = true;
-                        }
-                        else {
-                            document.getElementById("chCell" + b[i]).checked = false;
-                        }
-
-
-                        if (document.getElementById("chCell" + b[i]).hidden) {
-                            document.getElementById("chCell" + b[i]).hidden = false;
-                            document.getElementById("spCell" + b[i]).hidden = true;
-                        }
-                    }
-                }
-                else {
-                    if (document.getElementById("spCell" + b[i]) !== null) {
-
-                        if (document.getElementById("spCell" + b[i]).lastChild !== null) {
-                            document.getElementById("spCell" + b[i]).removeChild(document.getElementById("spCell" + b[i]).lastChild);
-                        }
-
-                        var c = document.createTextNode(b[i + 1]);
-
-                        document.getElementById("spCell" + b[i]).appendChild(c);
-
-                      
-                        if (document.getElementById("spCell" + b[i]).hidden) {
-                            document.getElementById("spCell" + b[i]).hidden = false;
-                            document.getElementById("chCell" + b[i]).hidden = true;
-                        }
-                    }
-                }
-            }
-
-        }
-        catch (err) {
-           
-            console.warn(err.message);
-        }
-
-       
+        updateCells(JSON.parse(Blazor.platform.toJavaScriptString(l)));
         return true;
     }, 
     UpdateCellClassBatch: function (l) {
@@ -210,14 +216,28 @@ window.BvgJsFunctions = {
        
         return true;
     },
-    UpdateRowWidthsBatch: function (l) {
-      
+    UpdateCellClassBatchMonoByteArray: function (id, l) {
+        IDs = JSON.parse(new TextDecoder("utf-8").decode(Blazor.platform.toUint8Array(id)));
+        b = JSON.parse(new TextDecoder("utf-8").decode(Blazor.platform.toUint8Array(l)));
+
+        for (var i = 0; i < b.length; i += 1) {
+
+            if (document.getElementById("divCell" + IDs[i]) !== null) {
+                document.getElementById("divCell" + IDs[i]).setAttribute("class", b[i]);
+            }
+        }
+
+        return true;
+    },
+    UpdateRowWidthsBatch: function (id, l) {
+
+        IDs = JSON.parse(Blazor.platform.toJavaScriptString(id));
         b = JSON.parse(Blazor.platform.toJavaScriptString(l));
 
-        for (var i = 0; i < b.length; i += 2) {
+        for (var i = 0; i < b.length; i += 1) {
 
-            if (document.getElementById("divCell" + b[i]) !== null) {
-                document.getElementById("divCell" + b[i]).setAttribute("style", "width:" + b[i + 1] + "px");
+            if (document.getElementById("divCell" + IDs[i]) !== null) {
+                document.getElementById("divCell" + IDs[i]).setAttribute("style", "width:" + b[i] + "px");
             }
         }
       
@@ -258,16 +278,9 @@ window.BvgJsFunctions = {
         
         return true;
     },
-    UpdateElementContentBatchMonoByteArray: function (l) {
-        
-        b = JSON.parse(new TextDecoder("utf-8").decode(Blazor.platform.toUint8Array(l)));
-
-        for (var i = 0; i < b.length; i += 2) {
-            if (document.getElementById(b[i]) !== null) {
-                document.getElementById(b[i]).innerText = b[i + 1];
-            }
-        }
-        
+    UpdateRowContentBatchMonoByteArray: function (id, l) {
+        updateCells(JSON.parse(new TextDecoder("utf-8").decode(Blazor.platform.toUint8Array(id))),
+            JSON.parse(new TextDecoder("utf-8").decode(Blazor.platform.toUint8Array(l))));    
         return true;
     },
     SetValueToCheckBox: function (el, val) {
