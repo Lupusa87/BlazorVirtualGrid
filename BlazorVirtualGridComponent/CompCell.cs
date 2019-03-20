@@ -351,23 +351,25 @@ namespace BlazorVirtualGridComponent
                     {
                         if (bvgActiveCell.bvgRow.IndexInSource < bvgCell.bvgGrid.RowsTotalCount)
                         {
-
+                           
                             int tmpindex = bvgCell.bvgGrid.ActiveBvgCell.bvgRow.IndexInSource;
-
+              
                             NavigationHelper<TItem>.ScrollIntoViewVertical(false, (ushort)(bvgActiveCell.bvgRow.IndexInSource + 1), bvgActiveCell.bvgColumn.prop.Name, bvgActiveCell.bvgGrid);
-                          
+                     
 
                             if (tmpindex == bvgCell.bvgGrid.ActiveBvgCell.bvgRow.IndexInSource)
                             {
-
+                           
                                 NavigationHelper<TItem>.ScrollIntoViewVertical(false, (ushort)(bvgActiveCell.bvgRow.IndexInSource + 2), bvgActiveCell.bvgColumn.prop.Name, bvgActiveCell.bvgGrid);
                             }
 
+                          
                             if (tmpindex == bvgCell.bvgGrid.ActiveBvgCell.bvgRow.IndexInSource)
                             {
                                 SelectCornerCell(d);
                             }
-                      }
+                 
+                        }
                     }
                     break;
                 default:
@@ -431,9 +433,9 @@ namespace BlazorVirtualGridComponent
                         bvgActiveCell.bvgGrid.VerticalScroll.compBlazorScrollbar.SetScrollPosition(0);
                     }
 
-                    if (bvgActiveCell.bvgRow.ID > 0)
+                    if (bvgActiveCell.bvgRow.IndexInSource > 1)
                     {
-                        BvgCell<TItem> c = bvgActiveCell.bvgGrid.Rows.Single(x => x.ID == 0).Cells.Single(x => x.bvgColumn.ID == bvgActiveCell.bvgColumn.ID);
+                        BvgCell<TItem> c = bvgActiveCell.bvgGrid.Rows.Single(x => x.IndexInSource == 1).Cells.Single(x => x.bvgColumn.ID == bvgActiveCell.bvgColumn.ID);
 
                         bvgActiveCell.bvgGrid.SelectCell(c, true);
                     }

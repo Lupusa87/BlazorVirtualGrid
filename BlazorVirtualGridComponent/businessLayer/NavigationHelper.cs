@@ -58,19 +58,21 @@ namespace BlazorVirtualGridComponent.businessLayer
 
         public static void ScrollIntoViewVertical(bool AlignTopOrBottom, ushort RowIndexInSource, string ColName, BvgGrid<TItem> _bvgGrid)
         {
-
+         
             double d = (RowIndexInSource-1) * _bvgGrid.bvgSettings.RowHeight;
-
+          
             if (!AlignTopOrBottom)
             {
                 d -= (_bvgGrid.DisplayedRowsCount - 3) * _bvgGrid.bvgSettings.RowHeight;
             }
-
+          
             _bvgGrid.ActiveCell = Tuple.Create(true, RowIndexInSource, ColName);
-
+         
             _bvgGrid.VerticalScroll.compBlazorScrollbar.SetScrollPosition(d);
-
+         
             _bvgGrid.SetScrollTop(0);
+
+           
         }
 
        

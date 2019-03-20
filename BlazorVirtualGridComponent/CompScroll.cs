@@ -77,6 +77,10 @@ namespace BlazorVirtualGridComponent
 
             if (bvgScroll.bsbSettings.VerticalOrHorizontal)
             {
+
+
+             
+
                 double b = ScrollPosition / bvgScroll.bvgGrid.bvgSettings.RowHeight;
 
                 int skip = (int)b;
@@ -84,14 +88,14 @@ namespace BlazorVirtualGridComponent
 
                 if (skip != bvgScroll.bvgGrid.CurrVerticalScrollPosition)
                 {
-        
+                   
                     bvgScroll.bvgGrid.CurrVerticalScrollPosition = skip;
 
                     bvgScroll.bvgGrid.OnVerticalScroll?.Invoke(skip);
-                    
+                
                 }
-        
 
+              
                 if (bvgScroll.bvgGrid.VerticalScroll.compBlazorScrollbar.IsOnMinPosition())
                 {
                 
