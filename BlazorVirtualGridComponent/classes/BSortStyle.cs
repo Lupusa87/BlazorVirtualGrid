@@ -37,7 +37,7 @@ namespace BlazorVirtualGridComponent.classes
             }
             else
             {
-                BvgJsInterop.Alert("Not set Sort icon width and/or height!");
+                BVirtualGridCJsInterop.Alert("Not set Sort icon width and/or height!");
             }
         }
 

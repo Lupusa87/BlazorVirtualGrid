@@ -2,6 +2,7 @@
 using BlazorVirtualGridComponent.classes;
 using BlazorVirtualGridComponent.ExternalSettings;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,10 @@ using System.Threading.Tasks;
 
 namespace BlazorVirtualGrid.Pages
 {
-    public class IndexBase:ComponentBase
+    public partial class Index
     {
-
+        [Inject]
+        private IJSRuntime jsRuntime { get; set; }
 
         Random rnd1 = new Random();
 
@@ -39,9 +41,11 @@ namespace BlazorVirtualGrid.Pages
 
 
        
-        protected override void OnInit()
+        protected override void OnInitialized()
         {
-           
+
+            BVirtualGridCJsInterop.jsRuntime = jsRuntime;
+
             FillList(200, 200);
 
            
@@ -81,7 +85,7 @@ namespace BlazorVirtualGrid.Pages
                // .Add(nameof(MyItem.SomeBool))
                 .Add(nameof(MyItem.C2));
 
-            base.OnInit();
+            base.OnInitialized();
         }
 
 

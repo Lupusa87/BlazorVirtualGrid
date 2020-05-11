@@ -13,20 +13,20 @@ using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent
 {
-    public class CompBlazorVirtualGridBase<TItem> : ComponentBase
+    public partial class CompBlazorVirtualGrid<TItem> : ComponentBase
     {
 
         [Inject]
         private IJSRuntime jsRuntimeCurrent { get; set; }
 
         [Parameter]
-        protected IList<TItem> SourceList { get; set; }
+        public IList<TItem> SourceList { get; set; }
 
         [Parameter]
-        protected string TableName { get; set; }
+        public string TableName { get; set; }
 
         [Parameter]
-        protected BvgSettings<TItem> bvgSettings { get; set; } = new BvgSettings<TItem>();
+        public BvgSettings<TItem> bvgSettings { get; set; } = new BvgSettings<TItem>();
 
 
         protected TItem[] SortedRowsList { get; set; }
@@ -56,13 +56,13 @@ namespace BlazorVirtualGridComponent
         //}
 
 
-        protected override void OnInit()
+        protected override void OnInitialized()
         {
 
-            BvgJsInterop.jsRuntime = jsRuntimeCurrent;
+            BVirtualGridCJsInterop.jsRuntime = jsRuntimeCurrent;
             JsEventReceiver.Initialize();
             JsEventReceiver.OnResize = OnResize;
-            base.OnInit();
+            base.OnInitialized();
         }
 
         private void OnResize()
@@ -167,10 +167,10 @@ namespace BlazorVirtualGridComponent
 
         }
 
-        protected override void OnAfterRender()
+        protected override void OnAfterRender(bool firstRender)
         {
 
-            base.OnAfterRender();
+            base.OnAfterRender(firstRender);
 
             if (FirstLoad)
             {
@@ -263,7 +263,7 @@ namespace BlazorVirtualGridComponent
                 p2 -= bvgGrid.ColumnsOrderedListNonFrozen.Take(LastHorizontalSkip).Sum(x => x.ColWidth);
             }
         
-            BvgJsInterop.SetElementScrollLeft("NonFrozenDiv1", p2);
+            BVirtualGridCJsInterop.SetElementScrollLeft("NonFrozenDiv1", p2);
         }
 
 
@@ -457,11 +457,11 @@ namespace BlazorVirtualGridComponent
         {
             if (!bvgGrid.HasMeasuredRect)
             {
-                bvgGrid.bvgSize.W = await BvgJsInterop.GetElementActualWidth(bvgGrid.DivContainerElementID);
+                bvgGrid.bvgSize.W = await BVirtualGridCJsInterop.GetElementActualWidth(bvgGrid.DivContainerElementID);
 
-                double top = await BvgJsInterop.GetElementActualTop(bvgGrid.DivContainerElementID);
+                double top = await BVirtualGridCJsInterop.GetElementActualTop(bvgGrid.DivContainerElementID);
 
-                double windowHeight = await BvgJsInterop.GetWindowHeight();
+                double windowHeight = await BVirtualGridCJsInterop.GetWindowHeight();
 
                 bvgGrid.bvgSize.H = windowHeight - top - 30;
                 bvgGrid.HasMeasuredRect = true;

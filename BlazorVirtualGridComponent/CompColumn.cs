@@ -2,7 +2,8 @@
 using BlazorVirtualGridComponent.businessLayer;
 using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace BlazorVirtualGridComponent
       
 
         [Parameter]
-        protected BvgColumn<TItem> bvgColumn { get; set; }
+        public BvgColumn<TItem> bvgColumn { get; set; }
 
         //bool EnabledRender = true;
 
@@ -70,7 +71,7 @@ namespace BlazorVirtualGridComponent
             builder.AddAttribute(k++, "id", "spCol" + bvgColumn.ID);
             builder.AddAttribute(k++, "class", "ColumnSpan");
             builder.AddAttribute(k++, "style", string.Concat("width:", bvgColumn.ColWidthSpan, "px"));
-            builder.AddAttribute(k++, "onmousedown", Clicked);
+            builder.AddAttribute(k++, "onmousedown", EventCallback.Factory.Create(this, Clicked));
             builder.AddContent(k++, bvgColumn.prop.Name);
             builder.CloseElement(); //span
 
@@ -98,7 +99,7 @@ namespace BlazorVirtualGridComponent
         }
 
 
-        public void Clicked(UIMouseEventArgs e)
+        public void Clicked(MouseEventArgs e)
         {
             EnsureIdentity();
             // bvgColumn.bvgGrid.SelectColumn(bvgColumn);

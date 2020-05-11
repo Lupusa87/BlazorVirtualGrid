@@ -1,7 +1,8 @@
 ﻿using BlazorVirtualGridComponent.businessLayer;
 using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,7 +19,7 @@ namespace BlazorVirtualGridComponent
 
 
         [Parameter]
-        protected BvgCell<TItem> bvgCell { get; set; }
+        public BvgCell<TItem> bvgCell { get; set; }
 
         private PressState keyPressState = new PressState();
 
@@ -41,9 +42,11 @@ namespace BlazorVirtualGridComponent
         }
 
 
-        protected override void OnInit()
+        protected override void OnInitialized()
         {
             bvgCell.PropertyChanged = BvgCell_PropertyChanged;
+
+            base.OnInitialized();
 
         }
 
@@ -67,9 +70,9 @@ namespace BlazorVirtualGridComponent
             builder.AddAttribute(k++, "class", bvgCell.CssClassFull);
             builder.AddAttribute(k++, "tabindex", 0); // without this div can't get focus and don't fires keyboard events
             //builder.AddAttribute(k++, "style", string.Concat("width:", bvgCell.bvgColumn.ColWidth, "px"));
-            builder.AddAttribute(k++, "onclick", Clicked);
-            builder.AddAttribute(k++, "onkeydown", EventCallback.Factory.Create<UIKeyboardEventArgs>(this, OnKeyDown));
-            builder.AddAttribute(k++, "onkeyup", OnKeyUp);
+            builder.AddAttribute(k++, "onclick", EventCallback.Factory.Create(this, Clicked));
+            builder.AddAttribute(k++, "onkeydown", EventCallback.Factory.Create<KeyboardEventArgs>(this, OnKeyDown));
+            builder.AddAttribute(k++, "onkeyup", EventCallback.Factory.Create(this, OnKeyUp));
 
 
             builder.OpenElement(k++, "input");
@@ -93,7 +96,7 @@ namespace BlazorVirtualGridComponent
             //builder.AddAttribute(k++, "style", string.Concat("zoom:", bvgCell.bvgGrid.bvgSettings.CheckBoxZoom));
             builder.AddAttribute(k++, "style", string.Concat("transform:scale(", bvgCell.bvgGrid.bvgSettings.CheckBoxZoom,")"));
        
-            builder.AddAttribute(k++, "onclick", CheckboxClicked);
+            builder.AddAttribute(k++, "onclick", EventCallback.Factory.Create(this, CheckboxClicked));
             builder.CloseElement(); //input
 
 
@@ -116,22 +119,22 @@ namespace BlazorVirtualGridComponent
 
 
         
-        public void CheckboxClicked(UIMouseEventArgs e)
+        public void CheckboxClicked(MouseEventArgs e)
         {
-            BvgJsInterop.SetValueToCheckBox(string.Concat("chCell", bvgCell.ID), bvgCell.Value);
+            BVirtualGridCJsInterop.SetValueToCheckBox(string.Concat("chCell", bvgCell.ID), bvgCell.Value);
             bvgCell.bvgGrid.SelectCell(bvgCell, false);
 
         }
 
 
-        public void Clicked(UIMouseEventArgs e)
+        public void Clicked(MouseEventArgs e)
         {
             bvgCell.bvgGrid.SelectCell(bvgCell, false);
         }
 
 
 
-        public void OnKeyDown(UIKeyboardEventArgs e)
+        public void OnKeyDown(KeyboardEventArgs e)
         {
 
             if (e.Repeat && e.ShiftKey)
@@ -225,7 +228,7 @@ namespace BlazorVirtualGridComponent
 
        
 
-        public void OnKeyUp(UIKeyboardEventArgs e)
+        public void OnKeyUp(KeyboardEventArgs e)
         {
             if (keyPressState.Count == 99)
             {

@@ -9,10 +9,10 @@ using System.Text;
 
 namespace BlazorVirtualGridComponent.Modals
 {
-    public class CompStyleDesignerBase<TItem> : ComponentBase
+    public partial class CompStyleDesigner<TItem>
     {
         [Parameter]
-        protected BvgGrid<TItem> bvgGrid { get; set; }
+        public BvgGrid<TItem> bvgGrid { get; set; }
 
         public Style currStyle { get; set; } = new Style();
 
@@ -29,7 +29,7 @@ namespace BlazorVirtualGridComponent.Modals
 
         protected bool FastApplyChanges { get; set; } = true;
 
-        protected override void OnInit()
+        protected override void OnInitialized()
         {
             LoadStyle();
 
@@ -46,7 +46,7 @@ namespace BlazorVirtualGridComponent.Modals
             currStyle.PropertyChanged = OnStyleChanged;
 
 
-            base.OnInit();
+            base.OnInitialized();
         }
 
 
@@ -163,7 +163,7 @@ namespace BlazorVirtualGridComponent.Modals
 
         }
 
-        public void ComboSelectionChanged(UIChangeEventArgs e)
+        public void ComboSelectionChanged(ChangeEventArgs e)
         {
             if (int.TryParse(e.Value.ToString(), out int index))
             {
@@ -174,7 +174,7 @@ namespace BlazorVirtualGridComponent.Modals
         }
 
 
-        public void ComboScrollSelectionChanged(UIChangeEventArgs e)
+        public void ComboScrollSelectionChanged(ChangeEventArgs e)
         {
             if (int.TryParse(e.Value.ToString(), out int index))
             {

@@ -1,22 +1,25 @@
 ﻿<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Blazor Virtual Grid</a>
-    <button class="navbar-toggler" onclick=@ToggleNavMenu>
+    <button class="navbar-toggler" @onclick="@ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
 
-<div class=@(collapseNavMenu ? "collapse" : null) onclick=@ToggleNavMenu>
+<div class="@NavMenuCssClass" @onclick="@ToggleNavMenu">
     <ul class="nav flex-column">
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="https://lupblazordemos.z13.web.core.windows.net/" >
+            <NavLink class="nav-link" href="https://lupblazordemos.z13.web.core.windows.net/" Match=NavLinkMatch.All>
                 <span class="oi oi-home" aria-hidden="true"></span> All demos
             </NavLink>
         </li>
     </ul>
 </div>
 
-@functions {
+@code {
     bool collapseNavMenu = true;
+
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     void ToggleNavMenu()
     {

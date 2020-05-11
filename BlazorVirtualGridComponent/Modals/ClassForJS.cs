@@ -18,8 +18,13 @@ namespace BlazorVirtualGridComponent.Modals
         }
 
         [JSInvokable]
-        public void InvokeDropFromJS(int parentID, int id)
+        public void InvokeDropFromJS(object args)
         {
+            string[] a = args.ToString().Replace("[", null).Replace("]", null).Replace("\"", null).Split(",");
+
+            int parentID = int.Parse(a[0]);
+            int id = int.Parse(a[1]);
+
             CustomOnDrop?.Invoke(parentID,id);
         }
     }

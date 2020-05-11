@@ -2,7 +2,8 @@
 using BlazorScrollbarComponent.classes;
 using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.CompilerServices;
+using Microsoft.AspNetCore.Components.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,7 +18,7 @@ namespace BlazorVirtualGridComponent
       
 
         [Parameter]
-        protected BvgScroll<TItem> bvgScroll { get; set; }
+        public BvgScroll<TItem> bvgScroll { get; set; }
 
         //bool EnabledRender = true;
 
@@ -35,11 +36,12 @@ namespace BlazorVirtualGridComponent
         //    return EnabledRender;
         //}
 
-        protected override void OnInit()
+        protected override void OnInitialized()
         {
 
             bvgScroll.PropertyChanged = BvgScroll_PropertyChanged;
-          
+
+            base.OnInitialized();
         }
 
 

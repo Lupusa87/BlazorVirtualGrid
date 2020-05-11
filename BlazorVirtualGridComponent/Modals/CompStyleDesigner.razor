@@ -1,27 +1,25 @@
 ﻿@typeparam TItem
-
-@inherits CompStyleDesignerBase<TItem>
-
+@using Microsoft.AspNetCore.Components.Web;
 
 <style>
-    .MyContainerStyleDesigner{
-            display:grid;
-            position:relative;
-            width:1000px;
-            height:300px;
-            grid-template-columns:1fr 1fr 1fr 1fr;
-            overflow:hidden;
-            align-self:center;
-            line-height:30px;
-            margin:10px;
+    .MyContainerStyleDesigner {
+        display: grid;
+        position: relative;
+        width: 1000px;
+        height: 300px;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        overflow: hidden;
+        align-self: center;
+        line-height: 30px;
+        margin: 10px;
     }
-    </style>
+</style>
 
 
 <div class="MyContainerStyleDesigner">
 
     <div width="160" style="padding-left:10px;vertical-align:top;text-align:left;">
-        <select style="margin:3px" onchange="@ComboSelectionChanged">
+        <select style="margin:3px" @onchange="@ComboSelectionChanged">
             <option value="0" selected>
                 @StylePropsList[0]
             </option>
@@ -34,41 +32,41 @@
         </select>
 
         <br />
-        <input style="margin:3px" bind="@currStyle.BackgroundColor" type="color" />
+        <input style="margin:3px" @bind="@currStyle.BackgroundColor" type="color" />
         <label style="margin:3px">BG Color</label>
         <br />
-        <input style="margin:3px" bind="@currStyle.ForeColor" type="color" />
+        <input style="margin:3px" @bind="@currStyle.ForeColor" type="color" />
         <label style="margin:3px">Fore Color</label>
         <br />
-        <input style="margin:3px" bind="@currStyle.BorderColor" type="color" />
+        <input style="margin:3px" @bind="@currStyle.BorderColor" type="color" />
         <label style="margin:3px">Border Color</label>
         <br />
-        <input style="margin:3px" bind="@currStyle.BorderWidth" type="number" min="1" max="5" step="1" />
+        <input style="margin:3px" @bind="@currStyle.BorderWidth" type="number" min="1" max="5" step="1" />
         <label style="margin:3px">Border Width</label>
         <br />
     </div>
 
     <div width="200" style="padding-left:30px;vertical-align:top;text-align:left;">
-        <input style="margin:3px" bind="@currStyle.HeaderHeight" type="number" min="30" max="150" step="1" />
+        <input style="margin:3px" @bind="@currStyle.HeaderHeight" type="number" min="30" max="150" step="1" />
         <label style="margin:3px">Header Height</label>
         <br />
 
-        <input style="margin:3px" bind="@currStyle.RowHeight" type="number" min="20" max="100" step="1" />
+        <input style="margin:3px" @bind="@currStyle.RowHeight" type="number" min="20" max="100" step="1" />
         <label style="margin:3px">Row Height</label>
         <br />
 
-        <input style="margin:3px" bind="@currStyle.CheckBoxZoom" type="number" min="1" max="3" step="0.1" />
+        <input style="margin:3px" @bind="@currStyle.CheckBoxZoom" type="number" min="1" max="3" step="0.1" />
         <label style="margin:3px">CheckBox Zoom</label>
         <br />
 
-        <input style="margin:3px" bind="@currStyle.ScrollSize" type="number" min="10" max="30" step="1" />
+        <input style="margin:3px" @bind="@currStyle.ScrollSize" type="number" min="10" max="30" step="1" />
         <label style="margin:3px">Scroll Size</label>
         <br />
     </div>
 
     <div width="250" style="padding-left:30px;vertical-align:top;text-align:left;">
 
-        <select style="margin:3px" onchange="@ComboScrollSelectionChanged">
+        <select style="margin:3px" @onchange="@ComboScrollSelectionChanged">
             <option value="0" selected>
                 Horizontal and Vertical
             </option>
@@ -80,13 +78,13 @@
             </option>
         </select>
         <br />
-        <input style="margin:3px" bind="@currStyle.ScrollButtonColor" type="color" />
+        <input style="margin:3px" @bind="@currStyle.ScrollButtonColor" type="color" />
         <label style="margin:3px">Button Color</label>
         <br />
-        <input style="margin:3px" bind="@currStyle.ScrollThumbColor" type="color" />
+        <input style="margin:3px" @bind="@currStyle.ScrollThumbColor" type="color" />
         <label style="margin:3px">Thumb Color</label>
         <br />
-        <input style="margin:3px" bind="@currStyle.ScrollThumbWayColor" type="color" />
+        <input style="margin:3px" @bind="@currStyle.ScrollThumbWayColor" type="color" />
         <label style="margin:3px">Thumb Way Color</label>
         <br />
 
@@ -94,26 +92,26 @@
 
     <div width="250" style="padding-left:30px;vertical-align:top;text-align:left;">
 
-        <input style="margin:3px" bind="@currStyle.SortedDirectionColor" type="color" />
+        <input style="margin:3px" @bind="@currStyle.SortedDirectionColor" type="color" />
         <label for="Checkbox1">Is none</label>
-        <input id="Checkbox1" style="margin:3px" bind="@currStyle.SortedDirectionColorIsNone" type="checkbox" />
+        <input id="Checkbox1" style="margin:3px" @bind="@currStyle.SortedDirectionColorIsNone" type="checkbox" />
         <label style="margin:3px">Sorted Direction Color</label>
         <br />
-        <input style="margin:3px" bind="@currStyle.UnSortedDirectionColor" type="color" />
+        <input style="margin:3px" @bind="@currStyle.UnSortedDirectionColor" type="color" />
         <label for="Checkbox2">Is none</label>
-        <input id="Checkbox2" style="margin:3px" bind="@currStyle.UnSortedDirectionColorIsNone" type="checkbox" />
+        <input id="Checkbox2" style="margin:3px" @bind="@currStyle.UnSortedDirectionColorIsNone" type="checkbox" />
         <label style="margin:3px">UnSorted Direction Color</label>
         <br />
-        <input style="margin:3px" bind="@currStyle.SortBorderColor" type="color" />
+        <input style="margin:3px" @bind="@currStyle.SortBorderColor" type="color" />
         <label for="Checkbox3">Is none</label>
-        <input id="Checkbox3" style="margin:3px" bind="@currStyle.SortBorderColorIsNone" type="checkbox" value="Is none" />
+        <input id="Checkbox3" style="margin:3px" @bind="@currStyle.SortBorderColorIsNone" type="checkbox" value="Is none" />
         <label style="margin:3px">Sort Border Color</label>
         <br />
 
         @if (!FastApplyChanges)
         {
 
-            <button class="btn btn-primary" style="width:220px;margin:3px" onclick="@Refresh">Apply</button>
+            <button class="btn btn-primary" style="width:220px;margin:3px" @onclick="@Refresh">Apply</button>
         }
     </div>
 

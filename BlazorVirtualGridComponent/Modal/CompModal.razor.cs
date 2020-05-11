@@ -8,11 +8,11 @@ using static BlazorVirtualGridComponent.classes.BvgEnums;
 
 namespace BlazorVirtualGridComponent.Modal
 {
-    public class CompModalBase<TItem>: ComponentBase,IDisposable
+    public partial class CompModal<TItem>: IDisposable
     {
 
         [Parameter]
-        protected BvgModal<TItem> bvgModal { get; set; }
+        public BvgModal<TItem> bvgModal { get; set; }
 
 
 
@@ -20,20 +20,23 @@ namespace BlazorVirtualGridComponent.Modal
 
         protected string Title { get; set; }
 
-        protected override void OnInit()
+        protected override void OnInitialized()
         {
             bvgModal.OnShow = ShowModal;
+
+            base.OnInitialized();
         }
 
-        protected override void OnAfterRender()
+        protected override void OnAfterRender(bool firstRender)
         {
             if (bvgModal.OnShow == null)
             {
                 bvgModal.OnShow = ShowModal;
             }
 
-            base.OnAfterRender();
+            base.OnAfterRender(firstRender);
         }
+
         public void ShowModal()
         {
             switch (bvgModal.modalForm)

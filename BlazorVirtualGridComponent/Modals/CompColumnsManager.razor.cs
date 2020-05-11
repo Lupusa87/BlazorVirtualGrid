@@ -6,23 +6,23 @@ using System.Text;
 using System.Linq;
 using System.Reflection;
 using Microsoft.JSInterop;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace BlazorVirtualGridComponent.Modals
 {
-    public class CompColumnsManagerBase<TItem> : ComponentBase, IDisposable
+    public partial class CompColumnsManager<TItem>:IDisposable
     {
         [Parameter]
-        protected BvgGrid<TItem> bvgGrid { get; set; }
+        public BvgGrid<TItem> bvgGrid { get; set; }
 
         protected List<MyDraggable> listDraggable = new List<MyDraggable>();
         protected List<MyDragTarget> listDragTarget = new List<MyDragTarget>();
 
-        bool firtsLoad = true;
 
         protected ClassForJS classForJS = new ClassForJS();
 
-
-        protected override void OnInit()
+        
+        protected override void OnInitialized()
         {
 
             classForJS.CustomOnDragStart = InvokeDragStartFromJS;
@@ -59,34 +59,33 @@ namespace BlazorVirtualGridComponent.Modals
 
             }
 
-            base.OnInit();
+            base.OnInitialized();
         }
 
 
-        protected override void OnAfterRender()
+        protected override void OnAfterRender(bool firstRender)
         {
-            if (firtsLoad)
+            if (firstRender)
             {
-                firtsLoad = false;
                 RegisterJsEvents();
             }
 
 
-            base.OnAfterRender();
+            base.OnAfterRender(firstRender);
         }
 
         public void RegisterJsEvents()
         {
             foreach (var item in listDragTarget)
             {
-                BvgJsInterop.HandleDrop(item.ElementID, item.ID, new DotNetObjectRef(classForJS));
+                BVirtualGridCJsInterop.HandleDrop(item.ElementID, item.ID, DotNetObjectReference.Create(classForJS));
             }
         }
 
-        public void OnMouseDown(UIMouseEventArgs e, MyDraggable item)
+        public void OnMouseDown(MouseEventArgs e, MyDraggable item)
         {
            
-            BvgJsInterop.HandleDrag(item.ElementID, item.ID, new DotNetObjectRef(classForJS));
+            BVirtualGridCJsInterop.HandleDrag(item.ElementID, item.ID, DotNetObjectReference.Create(classForJS));
            
         }
 

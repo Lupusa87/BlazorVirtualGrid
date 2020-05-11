@@ -1,6 +1,6 @@
 ﻿using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +12,11 @@ namespace BlazorVirtualGridComponent
     {
        
         [Parameter]
-        protected BvgRow<TItem> bvgRow { get; set; }
+        public BvgRow<TItem> bvgRow { get; set; }
 
 
         [Parameter]
-        protected bool ForFrozen { get; set; }
+        public bool ForFrozen { get; set; }
 
         //bool EnabledRender = true;
 

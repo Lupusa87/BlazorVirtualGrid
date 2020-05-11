@@ -1,6 +1,6 @@
 ﻿using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,11 +11,11 @@ namespace BlazorVirtualGridComponent
     public class CompSort<TItem> : ComponentBase 
     {
         [Parameter]
-        protected BvgColumn<TItem> bvgColumn { get; set; }
+        public BvgColumn<TItem> bvgColumn { get; set; }
 
 
         [Parameter]
-        protected bool IsNotHidden { get; set; }
+        public bool IsNotHidden { get; set; }
 
         //bool EnabledRender = true;
 

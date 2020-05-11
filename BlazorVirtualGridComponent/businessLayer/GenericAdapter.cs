@@ -59,7 +59,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
                 if (UpdateUI)
                 {
-                    BvgJsInterop.UpdateColContentsBatch(UpdatePkg);
+                    BVirtualGridCJsInterop.UpdateColContentsBatch(UpdatePkg);
                     RefreshRows(list, _bvgGrid, true, 0);
                 }
             }
@@ -249,18 +249,18 @@ namespace BlazorVirtualGridComponent.businessLayer
 
 
             //BlazorWindowHelper.BlazorTimeAnalyzer.Add("js calls 1 start", MethodBase.GetCurrentMethod());
-            BvgJsInterop.UpdateElementContentBatchMonoByteArray(PkgIDs, UpdatePkg);
+            BVirtualGridCJsInterop.UpdateElementContentBatchMonoByteArray(PkgIDs, UpdatePkg);
 
             if (!updateWidths)
             {
                 //BlazorWindowHelper.BlazorTimeAnalyzer.Add("js calls 2 start", MethodBase.GetCurrentMethod());
-                BvgJsInterop.UpdateCellClassBatchMonoByteArray(PkgIDs, UpdatePkgClass);
+                BVirtualGridCJsInterop.UpdateCellClassBatchMonoByteArray(PkgIDs, UpdatePkgClass);
             }
 
             if (updateWidths)
             {
                 //BlazorWindowHelper.BlazorTimeAnalyzer.Add("js calls 3 start", MethodBase.GetCurrentMethod());
-                BvgJsInterop.UpdateRowWidthsBatch(PkgIDs, UpdatePkg2);
+                BVirtualGridCJsInterop.UpdateRowWidthsBatch(PkgIDs, UpdatePkg2);
             }
             //BlazorWindowHelper.BlazorTimeAnalyzer.Add("js calls end", MethodBase.GetCurrentMethod());
 

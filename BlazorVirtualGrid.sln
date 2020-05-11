@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.271
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30105.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorVirtualGrid", "BlazorVirtualGrid\BlazorVirtualGrid.csproj", "{8223C2CE-C2E2-4814-AA2C-786C377FA8B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorVirtualGrid", "BlazorVirtualGrid\BlazorVirtualGrid.csproj", "{8223C2CE-C2E2-4814-AA2C-786C377FA8B8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorVirtualGridComponent", "BlazorVirtualGridComponent\BlazorVirtualGridComponent.csproj", "{FDD0E3AB-4D53-490F-9EBC-2C409225E5E4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorScrollbarComponent", "..\BlazorScrollbar\BlazorScrollbarComponent\BlazorScrollbarComponent.csproj", "{0D3AE4DD-B0FB-45D9-9FC8-505E31116045}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorSplitterComponent", "..\BlazorSplitter\BlazorSplitterComponent\BlazorSplitterComponent.csproj", "{886CA572-A1BA-4F3F-AF04-296453286120}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{FDD0E3AB-4D53-490F-9EBC-2C409225E5E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDD0E3AB-4D53-490F-9EBC-2C409225E5E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDD0E3AB-4D53-490F-9EBC-2C409225E5E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D3AE4DD-B0FB-45D9-9FC8-505E31116045}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D3AE4DD-B0FB-45D9-9FC8-505E31116045}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D3AE4DD-B0FB-45D9-9FC8-505E31116045}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D3AE4DD-B0FB-45D9-9FC8-505E31116045}.Release|Any CPU.Build.0 = Release|Any CPU
+		{886CA572-A1BA-4F3F-AF04-296453286120}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{886CA572-A1BA-4F3F-AF04-296453286120}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{886CA572-A1BA-4F3F-AF04-296453286120}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{886CA572-A1BA-4F3F-AF04-296453286120}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

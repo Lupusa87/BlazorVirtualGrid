@@ -66,7 +66,7 @@ namespace BlazorVirtualGridComponent.businessLayer
 
 
 
-            BvgJsInterop.UpdateStyle(StyleID2, GetString(StyleID2));
+            BVirtualGridCJsInterop.UpdateStyle(StyleID2, GetString(StyleID2));
 
         }
 

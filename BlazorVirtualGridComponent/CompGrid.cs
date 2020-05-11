@@ -1,7 +1,7 @@
 ﻿using BlazorSplitterComponent;
 using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace BlazorVirtualGridComponent
     public class CompGrid<TItem> : ComponentBase, IDisposable
     {
         [Parameter]
-        protected BvgGrid<TItem> bvgGrid { get; set; }
+        public BvgGrid<TItem> bvgGrid { get; set; }
 
         //bool EnabledRender = true;
 
@@ -33,14 +33,16 @@ namespace BlazorVirtualGridComponent
         //    return EnabledRender;
         //}
 
-        protected override void OnInit()
+        protected override void OnInitialized()
         {
             bvgGrid.compGrid = this;
 
             Subscribe();
+
+            base.OnInitialized();
         }
 
-        protected override void OnAfterRender()
+        protected override void OnAfterRender(bool firstRender)
         {
 
             if (bvgGrid.compGrid == null)
@@ -49,7 +51,7 @@ namespace BlazorVirtualGridComponent
             }
 
 
-            base.OnAfterRender();
+            base.OnAfterRender(firstRender);
         }
 
 
@@ -71,10 +73,6 @@ namespace BlazorVirtualGridComponent
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             //EnabledRender = false;
-
-
-           
-
 
             base.BuildRenderTree(builder);
 

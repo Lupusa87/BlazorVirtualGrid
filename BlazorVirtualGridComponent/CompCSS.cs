@@ -1,7 +1,7 @@
 ﻿using BlazorVirtualGridComponent.businessLayer;
 using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +13,7 @@ namespace BlazorVirtualGridComponent
     {
 
         [Parameter]
-        protected BvgGrid<TItem> bvgGrid { get; set; }
+        public BvgGrid<TItem> bvgGrid { get; set; }
 
         bool EnabledRender = true;
 

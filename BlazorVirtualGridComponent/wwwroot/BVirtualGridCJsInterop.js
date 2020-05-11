@@ -95,7 +95,7 @@ function drop1(e, el, id, dotnetHelper) {
     if (e.stopPropagation) { e.stopPropagation(); }
 
 
-    dotnetHelper.invokeMethodAsync('InvokeDropFromJS', id, e.dataTransfer.getData("text"));
+    dotnetHelper.invokeMethodAsync('InvokeDropFromJS', [id, e.dataTransfer.getData("text")]);
 
     document.getElementById(el).removeEventListener('dragstart', null);
 
@@ -104,7 +104,7 @@ function drop1(e, el, id, dotnetHelper) {
 
 
 
-window.BvgJsFunctions = {
+window.BVirtualGridCJsFunctions = {
     Alert: function (msg) {
         alert(msg);
         return true; 
@@ -199,12 +199,12 @@ window.BvgJsFunctions = {
     },
     UpdateRowContentBatch: function (l) {
        
-        updateCells(JSON.parse(Blazor.platform.toJavaScriptString(l)));
+        updateCells(JSON.parse(BINDING.conv_string(l)));
         return true;
     }, 
     UpdateCellClassBatch: function (l) {
        
-        b = JSON.parse(Blazor.platform.toJavaScriptString(l));
+        b = JSON.parse(BINDING.conv_string(l));
 
 
         for (var i = 0; i < b.length; i += 2) {
@@ -217,8 +217,8 @@ window.BvgJsFunctions = {
         return true;
     },
     UpdateCellClassBatchMonoByteArray: function (id, l) {
-        IDs = JSON.parse(new TextDecoder("utf-8").decode(Blazor.platform.toUint8Array(id)));
-        b = JSON.parse(new TextDecoder("utf-8").decode(Blazor.platform.toUint8Array(l)));
+        IDs = JSON.parse(BINDING.conv_string(id));
+        b = JSON.parse(BINDING.conv_string(l));
 
         for (var i = 0; i < b.length; i += 1) {
 
@@ -231,8 +231,8 @@ window.BvgJsFunctions = {
     },
     UpdateRowWidthsBatch: function (id, l) {
 
-        IDs = JSON.parse(Blazor.platform.toJavaScriptString(id));
-        b = JSON.parse(Blazor.platform.toJavaScriptString(l));
+        IDs = JSON.parse(BINDING.conv_string(id));
+        b = JSON.parse(BINDING.conv_string(l));
 
         for (var i = 0; i < b.length; i += 1) {
 
@@ -245,7 +245,7 @@ window.BvgJsFunctions = {
     },
     UpdateColContentsBatch: function (l) {
         
-        b = JSON.parse(Blazor.platform.toJavaScriptString(l));
+        b = JSON.parse(BINDING.conv_string(l));
 
         for (var i = 0; i < b.length; i += 4) {
 
@@ -267,20 +267,20 @@ window.BvgJsFunctions = {
     },
     SetAttributeBatch: function (l, attr) {
         
-        b = JSON.parse(Blazor.platform.toJavaScriptString(l));
+        b = JSON.parse(BINDING.conv_string(l));
 
         for (var i = 0; i < b.length; i += 2) {
 
             if (document.getElementById("divCell" + b[i]) !== null) {
-                document.getElementById("divCell" + b[i]).setAttribute(Blazor.platform.toJavaScriptString(attr), b[i + 1]);
+                document.getElementById("divCell" + b[i]).setAttribute(BINDING.conv_string(attr), b[i + 1]);
             }
         }
         
         return true;
     },
     UpdateRowContentBatchMonoByteArray: function (id, l) {
-        updateCells(JSON.parse(new TextDecoder("utf-8").decode(Blazor.platform.toUint8Array(id))),
-            JSON.parse(new TextDecoder("utf-8").decode(Blazor.platform.toUint8Array(l))));    
+        updateCells(JSON.parse(BINDING.conv_string(id)),
+            JSON.parse(BINDING.conv_string(l)));    
         return true;
     },
     SetValueToCheckBox: function (el, val) {
@@ -299,9 +299,9 @@ window.BvgJsFunctions = {
     },
     UpdateStyle: function (id, val) {
        
-        b = Blazor.platform.toJavaScriptString(id);
+        b = BINDING.conv_string(id);
         if (document.getElementById(b) !== null) {
-            document.getElementById(b).innerHTML = Blazor.platform.toJavaScriptString(val);
+            document.getElementById(b).innerHTML = BINDING.conv_string(val);
         }
   
         return true;

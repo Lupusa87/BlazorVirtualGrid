@@ -1,6 +1,6 @@
 ﻿using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +13,10 @@ namespace BlazorVirtualGridComponent
     {
 
         [Parameter]
-        protected BvgAreaRows<TItem> bvgAreaRows { get; set; }
+        public BvgAreaRows<TItem> bvgAreaRows { get; set; }
 
         [Parameter]
-        protected bool ForFrozen { get; set; }
+        public bool ForFrozen { get; set; }
 
         //bool EnabledRender = true;
 
@@ -34,10 +34,10 @@ namespace BlazorVirtualGridComponent
         //    return EnabledRender;
         //}
 
-        protected override void OnInit()
+        protected override void OnInitialized()
         {
             bvgAreaRows.PropertyChanged = BvgAreaRows_PropertyChanged;
-
+            base.OnInitialized();
         }
 
 

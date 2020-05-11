@@ -112,7 +112,7 @@ namespace BlazorVirtualGridComponent.classes
 
             if (IsSameRow)
             {
-                BvgJsInterop.SetAttributeBatch(new string[] { oldActiveCellID, "CDiv " + CellStyle.CS.ToString() }, "class");
+                BVirtualGridCJsInterop.SetAttributeBatch(new string[] { oldActiveCellID, "CDiv " + CellStyle.CS.ToString() }, "class");
             }
             else
             { 
@@ -132,7 +132,7 @@ namespace BlazorVirtualGridComponent.classes
         {
             if (ActiveCell != null)
             {
-                BvgJsInterop.SetFocus(ActiveBvgCell.ID);
+                BVirtualGridCJsInterop.SetFocus(ActiveBvgCell.ID);
             }
         }
 
@@ -160,7 +160,7 @@ namespace BlazorVirtualGridComponent.classes
             }
 
 
-            BvgJsInterop.SetAttributeBatch(UpdatePkg, "class");
+            BVirtualGridCJsInterop.SetAttributeBatch(UpdatePkg, "class");
 
             //ActiveRow.InvokePropertyChanged();
             //InvokePropertyChanged();
@@ -246,7 +246,7 @@ namespace BlazorVirtualGridComponent.classes
             ActiveBvgCell.CssClassBase = CellStyle.CA.ToString();
 
 
-            BvgJsInterop.SetAttributeBatch(new string[] { ActiveBvgCell.ID, ActiveBvgCell.CssClassFull }, "class");
+            BVirtualGridCJsInterop.SetAttributeBatch(new string[] { ActiveBvgCell.ID, ActiveBvgCell.CssClassFull }, "class");
 
 
 
@@ -285,7 +285,7 @@ namespace BlazorVirtualGridComponent.classes
             }
 
 
-            BvgJsInterop.SetAttributeBatch(l.ToArray(), "class");
+            BVirtualGridCJsInterop.SetAttributeBatch(l.ToArray(), "class");
 
 
 
@@ -301,7 +301,7 @@ namespace BlazorVirtualGridComponent.classes
             }
 
 
-            BvgJsInterop.SetAttributeBatch(l.ToArray(), "class");
+            BVirtualGridCJsInterop.SetAttributeBatch(l.ToArray(), "class");
 
         }
 
@@ -483,7 +483,7 @@ namespace BlazorVirtualGridComponent.classes
         {
             //BvgJsInterop.SetElementScrollTop("FrozenDiv1", p);
             //BvgJsInterop.SetElementScrollTop("NonFrozenDiv1", p);
-            BvgJsInterop.SetDivsScrollTop(p);
+            BVirtualGridCJsInterop.SetDivsScrollTop(p);
         }
 
         #endregion

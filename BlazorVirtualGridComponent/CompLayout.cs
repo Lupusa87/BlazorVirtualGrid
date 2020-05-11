@@ -1,6 +1,7 @@
 ﻿using BlazorVirtualGridComponent.classes;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,16 +12,14 @@ namespace BlazorVirtualGridComponent
     public class CompLayout<TItem> : ComponentBase, IDisposable
     {
         [Parameter]
-        protected BvgGrid<TItem> bvgGrid { get; set; }
+        public BvgGrid<TItem> bvgGrid { get; set; }
 
         [Parameter]
-        protected bool ActualRender { get; set; }
+        public bool ActualRender { get; set; }
 
 
 
         bool EnabledRender = true;
-
-
 
 
         protected override void OnParametersSet()
@@ -59,7 +58,7 @@ namespace BlazorVirtualGridComponent
             builder.AddAttribute(k++, "id", bvgGrid.DivContainerElementID);
 
 
-                builder.AddAttribute(k++, "onwheel", OnWheel);
+                builder.AddAttribute(k++, "onwheel", EventCallback.Factory.Create(this, OnWheel)); 
 
                 if (ActualRender)
                 {
@@ -81,7 +80,7 @@ namespace BlazorVirtualGridComponent
         }
 
 
-        public void OnWheel(UIWheelEventArgs e)
+        public void OnWheel(WheelEventArgs e)
         {
             bvgGrid.VerticalScroll.compBlazorScrollbar.DoWheel(e.DeltaY > 0);
         }
