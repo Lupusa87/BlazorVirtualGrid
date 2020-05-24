@@ -1,20 +1,20 @@
 # Blazor Virtual Grid
 
 ![](https://placehold.it/15/4747d1/000000?text=+) 
-If you like my work on blazor and want to see more open sourced demos please support me with donations.
+If you like my blazor works and want to see more open sourced repos please support me with [paypal donation](https://www.paypal.me/VakhtangiAbashidze/10)
 ![](https://placehold.it/15/4747d1/000000?text=+) 
 
-[donate via paypal](https://www.paypal.me/VakhtangiAbashidze/50)
+![](https://placehold.it/15/00e600/000000?text=+) 
+Please send [email](mailto:VakhtangiAbashidze@gmail.com) if you consider to **hire me**.
+![](https://placehold.it/15/00e600/000000?text=+)     
 
 
-![](https://placehold.it/15/00e600/000000?text=+) 
-Please send [email](VakhtangiAbashidze@gmail.com) if you consider to **hire me**.
-![](https://placehold.it/15/00e600/000000?text=+) 
+![](https://placehold.it/15/ffffff/000000?text=+)  
 
 
 =================================================
 
-Component is live [here](https://lupblazorvirtualgrid.z13.web.core.windows.net)
+Component is live [here](https://lupblazordemos.z13.web.core.windows.net/PageVirtualGrid)
 
 In this repo there are component itself and consumer blazor app where you can see how component can be used.
 
@@ -26,33 +26,6 @@ Here I will also give some basic usage info.
 3. [Mono.WebAssembly.Interop](https://www.nuget.org/packages/Mono.WebAssembly.Interop);
 4. [System.Linq.Dynamic.Core](https://www.nuget.org/packages/System.Linq.Dynamic.Core/).
 
-Client app csproj file should have configured linker
-```
-  <ItemGroup>
-    <BlazorLinkerDescriptor Include="Linker.xml" />
-  </ItemGroup>
-```
-
-and have linker file inside app folder with this content:
-
-```
-<?xml version="1.0" encoding="UTF-8" ?>
-<linker>
-  <assembly fullname="mscorlib">
-    <type fullname="System.Threading.WasmRuntime" />
-  </assembly>
-  <assembly fullname="System.Core">
-    <type fullname="System.Linq*" />
-  </assembly>
-  <assembly fullname="System.Linq.Dynamic.core">
-  </assembly>
-  <assembly fullname="BlazorVirtualGrid" />
-</linker>
-```
-Last item - BlazorVirtualGrid should be replaced with your blazor app name.
-This is necessary because linker can remove libraries which are used by component, for example without System.Linq.Dynamic.Core sorting will not work.
-
-[Index.html](https://github.com/Lupusa87/BlazorVirtualGrid/blob/master/BlazorVirtualGrid/Pages/Index.cshtml) and [Indexbase.cs](https://github.com/Lupusa87/BlazorVirtualGrid/blob/master/BlazorVirtualGrid/Pages/IndexBase.cs) have example how component can be configured and consumed.
 
 Component can receive any list object in parameter SourceList, table name and configuration settings.
 
