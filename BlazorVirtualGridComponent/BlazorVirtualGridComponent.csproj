@@ -12,9 +12,9 @@
     <PackageProjectUrl>https://lupblazordemos.z13.web.core.windows.net/PageVirtualGrid</PackageProjectUrl>
     <PackageTags>Blazor</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
-    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
+    <Version>1.0.2</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
@@ -27,11 +27,11 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0-preview.3.20215.14" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0-preview.3.20215.14" />
-    <PackageReference Include="Mono.WebAssembly.Interop" Version="5.0.0-preview.3.20215.14" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.1.0" />
-    <PackageReference Include="System.Text.Json" Version="5.0.0-preview.3.20214.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0-preview.4.20257.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0-preview.4.20257.10" />
+    <PackageReference Include="Mono.WebAssembly.Interop" Version="5.0.0-preview.4.20257.10" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.1.1" />
+    <PackageReference Include="System.Text.Json" Version="5.0.0-preview.4.20251.6" />
   </ItemGroup>
 
 
