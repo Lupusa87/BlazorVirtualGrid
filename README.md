@@ -14,6 +14,16 @@ Please send [email](mailto:VakhtangiAbashidze@gmail.com) if you consider to **hi
 
 =================================================
 
+Component is available on [nuget](https://www.nuget.org/packages/BlazorVirtualGridComponent/)
+
+After installing package please add bellow script to your index.html
+
+```
+<script src="_content/BlazorVirtualGridComponent/BVirtualGridCJsInterop.js"></script>
+```
+
+
+
 Component is live [here](https://lupblazordemos.z13.web.core.windows.net/PageVirtualGrid)
 
 In this repo there are component itself and consumer blazor app where you can see how component can be used.
