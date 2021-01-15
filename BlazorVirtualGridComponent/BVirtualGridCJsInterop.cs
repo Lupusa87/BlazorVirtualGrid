@@ -1,7 +1,6 @@
 using BlazorVirtualGridComponent.Modals;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Mono.WebAssembly.Interop;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,9 +11,27 @@ namespace BlazorVirtualGridComponent
 {
     public class BVirtualGridCJsInterop
     {
-        
-        public static IJSRuntime jsRuntime;
-        public static MonoWebAssemblyJSRuntime monoWebAssemblyJSRuntime = new MonoWebAssemblyJSRuntime();
+
+        public static IJSRuntime _jsRuntime;
+        public static IJSRuntime jsRuntime
+        {
+
+            get
+            {
+                return _jsRuntime;
+            }
+
+            set
+            {
+
+                _jsRuntime = value;
+                _jsUnmarshalledRuntime = value as IJSUnmarshalledRuntime;
+            }
+        }
+
+
+        private static IJSUnmarshalledRuntime _jsUnmarshalledRuntime;
+
 
         public static ValueTask<bool> Alert(string msg)
         {
@@ -106,7 +123,7 @@ namespace BlazorVirtualGridComponent
         public static bool UpdateRowContentBatch(string[] updatepkg)
         {
 
-                return monoWebAssemblyJSRuntime.InvokeUnmarshalled<string, bool>(
+                return _jsUnmarshalledRuntime.InvokeUnmarshalled<string, bool>(
                     "BVirtualGridCJsFunctions.UpdateRowContentBatch",
                     JsonSerializer.Serialize(updatepkg));
 
@@ -116,7 +133,7 @@ namespace BlazorVirtualGridComponent
         public static bool UpdateCellClassBatch(string[] updatepkg)
         {
 
-                return monoWebAssemblyJSRuntime.InvokeUnmarshalled<string, bool>(
+                return _jsUnmarshalledRuntime.InvokeUnmarshalled<string, bool>(
                     "BVirtualGridCJsFunctions.UpdateCellClassBatch",
                     JsonSerializer.Serialize(updatepkg));
            
@@ -125,7 +142,7 @@ namespace BlazorVirtualGridComponent
 
         public static bool UpdateCellClassBatchMonoByteArray(string[] pkgIDs, string[] updatepkg)
         {
-                return monoWebAssemblyJSRuntime.InvokeUnmarshalled<string, string, bool>(
+                return _jsUnmarshalledRuntime.InvokeUnmarshalled<string, string, bool>(
                     "BVirtualGridCJsFunctions.UpdateCellClassBatchMonoByteArray",
                      JsonSerializer.Serialize(pkgIDs),
                      JsonSerializer.Serialize(updatepkg));
@@ -135,7 +152,7 @@ namespace BlazorVirtualGridComponent
         public static bool UpdateRowWidthsBatch(string[] pkgIDs, string[] updatepkg)
         {
 
-                return monoWebAssemblyJSRuntime.InvokeUnmarshalled<string, string, bool>(
+                return _jsUnmarshalledRuntime.InvokeUnmarshalled<string, string, bool>(
                     "BVirtualGridCJsFunctions.UpdateRowWidthsBatch",
                     JsonSerializer.Serialize(pkgIDs),
                     JsonSerializer.Serialize(updatepkg));
@@ -146,7 +163,7 @@ namespace BlazorVirtualGridComponent
         public static bool UpdateColContentsBatch(string[] updatepkg)
         {
 
-                return monoWebAssemblyJSRuntime.InvokeUnmarshalled<string, bool>(
+                return _jsUnmarshalledRuntime.InvokeUnmarshalled<string, bool>(
                     "BVirtualGridCJsFunctions.UpdateColContentsBatch",
                     JsonSerializer.Serialize(updatepkg));
            
@@ -157,7 +174,7 @@ namespace BlazorVirtualGridComponent
         {
 
            
-                return monoWebAssemblyJSRuntime.InvokeUnmarshalled<string, string, bool>(
+                return _jsUnmarshalledRuntime.InvokeUnmarshalled<string, string, bool>(
                     "BVirtualGridCJsFunctions.UpdateRowContentBatchMonoByteArray",
                     JsonSerializer.Serialize(pkgIDs),
                     JsonSerializer.Serialize(updatepkg));
@@ -167,7 +184,7 @@ namespace BlazorVirtualGridComponent
         public static bool SetAttributeBatch(string[] updatepkg, string attr)
         {
 
-                return monoWebAssemblyJSRuntime.InvokeUnmarshalled<string, string, bool>(
+                return _jsUnmarshalledRuntime.InvokeUnmarshalled<string, string, bool>(
                     "BVirtualGridCJsFunctions.SetAttributeBatch",
                     JsonSerializer.Serialize(updatepkg), attr);
           
@@ -186,7 +203,7 @@ namespace BlazorVirtualGridComponent
         public static bool UpdateStyle(string el, string val)
         {
            
-                return monoWebAssemblyJSRuntime.InvokeUnmarshalled<string,string, bool>(
+                return _jsUnmarshalledRuntime.InvokeUnmarshalled<string,string, bool>(
                     "BVirtualGridCJsFunctions.UpdateStyle",
                     el, val);
            
